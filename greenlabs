@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2D4A28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Greenlabs">
+<meta name="description" content="Jouw persoonlijke tuinplanner. Zelfvoorzienend leven, stap voor stap.">
+<link rel="manifest" href="#" id="manifestLink">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%232D4A28'/%3E%3Ctext x='90' y='130' font-size='100' text-anchor='middle'%3E%F0%9F%8C%B1%3C/text%3E%3C/svg%3E">
+<title>Greenlabs</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+:root{
+  --bg:#F4EFE4;--bg2:#EDE6D8;--sage:#5A7A52;--forest:#2D4A28;
+  --mint:#8BBF6A;--terra:#C47B52;--cream:#FDFAF4;--ink:#1C1C1A;
+  --muted:#7A7A6E;--border:#D8D0C0;--white:#FFFFFF;
+  --warn:#E8A030;--sky:#4A8FAE;--red:#C44A3A;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;max-width:100vw;overflow-x:hidden;}
+
+/* PWA INSTALL BANNER */
+.pwa-banner{
+  background:var(--forest);color:var(--cream);
+  padding:12px 20px;display:flex;align-items:center;gap:12px;
+  font-size:0.82rem;position:relative;
+}
+.pwa-banner.hidden{display:none;}
+.pwa-banner-icon{font-size:1.4rem;flex-shrink:0;}
+.pwa-banner-text{flex:1;line-height:1.4;}
+.pwa-banner-text strong{display:block;font-size:0.88rem;margin-bottom:2px;}
+.pwa-install-btn{background:var(--mint);color:var(--forest);border:none;border-radius:8px;padding:8px 14px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;}
+.pwa-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.2rem;cursor:pointer;padding:4px;flex-shrink:0;}
+
+/* NAV */
+.nav{background:var(--forest);display:flex;align-items:center;padding:0 20px;gap:2px;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,0.25);}
+.nav-logo{font-family:'DM Serif Display',serif;color:var(--cream);font-size:1.25rem;padding:14px 14px 14px 0;margin-right:8px;border-right:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:7px;}
+.nav-logo .dot{width:9px;height:9px;background:var(--mint);border-radius:50%;display:inline-block;}
+.nav-tab{padding:16px 12px;font-size:0.76rem;font-weight:500;color:rgba(255,255,255,0.45);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.15s;white-space:nowrap;}
+.nav-tab:hover{color:rgba(255,255,255,0.8);}
+.nav-tab.active{color:var(--mint);border-bottom-color:var(--mint);font-weight:600;}
+.nav-sp{flex:1;}
+.loc-pill{font-size:0.7rem;color:rgba(255,255,255,0.55);padding:5px 11px;background:rgba(255,255,255,0.08);border-radius:20px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s;white-space:nowrap;}
+.loc-pill:hover{background:rgba(255,255,255,0.14);color:white;}
+.panel{display:none;}.panel.active{display:block;}
+
+/* ── DASHBOARD ── */
+.dash-hero{background:linear-gradient(135deg,var(--forest) 0%,#3A6030 60%,#4A7A40 100%);padding:28px 24px 0;color:var(--cream);position:relative;overflow:hidden;}
+.dash-hero::before{content:'';position:absolute;top:-40px;right:-60px;width:240px;height:240px;background:rgba(139,191,106,0.07);border-radius:50%;}
+.dash-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.dash-greeting h1{font-family:'DM Serif Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:3px;}
+.dash-greeting p{font-size:0.83rem;opacity:0.65;}
+.weather-widget{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;min-width:180px;}
+.weather-icon{font-size:1.8rem;}
+.weather-temp{font-size:1.3rem;font-weight:700;line-height:1;}
+.weather-desc{font-size:0.72rem;opacity:0.7;margin-top:2px;}
+.weather-extra{font-size:0.67rem;opacity:0.5;margin-top:3px;}
+.super-meter{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:18px 20px;}
+.super-meter-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.super-meter-top h3{font-size:0.83rem;font-weight:600;opacity:0.9;}
+.super-pct{font-size:1.9rem;font-weight:700;color:var(--mint);line-height:1;}
+.super-sub{font-size:0.67rem;opacity:0.5;margin-top:1px;}
+.meter-bar-bg{background:rgba(255,255,255,0.12);border-radius:99px;height:9px;margin-bottom:8px;overflow:hidden;}
+.meter-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--mint),#A8D880);transition:width 1.2s ease;}
+.meter-labels{display:flex;justify-content:space-between;font-size:0.65rem;opacity:0.4;}
+.dash-tabs{display:flex;border-bottom:2px solid rgba(255,255,255,0.1);margin-top:18px;}
+.dash-tab{padding:11px 18px;font-size:0.78rem;font-weight:500;color:rgba(255,255,255,0.5);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.dash-tab.active{color:var(--mint);border-bottom-color:var(--mint);}
+.dash-body{padding:22px 24px;max-width:1100px;margin:0 auto;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:22px;}
+.stat-card{background:var(--white);border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--border);}
+.stat-icon{font-size:1.3rem;margin-bottom:6px;}
+.stat-val{font-size:1.5rem;font-weight:700;color:var(--forest);line-height:1;}
+.stat-label{font-size:0.7rem;color:var(--muted);margin-top:3px;}
+.stat-trend{font-size:0.66rem;color:var(--mint);margin-top:2px;font-weight:600;}
+.section-hd{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--forest);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.badge-count{background:var(--mint);color:var(--forest);font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:10px;font-family:'DM Sans',sans-serif;}
+.task-feed{display:flex;flex-direction:column;gap:7px;margin-bottom:22px;}
+.task-card{background:var(--white);border-radius:9px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 5px rgba(0,0,0,0.05);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.task-card:hover{border-color:var(--sage);transform:translateY(-1px);}
+.task-card.done{opacity:0.45;}
+.task-card.done .tc-name{text-decoration:line-through;}
+.tc-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.task-card.done .tc-check{background:var(--mint);border-color:var(--mint);color:white;font-size:0.72rem;}
+.tc-emoji{font-size:1.15rem;flex-shrink:0;}
+.tc-info{flex:1;}
+.tc-name{font-weight:500;font-size:0.86rem;margin-bottom:1px;}
+.tc-sub{font-size:0.7rem;color:var(--muted);}
+.tc-type{font-size:0.66rem;font-weight:700;padding:3px 7px;border-radius:7px;white-space:nowrap;}
+.harvest-btn{margin-top:6px;background:var(--mint);color:var(--forest);border:none;border-radius:6px;padding:4px 10px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.harvest-btn:hover{background:var(--sage);color:white;}
+.type-z{background:#E8F5D8;color:#2E5C14;}
+.type-v{background:#FFF4D4;color:#7A4E08;}
+.type-o{background:#FDEEE6;color:#8C2E10;}
+.forecast-row{display:flex;gap:7px;margin-bottom:22px;overflow-x:auto;padding-bottom:4px;}
+.fc-card{background:var(--white);border-radius:9px;padding:11px 12px;border:1px solid var(--border);text-align:center;flex-shrink:0;min-width:74px;}
+.fc-day{font-size:0.68rem;color:var(--muted);margin-bottom:5px;font-weight:600;}
+.fc-ico{font-size:1.3rem;margin-bottom:3px;}
+.fc-tmp{font-size:0.82rem;font-weight:700;color:var(--forest);}
+.fc-rain{font-size:0.62rem;color:var(--sky);margin-top:2px;}
+.weather-tips-box{background:var(--white);border-radius:10px;padding:16px;border:1px solid var(--border);font-size:0.84rem;line-height:1.7;color:#333;margin-bottom:22px;}
+.breakdown-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:24px;}
+.bk-card{background:var(--white);border-radius:10px;padding:13px 15px;border:1px solid var(--border);}
+.bk-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.bk-name{font-size:0.8rem;font-weight:600;}
+.bk-pct{font-size:0.88rem;font-weight:700;color:var(--sage);}
+.bk-bar-bg{background:var(--bg2);border-radius:99px;height:5px;overflow:hidden;}
+.bk-bar-fill{height:100%;border-radius:99px;background:var(--mint);transition:width 0.8s ease;}
+.bk-note{font-size:0.66rem;color:var(--muted);margin-top:4px;}
+.agenda-btn{background:var(--sky);color:white;border:none;border-radius:7px;padding:8px 14px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;}
+
+/* ── PLANNER ── */
+.setup{background:linear-gradient(135deg,var(--sage) 0%,var(--forest) 100%);padding:20px 24px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
+.setup h2{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--cream);font-weight:400;width:100%;margin-bottom:-2px;}
+.cg label{display:block;font-size:0.67rem;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:4px;}
+.cg select,.cg input[type=number]{background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.18);color:var(--cream);border-radius:8px;padding:8px 11px;font-size:0.86rem;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+.cg select option{background:#2D4A28;}
+.cg input[type=number]{width:78px;}
+.cbadge{background:rgba(139,191,106,0.18);border:1px solid rgba(139,191,106,0.35);color:var(--mint);border-radius:8px;padding:8px 11px;font-size:0.78rem;font-weight:500;align-self:flex-end;}
+.mstrip{background:var(--bg2);padding:0 20px;display:flex;overflow-x:auto;border-bottom:2px solid var(--border);scrollbar-width:none;}
+.mstrip::-webkit-scrollbar{display:none;}
+.mbtn{padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:0.76rem;font-weight:500;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;transition:all 0.15s;}
+.mbtn:hover{color:var(--sage);}
+.mbtn.active{color:var(--forest);border-bottom-color:var(--sage);font-weight:700;}
+.pmain{padding:20px 24px;max-width:1200px;margin:0 auto;}
+.mhl{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--forest);margin-bottom:3px;}
+.mtip{font-size:0.82rem;color:var(--muted);margin-bottom:18px;max-width:580px;line-height:1.6;}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:11px;margin-bottom:26px;}
+.tc2{background:var(--white);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--border);}
+.tc2-hd{padding:10px 15px;display:flex;align-items:center;gap:7px;font-size:0.72rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+.cz2 .tc2-hd{background:#E8F5D8;color:#2E5C14;}.cv2 .tc2-hd{background:#FFF4D4;color:#7A4E08;}.co2 .tc2-hd{background:#FDEEE6;color:#8C2E10;}.cw2 .tc2-hd{background:#E0EEF8;color:#0E4060;}
+.tli2{padding:9px 13px;}
+.ti2{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--bg2);}
+.ti2:last-child{border-bottom:none;}
+.te2{font-size:1.15rem;flex-shrink:0;}
+.tin2{flex:1;}
+.tn2{font-weight:600;font-size:0.83rem;margin-bottom:2px;}
+.td2{font-size:0.7rem;color:var(--muted);line-height:1.4;}
+.tq2{font-size:0.65rem;font-weight:700;background:var(--bg2);color:var(--terra);padding:2px 6px;border-radius:6px;white-space:nowrap;flex-shrink:0;}
+.ec2{padding:14px;font-size:0.78rem;color:#bbb;text-align:center;}
+.yst{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--forest);margin-bottom:10px;}
+.yw{background:var(--white);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid var(--border);overflow-x:auto;}
+.gt{width:100%;border-collapse:collapse;font-size:0.68rem;min-width:540px;}
+.gt th{background:var(--forest);color:var(--cream);padding:8px 6px;text-align:center;font-weight:500;}
+.gt td{padding:5px 4px;text-align:center;border:1px solid var(--bg2);}
+.gt .pn{text-align:left;font-weight:500;color:var(--forest);padding-left:11px;white-space:nowrap;}
+.dot{border-radius:3px;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;font-size:0.58rem;}
+.dz{background:#C8EEA0;}.dv{background:#FFE580;}.do{background:#FFBB90;}.dzv{background:#D4F0B0;}.dvo{background:#FFD090;}.dzo{background:#E8F890;}
+.gl{display:flex;gap:14px;padding:10px 13px;background:var(--bg2);font-size:0.68rem;flex-wrap:wrap;}
+.gli{display:flex;align-items:center;gap:5px;}
+.gld{width:10px;height:10px;border-radius:3px;}
+
+/* ── SHOP ── */
+.shop-hero{background:linear-gradient(135deg,var(--terra) 0%,#A0522D 100%);padding:28px 24px;color:var(--cream);}
+.shop-hero h2{font-family:'DM Serif Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:6px;}
+.shop-hero p{font-size:0.84rem;opacity:0.75;line-height:1.6;max-width:500px;}
+.shop-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:5px 14px;font-size:0.72rem;font-weight:600;margin-top:12px;letter-spacing:0.3px;}
+.shop-body{padding:24px;max-width:1100px;margin:0 auto;}
+.shop-cats{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+.shop-cat{padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-size:0.79rem;font-weight:500;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.shop-cat:hover{border-color:var(--terra);}
+.shop-cat.active{background:var(--terra);color:white;border-color:var(--terra);}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:28px;}
+.shop-card{background:var(--white);border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,0.06);transition:all 0.2s;cursor:pointer;}
+.shop-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.12);border-color:var(--terra);}
+.shop-img{width:100%;height:140px;object-fit:cover;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:3.5rem;}
+.shop-info{padding:14px 16px;}
+.shop-name{font-weight:600;font-size:0.9rem;margin-bottom:4px;color:var(--ink);}
+.shop-desc{font-size:0.75rem;color:var(--muted);line-height:1.4;margin-bottom:10px;}
+.shop-bottom{display:flex;align-items:center;justify-content:space-between;}
+.shop-price{font-weight:700;font-size:1rem;color:var(--terra);}
+.shop-price-sub{font-size:0.65rem;color:var(--muted);font-weight:400;}
+.shop-btn{background:var(--terra);color:white;border:none;border-radius:7px;padding:7px 14px;font-size:0.77rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.15s;}
+.shop-btn:hover{opacity:0.85;}
+.shop-aff-note{background:var(--bg2);border-radius:10px;padding:14px 18px;font-size:0.78rem;color:var(--muted);line-height:1.6;border:1px solid var(--border);margin-bottom:20px;}
+.shop-aff-note strong{color:var(--terra);}
+
+/* ── PLANTDOKTER ── */
+.dw{max-width:660px;margin:0 auto;padding:26px 20px;}
+.dhero{background:linear-gradient(135deg,var(--forest) 0%,var(--sage) 100%);border-radius:14px;padding:24px;color:var(--cream);margin-bottom:20px;}
+.dhero h2{font-family:'DM Serif Display',serif;font-size:1.45rem;font-weight:400;margin-bottom:5px;}
+.dhero p{font-size:0.82rem;opacity:0.7;line-height:1.6;margin-bottom:16px;}
+.uz{border:2.5px dashed rgba(255,255,255,0.25);border-radius:10px;padding:24px;cursor:pointer;transition:all 0.2s;text-align:center;background:rgba(255,255,255,0.06);}
+.uz:hover,.uz.dg{border-color:var(--mint);background:rgba(139,191,106,0.1);}
+.ui2{font-size:2rem;margin-bottom:7px;}
+.uz p{font-size:0.82rem;opacity:0.65;margin-bottom:10px;}
+#photoInput{display:none;}
+.ubtn{background:var(--mint);color:var(--forest);border:none;border-radius:8px;padding:8px 18px;font-size:0.83rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.ppbox{margin-top:12px;display:none;}
+.ppbox img{width:100%;max-height:210px;object-fit:cover;border-radius:9px;}
+.abtn{width:100%;margin-top:10px;background:var(--warn);color:white;border:none;border-radius:9px;padding:11px;font-size:0.91rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:none;}
+.dbox{background:var(--white);border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,0.08);overflow:hidden;display:none;border:1px solid var(--border);}
+.dbhd{background:var(--sage);color:white;padding:12px 18px;font-weight:600;font-size:0.86rem;}
+.dbbody{padding:18px;line-height:1.75;font-size:0.86rem;color:#333;}
+.dbbody h4{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--terra);margin:12px 0 4px;}
+.dbbody h4:first-child{margin-top:0;}
+.dbbody ul{padding-left:16px;}
+.dbbody ul li{margin-bottom:4px;}
+
+/* ── KEUKEN ── */
+.kw{max-width:800px;margin:0 auto;padding:22px 20px;}
+.khd h2{font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--forest);font-weight:400;margin-bottom:4px;}
+.khd p{font-size:0.82rem;color:var(--muted);margin-bottom:16px;}
+.vsel{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.vc{padding:6px 13px;border-radius:20px;border:2px solid var(--border);background:var(--white);cursor:pointer;font-size:0.79rem;font-family:'DM Sans',sans-serif;transition:all 0.15s;color:var(--muted);}
+.vc:hover{border-color:var(--sage);}
+.vc.sel{border-color:var(--sage);background:#E8F5D8;color:var(--forest);font-weight:600;}
+.kbtn{background:var(--sage);color:white;border:none;border-radius:9px;padding:10px 22px;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:20px;}
+.kbtn:hover{opacity:0.85;}
+.kres{display:none;}
+.rtabs{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap;}
+.rtab{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-size:0.76rem;font-weight:500;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.rtab.active{background:var(--forest);color:white;border-color:var(--forest);}
+.kcon{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.06);min-height:160px;line-height:1.75;font-size:0.86rem;color:#333;border:1px solid var(--border);}
+.kcon h4{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--terra);margin:12px 0 4px;}
+.kcon h4:first-child{margin-top:0;}
+.kcon ul{padding-left:16px;}
+.kcon ul li{margin-bottom:4px;}
+
+/* ── ACCOUNT ── */
+.pfw{max-width:720px;margin:0 auto;padding:26px 20px;}
+.pf-header{text-align:center;margin-bottom:28px;}
+.pf-header h2{font-family:'DM Serif Display',serif;font-size:1.7rem;color:var(--forest);font-weight:400;margin-bottom:6px;}
+.pf-header p{font-size:0.86rem;color:var(--muted);}
+.plan-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:28px;}
+.plan-card{background:var(--white);border-radius:14px;padding:22px;border:2px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,0.05);position:relative;transition:all 0.2s;cursor:pointer;}
+.plan-card:hover{border-color:var(--sage);transform:translateY(-2px);}
+.plan-card.popular{border-color:var(--sage);background:linear-gradient(145deg,#F0F8E8,var(--white));}
+.popular-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--sage);color:white;font-size:0.66rem;font-weight:700;padding:3px 12px;border-radius:10px;letter-spacing:0.5px;text-transform:uppercase;white-space:nowrap;}
+.plan-name{font-weight:700;font-size:0.95rem;color:var(--forest);margin-bottom:3px;}
+.plan-price{font-size:1.9rem;font-weight:700;color:var(--forest);line-height:1;margin:10px 0 4px;}
+.plan-price span{font-size:0.82rem;font-weight:400;color:var(--muted);}
+.plan-desc{font-size:0.76rem;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.plan-feats{list-style:none;font-size:0.78rem;}
+.plan-feats li{padding:4px 0;color:var(--ink);display:flex;align-items:flex-start;gap:7px;}
+.plan-feats li::before{content:'✓';color:var(--mint);font-weight:700;flex-shrink:0;}
+.plan-feats li.dim{color:var(--muted);}
+.plan-feats li.dim::before{content:'–';color:var(--border);}
+.plan-btn{width:100%;margin-top:16px;padding:10px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.pbfree{background:var(--bg2);color:var(--forest);}
+.pbpro{background:var(--sage);color:white;}
+.pbfam{background:var(--forest);color:white;}
+.extra-info{background:var(--white);border-radius:12px;padding:18px;border:1px solid var(--border);margin-bottom:16px;}
+.extra-info h3{font-size:0.86rem;font-weight:700;color:var(--forest);margin-bottom:10px;}
+.extra-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bg2);font-size:0.81rem;}
+.extra-row:last-child{border-bottom:none;}
+.extra-price{font-weight:700;color:var(--sage);}
+
+/* SHARED */
+.spin-wrap{text-align:center;padding:24px;color:var(--sage);}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--bg2);border-top-color:var(--sage);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media(max-width:600px){
+  .nav{padding:0 8px;}.nav-logo{font-size:1.05rem;padding:12px 10px 12px 0;}.nav-tab{padding:13px 8px;font-size:0.69rem;}
+  .dash-hero{padding:18px 16px 0;}.dash-body,.pmain,.dw,.kw,.pfw,.shop-body{padding:14px 16px;}
+  .setup{padding:16px;}.weather-widget{min-width:150px;}
+}
+</style>
+</head>
+<body>
+
+<!-- PWA INSTALL BANNER -->
+<div class="pwa-banner" id="pwaBanner">
+  <div class="pwa-banner-icon">📱</div>
+  <div class="pwa-banner-text">
+    <strong>Installeer Greenlabs op je telefoon</strong>
+    Gebruik als echte app — geen App Store nodig
+  </div>
+  <button class="pwa-install-btn" id="pwaInstallBtn" onclick="installPWA()">Installeren</button>
+  <button class="pwa-close" onclick="closePWA()">×</button>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo"><span class="dot"></span>Greenlabs</div>
+  <button class="nav-tab active" onclick="sw('dash',this)">🏠 Home</button>
+  <button class="nav-tab" onclick="sw('planner',this)">🌱 Planner</button>
+  <button class="nav-tab" onclick="sw('shop',this)">🛍️ Shop</button>
+  <button class="nav-tab" onclick="sw('dokter',this)">🔬 Dokter</button>
+  <button class="nav-tab" onclick="sw('keuken',this)">🍳 Keuken</button>
+  <button class="nav-tab" onclick="sw('profiel',this)">👤 Account</button>
+  <div class="nav-sp"></div>
+  <div class="loc-pill" onclick="detectLoc()" id="locPill">📍 Locatie...</div>
+</nav>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="panel active" id="panel-dash">
+  <div class="dash-hero">
+    <div class="dash-hero-top">
+      <div class="dash-greeting">
+        <h1 id="greetMsg">Goedemorgen 🌱</h1>
+        <p id="greetSub">Vandaag zijn er <strong id="taskCount">...</strong> taken</p>
+      </div>
+      <div class="weather-widget" id="weatherWidget"><div style="font-size:0.78rem;opacity:0.6">📍 Locatie vereist voor weerdata</div></div>
+    </div>
+    <div class="super-meter">
+      <div class="super-meter-top">
+        <div><h3>🛒 Supermarkt-onafhankelijkheid</h3><div class="super-sub">Op basis van jouw tuin & seizoen</div></div>
+        <div style="text-align:right"><div class="super-pct" id="superPct">–</div><div class="super-sub">zelfredzaam</div></div>
+      </div>
+      <div class="meter-bar-bg"><div class="meter-bar-fill" id="meterFill" style="width:0%"></div></div>
+      <div class="meter-labels"><span>0%</span><span>50%</span><span>100% vrij 🎉</span></div>
+    </div>
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="showDTab('today',this)">Vandaag</button>
+      <button class="dash-tab" onclick="showDTab('weer',this)">7-daags weer</button>
+      <button class="dash-tab" onclick="showDTab('voortgang',this)">Voortgang</button>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div id="dtab-today">
+      <div class="section-hd">Taken voor vandaag <span class="badge-count" id="taskBadge">0</span>
+        <button class="agenda-btn" onclick="exportAgenda()" style="margin-left:auto">📅 Exporteer naar agenda</button>
+      </div>
+      <div class="task-feed" id="taskFeed"></div>
+    </div>
+    <div id="dtab-weer" style="display:none">
+      <div class="section-hd">7-daagse weersverwachting</div>
+      <div class="forecast-row" id="forecastRow"><div style="padding:16px;color:var(--muted);font-size:0.82rem">Weerdata laden... sta locatietoegang toe.</div></div>
+      <div class="section-hd">Tuintips op basis van het weer</div>
+      <div class="weather-tips-box" id="weatherTips">Weer laden...</div>
+    </div>
+    <div id="dtab-voortgang" style="display:none">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="section-hd">Breakdown per categorie</div>
+      <div class="breakdown-grid" id="breakdownGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLANNER ══ -->
+<div class="panel" id="panel-planner">
+  <div class="setup">
+    <h2>Tuinplanner</h2>
+    <div class="cg"><label>Personen</label><input type="number" id="personen" value="2" min="1" max="20" oninput="renderAll()"></div>
+    <div class="cg"><label>Tuinruimte</label>
+      <select id="ruimte" onchange="renderAll()">
+        <option value="klein">Klein (balkon/10m²)</option>
+        <option value="middel" selected>Middel (20–40m²)</option>
+        <option value="groot">Groot (40m²+)</option>
+      </select>
+    </div>
+    <div class="cg"><label>Klimaatzone</label>
+      <select id="klimaat" onchange="renderAll()">
+        <option value="gematigd" selected>Gematigd (NL/BE/DE/UK)</option>
+        <option value="mediterraan">Mediterraan (ES/IT/GR)</option>
+        <option value="tropisch">Tropisch / subtropisch</option>
+        <option value="koud">Koud (NO/SE/FI)</option>
+      </select>
+    </div>
+    <div class="cbadge" id="cbadge">🌧️ Gematigd</div>
+  </div>
+  <div class="mstrip" id="mstrip"></div>
+  <div class="pmain">
+    <div class="mhl" id="mhl"></div>
+    <div class="mtip" id="mtip"></div>
+    <div class="tgrid" id="tgrid"></div>
+    <div class="yst">📅 Jaaroverzicht</div>
+    <div class="yw"><table class="gt" id="ygrid"></table>
+      <div class="gl"><div class="gli"><div class="gld" style="background:#C8EEA0"></div>Zaaien</div><div class="gli"><div class="gld" style="background:#FFE580"></div>Uitplanten</div><div class="gli"><div class="gld" style="background:#FFBB90"></div>Oogsten</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SHOP (AFFILIATE) ══ -->
+<div class="panel" id="panel-shop">
+  <div class="shop-hero">
+    <h2>🛍️ Greenlabs Shop</h2>
+    <p>Alles wat je nodig hebt voor jouw tuin — zaden, potten, gereedschap en meer. Via onze partners bestel je direct en wij ontvangen een kleine commissie. Zo houd je Greenlabs gratis.</p>
+    <div class="shop-badge">🤝 Via affiliate partners — geen extra kosten voor jou</div>
+  </div>
+  <div class="shop-body">
+    <div class="shop-aff-note">
+      <strong>Hoe werkt dit?</strong> Klik je op "Bestel" dan ga je naar onze partner (zoals Bol.com, Bakker, of Intratuin). Koop je iets? Dan ontvangen wij een kleine commissie — <strong>zonder dat jij meer betaalt</strong>. Zo financieren we Greenlabs en houden we het betaalbaar voor jou.
+    </div>
+    <div class="shop-cats" id="shopCats"></div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+</div>
+
+<!-- ══ PLANTDOKTER ══ -->
+<div class="panel" id="panel-dokter">
+  <div class="dw">
+    <div class="dhero">
+      <h2>🔬 Plantdokter</h2>
+      <p>Upload een foto van je plant. De AI analyseert symptomen en geeft direct een behandelplan op maat.</p>
+      <div class="uz" id="uz" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.classList.add('dg')" ondragleave="this.classList.remove('dg')" ondrop="doDrop(event)">
+        <div class="ui2">📷</div>
+        <p>Sleep een foto hierheen of klik om te kiezen</p>
+        <button class="ubtn" onclick="event.stopPropagation();document.getElementById('photoInput').click()">Foto kiezen</button>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" onchange="handlePhoto(event)">
+      <div class="ppbox" id="ppbox"><img id="prevImg" src="" alt=""><button class="abtn" id="abtn" onclick="analyzePlant()">🔍 Analyseer mijn plant</button></div>
+    </div>
+    <div class="dbox" id="dbox"><div class="dbhd">🌿 AI Diagnose</div><div class="dbbody" id="dbbody"></div></div>
+  </div>
+</div>
+
+<!-- ══ KEUKEN ══ -->
+<div class="panel" id="panel-keuken">
+  <div class="kw">
+    <div class="khd"><h2>🍳 Van tuin naar tafel</h2><p>Selecteer wat je geoogst hebt — krijg bewaartips, conserveeradvies en gezonde recepten van de AI.</p></div>
+    <div class="vsel" id="vsel"></div>
+    <button class="kbtn" onclick="loadKeuken()">✨ Geef me tips en recepten</button>
+    <div class="kres" id="kres"><div class="rtabs" id="rtabs"></div><div class="kcon" id="kcon"></div></div>
+  </div>
+</div>
+
+<!-- ══ ACCOUNT ══ -->
+<div class="panel" id="panel-profiel">
+  <div class="pfw">
+    <div class="pf-header"><h2>Kies jouw plan</h2><p>Begin gratis. Upgrade wanneer je er klaar voor bent.</p></div>
+    <div class="plan-cards">
+      <div class="plan-card">
+        <div class="plan-name">🌱 Starter</div>
+        <div class="plan-price">€0 <span>/maand</span></div>
+        <div class="plan-desc">Ontdek de basis van zelfvoorzienend tuinieren.</div>
+        <ul class="plan-feats">
+          <li>Seizoenskalender (5 gewassen)</li><li>Maandelijkse taken</li><li>Locatie & klimaat</li>
+          <li class="dim">Plantdokter AI</li><li class="dim">Weerdata</li><li class="dim">Agenda-export</li><li class="dim">Shop & affiliate</li>
+        </ul>
+        <button class="plan-btn pbfree">Gratis starten</button>
+      </div>
+      <div class="plan-card popular">
+        <div class="popular-badge">Meest gekozen</div>
+        <div class="plan-name">🌿 Groen</div>
+        <div class="plan-price">€6 <span>/maand</span></div>
+        <div class="plan-desc">Alles wat je nodig hebt voor een zelfvoorzienende tuin.</div>
+        <ul class="plan-feats">
+          <li>Alle 14 gewassen</li><li>Plantdokter (onbeperkt)</li><li>7-daags weer + tips</li>
+          <li>Agenda-export</li><li>Supermarkt-meter</li><li>Keuken AI</li><li>Shop & affiliate</li>
+          <li class="dim">Extra profielen (+€2/st)</li>
+        </ul>
+        <button class="plan-btn pbpro">14 dagen gratis proberen</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">🌳 Familie</div>
+        <div class="plan-price">€6+ <span>/maand</span></div>
+        <div class="plan-desc">Groen-plan + extra tuinprofielen voor het gezin of buurt.</div>
+        <ul class="plan-feats">
+          <li>Alles uit Groen</li><li>Extra profiel = +€2/mnd</li><li>Eigen tuin per profiel</li>
+          <li>Gedeelde oogstkalender</li><li>Prioriteitsondersteuning</li>
+        </ul>
+        <button class="plan-btn pbfam" onclick="famCalc()">Bereken jouw prijs</button>
+      </div>
+    </div>
+    <div class="extra-info">
+      <h3>💡 Extra profielen</h3>
+      <div class="extra-row"><span>Greenlabs Groen (basis)</span><span class="extra-price">€6/mnd</span></div>
+      <div class="extra-row"><span>+ 1 extra profiel</span><span class="extra-price">€8/mnd</span></div>
+      <div class="extra-row"><span>+ 2 extra profielen</span><span class="extra-price">€10/mnd</span></div>
+      <div class="extra-row"><span>+ 3 extra profielen</span><span class="extra-price">€12/mnd</span></div>
+    </div>
+    <div class="extra-info">
+      <h3>🤝 Affiliate model — hoe verdienen we?</h3>
+      <div class="extra-row"><span>Abonnementen (€6/mnd)</span><span class="extra-price">✅ Vast inkomen</span></div>
+      <div class="extra-row"><span>Shop-commissie (5-12% per bestelling)</span><span class="extra-price">✅ Per verkoop</span></div>
+      <div class="extra-row"><span>Extra profielen (+€2 per stuk)</span><span class="extra-price">✅ Schaalt mee</span></div>
+      <div class="extra-row"><span>Advertenties</span><span>❌ Nooit</span></div>
+    </div>
+    <div class="extra-info">
+      <h3>🧺 Mijn oogstlogboek</h3>
+      <div id="harvestSummary" style="font-size:0.81rem;color:var(--muted);line-height:1.7"></div>
+    </div>
+    <div class="extra-info">
+      <h3>🔒 Jouw data blijft van jou</h3>
+      <div class="extra-row"><span>Geen advertenties</span><span>✅</span></div>
+      <div class="extra-row"><span>Locatie alleen voor weer & klimaat</span><span>✅</span></div>
+      <div class="extra-row"><span>Stop wanneer je wilt</span><span>✅</span></div>
+    </div>
+    <button onclick="resetState()" style="background:none;border:1.5px solid var(--red);color:var(--red);border-radius:8px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;margin-top:8px;">🗑️ Alle gegevens wissen</button>
+  </div>
+</div>
+
+<script>
+// ══════════ DATA ══════════
+const MN=['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+const ML=['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+const SZ=['Winter','Winter','Lente','Lente','Lente','Zomer','Zomer','Zomer','Herfst','Herfst','Herfst','Winter'];
+const KLIM={gematigd:{l:'🌧️ Gematigd',s:0},mediterraan:{l:'☀️ Mediterraan',s:-1},tropisch:{l:'🌴 Tropisch',s:-2},koud:{l:'❄️ Koud',s:1}};
+const TIPS=['Tuin slaapt. Plan alvast: bestel zaden, maak teeltschema.','Tomaten, paprika binnen op warme vensterbank. Lente nadert!','Drukste zaaimaand! Sla en spinazie mogen ook buiten.','Koude-harde gewassen uitplanten. Aardappelen in de grond.','Na 15 mei geen nachtvorst meer. Alles naar buiten!','Oogstseizoen! Sla, spinazie, aardbeien. Dagelijks water geven.','Volle productie: tomaten, komkommer, courgette. Regelmatig oogsten.','Nazomer. Start herfst-zaaisels. Aardappelen rooien.','Herfstgewassen floreren: sla, spinazie, boerenkool.','Rooi knolgewassen vóór vorst. Plant knoflook voor volgend jaar.','Opruimen, mulchen, compost omzetten.','Rust en planning. Bekijk zaadcatalogussen.'];
+const PL=[
+  {n:'Tomaat',e:'🍅',k:['-','-','Z','-','V','O','O','O','O','-','-','-'],p:4,u:'planten',zt:'Zaai binnen op 20°C, 0.5cm diep',vt:'Buiten na laatste nachtvorst',ot:'±3kg per plant per seizoen',r:'middel',cat:'Groenten'},
+  {n:'Sla',e:'🥬',k:['-','Z','Z','V','V,O','Z,O','Z,O','Z,O','V,O','O','-','-'],p:6,u:'planten',zt:'Zaai elke 2-3 weken voor doorlopende oogst',vt:'Kan vroeg naar buiten, verdraagt lichte vorst',ot:'Snijd buitenste bladeren, plant groeit door',r:'klein',cat:'Bladgroenten'},
+  {n:'Komkommer',e:'🥒',k:['-','-','-','Z','V','O','O','O','-','-','-','-'],p:2,u:'planten',zt:'Zaai binnen op warme plek (25°C)',vt:'Uitplanten na 15 mei',ot:'Regelmatig oogsten = meer fruit',r:'middel',cat:'Groenten'},
+  {n:'Wortel',e:'🥕',k:['-','-','Z','Z','Z','Z,O','O','O','O','O','-','-'],p:30,u:'zaden (rij)',zt:'Direct buiten, 1cm diep in losse grond',vt:'Niet verpotten — direct op eindplek',ot:'Na 10-16 weken oogsten',r:'klein',cat:'Wortelgroenten'},
+  {n:'Courgette',e:'🫛',k:['-','-','-','Z','V','O','O','O','O','-','-','-'],p:1,u:'planten',zt:'Zaai binnen in pot, 2cm diep',vt:'Na half mei naar buiten',ot:'Oogst jong (15-20cm)',r:'middel',cat:'Groenten'},
+  {n:'Aardappel',e:'🥔',k:['-','-','-','Z','-','-','O','O','O','-','-','-'],p:10,u:'poters',zt:'Poot in april, 10-15cm diep',vt:'Aanaarden als loof 15cm hoog is',ot:'±3kg per plant',r:'groot',cat:'Knolgewassen'},
+  {n:'Boon',e:'🫘',k:['-','-','-','-','Z','Z,O','O','O','O','-','-','-'],p:20,u:'zaden',zt:'Direct buiten na 15 mei, 4cm diep',vt:'Geen verpotten — direct zaaien',ot:'Regelmatig plukken = meer oogst',r:'klein',cat:'Peulvruchten'},
+  {n:'Ui',e:'🧅',k:['Z','-','Z','V','-','-','-','O','O','-','-','Z'],p:15,u:'plantuitjes',zt:'Plant uitjes 3cm diep, 10cm afstand',vt:'Direct poten, geen verpotten',ot:'Oogst als loof omvalt',r:'klein',cat:'Knolgewassen'},
+  {n:'Aardbei',e:'🍓',k:['-','-','-','V','V','O','O','-','-','V','-','-'],p:6,u:'planten',zt:'Koop jonge planten of uitlopers',vt:'Plant april/mei of september',ot:'Juni-juli is piekseizoen',r:'klein',cat:'Fruit'},
+  {n:'Paprika',e:'🫑',k:['-','-','Z','-','V','V','O','O','O','-','-','-'],p:2,u:'planten',zt:'Zaai maart binnen op 25°C',vt:'Buiten pas eind mei',ot:'Begin groen, rijpt tot rood/geel',r:'middel',cat:'Groenten'},
+  {n:'Knoflook',e:'🧄',k:['-','-','-','-','-','-','O','O','-','-','Z','Z'],p:10,u:'teentjes',zt:'Plant okt/nov, spits omhoog 5cm diep',vt:'Direct in border',ot:'Oogst als loof bruin wordt',r:'klein',cat:'Knolgewassen'},
+  {n:'Spinazie',e:'🌿',k:['Z','Z','Z','Z,O','O','O','-','-','Z','O','O','Z'],p:15,u:'zaden (rij)',zt:'Zaai elke 3 weken doorlopend',vt:'Direct zaaien',ot:'Snijd buitenste bladeren',r:'klein',cat:'Bladgroenten'},
+  {n:'Pompoen',e:'🎃',k:['-','-','-','Z','V','V','O','O','O','-','-','-'],p:1,u:'planten',zt:'Zaai binnen april, warm',vt:'Na half mei buiten, 1m² ruimte',ot:'Bewaart maanden na oogst',r:'groot',cat:'Groenten'},
+  {n:'Broccoli',e:'🥦',k:['-','-','Z','Z','V','-','-','O','O','O','O','-'],p:3,u:'planten',zt:'Zaai binnen of buiten 0.5cm diep',vt:'40cm afstand na hardstelling',ot:'Oogst vóór bloei',r:'middel',cat:'Bladgroenten'},
+];
+
+// SHOP PRODUCTEN (affiliate)
+const SHOP_ITEMS=[
+  {id:1,cat:'Zaden',name:'Biologisch zadenpakket (30 soorten)',emoji:'🌱',desc:'Alles om dit seizoen te starten. Tomaat, sla, wortel, courgette en meer.',price:'€24,95',url:'https://www.bol.com/nl/s/?searchtext=biologisch+zadenpakket',partner:'Bol.com',commission:'8%'},
+  {id:2,cat:'Zaden',name:'Tomatenzaden (6 rassen)',emoji:'🍅',desc:'Inclusief cherry, vleestomaat en heritage-rassen.',price:'€8,95',url:'https://www.bol.com/nl/s/?searchtext=tomatenzaden+biologisch',partner:'Bol.com',commission:'8%'},
+  {id:3,cat:'Zaden',name:'Kruidenmix pakket',emoji:'🌿',desc:'Basilicum, peterselie, bieslook, dille, koriander.',price:'€6,50',url:'https://www.bol.com/nl/s/?searchtext=kruidenzaden+pakket',partner:'Bol.com',commission:'8%'},
+  {id:4,cat:'Potten & Bakken',name:'Verhoogd plantenbak 120×40cm',emoji:'🪴',desc:'Ideaal voor kleine tuinen en balkons. Gecederd hout.',price:'€89,00',url:'https://www.bol.com/nl/s/?searchtext=verhoogd+plantenbak+hout',partner:'Bol.com',commission:'6%'},
+  {id:5,cat:'Potten & Bakken',name:'Terracotta potten set (5 stuks)',emoji:'🏺',desc:'Klassieke terracotta, Ø 15–30cm. Perfect voor kruiden.',price:'€34,95',url:'https://www.bol.com/nl/s/?searchtext=terracotta+potten+set',partner:'Bol.com',commission:'6%'},
+  {id:6,cat:'Potten & Bakken',name:'Zelfbesproeiende potten set',emoji:'💧',desc:'Nooit meer vergeten water geven. Set van 3 stuks.',price:'€29,95',url:'https://www.bol.com/nl/s/?searchtext=zelfbesproeiende+pot',partner:'Bol.com',commission:'6%'},
+  {id:7,cat:'Gereedschap',name:'Starterkit tuingereedschap (7-delig)',emoji:'🔧',desc:'Schoffel, troffel, vork, handschoenen en meer.',price:'€42,00',url:'https://www.bol.com/nl/s/?searchtext=tuingereedschap+starterkit',partner:'Bol.com',commission:'7%'},
+  {id:8,cat:'Gereedschap',name:'Compostvat 300L',emoji:'♻️',desc:'Zet je keukenafval om in goud voor de tuin.',price:'€79,00',url:'https://www.bol.com/nl/s/?searchtext=compostvat+300+liter',partner:'Bol.com',commission:'7%'},
+  {id:9,cat:'Bemesting',name:'Biologische tuinaarde 40L',emoji:'🌍',desc:'Rijke potgrond voor groenten en fruit. Peat-vrij.',price:'€18,95',url:'https://www.bol.com/nl/s/?searchtext=biologische+tuinaarde+groenten',partner:'Bol.com',commission:'5%'},
+  {id:10,cat:'Bemesting',name:'Wormenmest (5kg)',emoji:'🪱',desc:'De beste biologische bemesting voor meer oogst.',price:'€22,50',url:'https://www.bol.com/nl/s/?searchtext=wormenmest+biologisch',partner:'Bol.com',commission:'5%'},
+  {id:11,cat:'Bewaren',name:'Inmaakpotten set (12 stuks)',emoji:'🫙',desc:'Weckpotten 500ml. Ideaal voor conserveren.',price:'€32,00',url:'https://www.bol.com/nl/s/?searchtext=weckpotten+inmaken+set',partner:'Bol.com',commission:'8%'},
+  {id:12,cat:'Bewaren',name:'Vacuüm voedselopslag set',emoji:'🧊',desc:'Houd je oogst langer vers. Set van 10 containers.',price:'€28,95',url:'https://www.bol.com/nl/s/?searchtext=vacuüm+voedselopslag+groenten',partner:'Bol.com',commission:'8%'},
+];
+
+const SHOP_CATS=['Alle','Zaden','Potten & Bakken','Gereedschap','Bemesting','Bewaren'];
+
+// ══════════ STATE ══════════
+let cm=new Date().getMonth(),photoB64=null,kResp={},selVeg=[],activeKTab=null;
+let doneTasks=new Set(),userLat=null,userLon=null,activeSCat='Alle';
+let deferredPWA=null;
+let harvestLog={}; // { 'Tomaat': aantal keer geoogst }
+
+// ══════════ PERSISTENTIE (localStorage) ══════════
+const STORE_KEY='greenlabs_v1';
+function saveState(){
+  try{
+    const data={
+      personen:document.getElementById('personen').value,
+      ruimte:document.getElementById('ruimte').value,
+      klimaat:document.getElementById('klimaat').value,
+      doneTasks:[...doneTasks],
+      doneMonth:cm,
+      harvestLog,
+      userLat,userLon,
+      locLabel:document.getElementById('locPill').textContent,
+      savedAt:Date.now()
+    };
+    localStorage.setItem(STORE_KEY,JSON.stringify(data));
+  }catch(e){/* private mode / quota */}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(d.personen)document.getElementById('personen').value=d.personen;
+    if(d.ruimte)document.getElementById('ruimte').value=d.ruimte;
+    if(d.klimaat)document.getElementById('klimaat').value=d.klimaat;
+    if(d.doneMonth===cm&&Array.isArray(d.doneTasks))doneTasks=new Set(d.doneTasks);
+    if(d.harvestLog)harvestLog=d.harvestLog;
+    if(d.userLat){userLat=d.userLat;userLon=d.userLon;}
+    if(d.locLabel&&d.locLabel.startsWith('📍')&&!d.locLabel.includes('...'))document.getElementById('locPill').textContent=d.locLabel;
+    return true;
+  }catch(e){return false;}
+}
+function resetState(){
+  if(confirm('Weet je zeker dat je alle gegevens wilt wissen? Dit kan niet ongedaan worden gemaakt.')){
+    localStorage.removeItem(STORE_KEY);
+    location.reload();
+  }
+}
+
+// ══════════ PWA ══════════
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPWA=e;
+  document.getElementById('pwaBanner').classList.remove('hidden');
+});
+window.addEventListener('appinstalled',()=>{ document.getElementById('pwaBanner').classList.add('hidden'); });
+
+function installPWA(){
+  if(deferredPWA){deferredPWA.prompt();deferredPWA.userChoice.then(()=>{deferredPWA=null;closePWA();});}
+  else{
+    const ua=navigator.userAgent;
+    if(/iPhone|iPad|iPod/.test(ua))alert('📱 iPhone/iPad:\n\n1. Tik op het Deel-icoon (□↑) onderaan Safari\n2. Kies "Zet op beginscherm"\n3. Tik "Voeg toe" — klaar!');
+    else if(/Android/.test(ua))alert('📱 Android:\n\n1. Tik op de drie puntjes (⋮) rechtsboven in Chrome\n2. Kies "Toevoegen aan startscherm"\n3. Tik "Toevoegen" — klaar!');
+    else alert('💻 Desktop Chrome:\n\n1. Klik op het install-icoon (⊕) in de adresbalk\n2. Of: Menu → "Greenlabs installeren"');
+  }
+}
+function closePWA(){document.getElementById('pwaBanner').classList.add('hidden');}
+
+// Check of al geïnstalleerd
+if(window.matchMedia('(display-mode: standalone)').matches){ document.getElementById('pwaBanner').classList.add('hidden'); }
+
+// ══════════ NAV ══════════
+function sw(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════ LOCATIE + WEER ══════════
+async function detectLoc(){
+  const pill=document.getElementById('locPill');
+  pill.textContent='📍 Ophalen...';
+  if(!navigator.geolocation){pill.textContent='📍 N.v.t.';return;}
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    userLat=pos.coords.latitude;userLon=pos.coords.longitude;
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${userLat}&lon=${userLon}&format=json`);
+      const d=await r.json();
+      const stad=d.address?.city||d.address?.town||d.address?.village||'';
+      const land=d.address?.country||'';
+      pill.textContent=`📍 ${stad||land}`;
+      const cc=(d.address?.country_code||'').toLowerCase();
+      const med=['es','pt','it','gr','hr','me','al','mk','ba','rs','mt','cy','ma','tn','tr'];
+      const koud=['no','se','fi','is','ee','lv','lt','ca'];
+      const trop=['th','id','my','ph','vn','sg','br','pe','co','mx','in','gh','ng','ke'];
+      let z='gematigd';
+      if(med.includes(cc))z='mediterraan';
+      else if(koud.includes(cc))z='koud';
+      else if(trop.includes(cc))z='tropisch';
+      document.getElementById('klimaat').value=z;
+      renderAll();
+    }catch(e){pill.textContent='📍 Fout';}
+    fetchWeer();
+  },()=>{pill.textContent='📍 Geen toegang';});
+}
+
+function wcEmoji(wc){if(wc<=1)return'☀️';if(wc<=3)return'⛅';if(wc<=49)return'☁️';if(wc<=67)return'🌧️';if(wc<=77)return'❄️';if(wc<=82)return'🌦️';return'⛈️';}
+function wcText(wc){if(wc<=1)return'Zonnig';if(wc<=3)return'Licht bewolkt';if(wc<=49)return'Bewolkt';if(wc<=67)return'Regen';if(wc<=77)return'Sneeuw';if(wc<=82)return'Buien';return'Onweer';}
+const DAGNM=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+
+async function fetchWeer(){
+  if(!userLat||!userLon)return;
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&current=temperature_2m,weathercode,relative_humidity_2m,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`;
+    const res=await fetch(url);const d=await res.json();
+    const c=d.current,t=Math.round(c.temperature_2m),wc=c.weathercode;
+    document.getElementById('weatherWidget').innerHTML=`<div class="weather-icon">${wcEmoji(wc)}</div><div><div class="weather-temp">${t}°C</div><div class="weather-desc">${wcText(wc)}</div><div class="weather-extra">💧${c.relative_humidity_2m}% · 💨${Math.round(c.windspeed_10m)}km/u</div></div>`;
+    if(d.daily){
+      document.getElementById('forecastRow').innerHTML=d.daily.time.map((dt,i)=>{
+        const day=new Date(dt),dn=i===0?'Vandaag':i===1?'Morgen':DAGNM[day.getDay()];
+        return`<div class="fc-card"><div class="fc-day">${dn}</div><div class="fc-ico">${wcEmoji(d.daily.weathercode[i])}</div><div class="fc-tmp">${Math.round(d.daily.temperature_2m_max[i])}°/${Math.round(d.daily.temperature_2m_min[i])}°</div><div class="fc-rain">🌧 ${d.daily.precipitation_probability_max[i]||0}%</div></div>`;
+      }).join('');
+      const maxR=Math.max(...d.daily.precipitation_probability_max),maxT=Math.max(...d.daily.temperature_2m_max),minT=Math.min(...d.daily.temperature_2m_min);
+      let tips=[];
+      if(maxR>70)tips.push('🌧️ <strong>Veel neerslag</strong> — stel water geven uit, check afwatering potten.');
+      else if(maxR<20&&maxT>22)tips.push('☀️ <strong>Droog & warm</strong> — water geven voor 9u of na 18u.');
+      if(maxT>28)tips.push('🥵 <strong>Hittegolf</strong> — mulch de grond, bescherm sla en komkommer.');
+      if(minT<5&&minT>0)tips.push('🥶 <strong>Lichte nachtvorst mogelijk</strong> — bescherm jonge zaailingen met vlies.');
+      if(minT<=0)tips.push('❄️ <strong>Nachtvorst!</strong> — breng vorstgevoelige planten naar binnen vanavond!');
+      if(!tips.length)tips.push('🌤️ Normale tuinomstandigheden. Houd je reguliere taken aan.');
+      document.getElementById('weatherTips').innerHTML=tips.join('<br><br>');
+    }
+  }catch(e){document.getElementById('weatherWidget').innerHTML='<div style="font-size:0.78rem;opacity:0.6">Weerdata niet beschikbaar</div>';}
+}
+
+// ══════════ METER ══════════
+function calcPct(){
+  const r=document.getElementById('ruimte').value;
+  const base={klein:28,middel:52,groot:78}[r]||40;
+  const s=[8,10,16,28,38,54,63,63,48,32,14,8][cm];
+  let pct=base*0.5+s*0.5;
+  // Echte oogst-bonus: elke gelogde oogst telt mee (max +20%)
+  const totalHarvests=Object.values(harvestLog).reduce((a,b)=>a+b,0);
+  const harvestBonus=Math.min(20,totalHarvests*2);
+  pct=pct*0.8+harvestBonus+ (base*0.5+s*0.5)*0.2;
+  return Math.min(98,Math.round(pct));
+}
+function updateMeter(){
+  const p=calcPct();
+  document.getElementById('superPct').textContent=p+'%';
+  setTimeout(()=>document.getElementById('meterFill').style.width=p+'%',120);
+}
+
+// ══════════ DASHBOARD ══════════
+function getP(){return parseInt(document.getElementById('personen').value)||2;}
+function getR(){return document.getElementById('ruimte').value;}
+function getK(){return document.getElementById('klimaat').value;}
+function shiftK(k,s){if(!s)return k;const n=k.length;return k.map((_,i)=>k[((i-s)%n+n)%n]);}
+function filtP(){const r=getR();return PL.filter(p=>r==='klein'?p.r==='klein':r==='middel'?p.r!=='groot':true);}
+
+function buildTasks(){
+  const s=KLIM[getK()].s,pl=filtP(),tasks=[];
+  pl.forEach(p=>{
+    const k=shiftK(p.k,s),c=k[cm],q=Math.max(1,Math.round(p.p*getP()));
+    if(c.includes('Z'))tasks.push({id:`z${p.n}`,e:p.e,name:p.n,sub:p.zt,type:'z',qty:`${q} ${p.u}`});
+    if(c.includes('V'))tasks.push({id:`v${p.n}`,e:p.e,name:p.n,sub:p.vt,type:'v',qty:`${q} ${p.u}`});
+    if(c.includes('O'))tasks.push({id:`o${p.n}`,e:p.e,name:p.n,sub:p.ot,type:'o',qty:`${q} ${p.u}`,crop:p.n});
+  });
+  document.getElementById('taskBadge').textContent=tasks.length;
+  document.getElementById('taskCount').textContent=tasks.length;
+  const tl={'z':'Zaaien','v':'Uitplanten','o':'Oogsten'};
+  document.getElementById('taskFeed').innerHTML=tasks.length?tasks.map(t=>{
+    const harvestBtn=t.type==='o'?`<button class="harvest-btn" onclick="event.stopPropagation();logHarvest('${t.crop}')">＋ Oogst loggen${harvestLog[t.crop]?` (${harvestLog[t.crop]}×)`:''}</button>`:'';
+    return `
+    <div class="task-card${doneTasks.has(t.id)?' done':''}" onclick="toggleTask('${t.id}')">
+      <div class="tc-check">${doneTasks.has(t.id)?'✓':''}</div>
+      <div class="tc-emoji">${t.e}</div>
+      <div class="tc-info"><div class="tc-name">${t.name} — ${t.qty}</div><div class="tc-sub">${t.sub}</div>${harvestBtn}</div>
+      <div class="tc-type type-${t.type}">${tl[t.type]}</div>
+    </div>`;}).join(''):`<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.84rem">Geen taken deze maand. Genieten! 🌿</div>`;
+}
+function logHarvest(crop){
+  harvestLog[crop]=(harvestLog[crop]||0)+1;
+  buildTasks();updateMeter();buildStats();buildHarvestSummary();saveState();
+}
+function buildHarvestSummary(){
+  const el=document.getElementById('harvestSummary');
+  if(!el)return;
+  const entries=Object.entries(harvestLog).filter(([k,v])=>v>0);
+  if(!entries.length){el.innerHTML='Nog niets geoogst. Log je oogst op het Dashboard om je supermarkt-meter te laten groeien! 🌱';return;}
+  const total=entries.reduce((a,[,v])=>a+v,0);
+  el.innerHTML=`<strong style="color:var(--forest)">${total} keer geoogst dit seizoen 🎉</strong><br>`+
+    entries.sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+      const plant=PL.find(p=>p.n===k);
+      return `${plant?plant.e:'🌿'} ${k}: ${v}×`;
+    }).join(' · ');
+}
+function toggleTask(id){if(doneTasks.has(id))doneTasks.delete(id);else doneTasks.add(id);buildTasks();saveState();}
+
+function buildStats(){
+  const p=calcPct(),pl=filtP();
+  const oogstN=pl.filter(x=>{const k=shiftK(x.k,KLIM[getK()].s);return k[cm].includes('O');}).length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="stat-icon">🛒</div><div class="stat-val">${p}%</div><div class="stat-label">Supermarkt-vrij</div><div class="stat-trend">Doel: 80%</div></div>
+    <div class="stat-card"><div class="stat-icon">🧺</div><div class="stat-val">${oogstN}</div><div class="stat-label">Te oogsten nu</div></div>
+    <div class="stat-card"><div class="stat-icon">🌱</div><div class="stat-val">${pl.length}</div><div class="stat-label">Actieve gewassen</div></div>
+    <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">${ML[cm].slice(0,3)}</div><div class="stat-label">Huidige maand</div></div>`;
+  const cats=[['Bladgroenten',82],['Groenten',p],['Fruit',38],['Knolgewassen',58],['Wortelgroenten',70],['Peulvruchten',52]];
+  document.getElementById('breakdownGrid').innerHTML=cats.map(([n,v])=>`
+    <div class="bk-card"><div class="bk-top"><div class="bk-name">${n}</div><div class="bk-pct">${v}%</div></div>
+    <div class="bk-bar-bg"><div class="bk-bar-fill" style="width:${v}%"></div></div>
+    <div class="bk-note">Gedekt door jouw tuin dit seizoen</div></div>`).join('');
+}
+
+function showDTab(id,btn){
+  ['today','weer','voortgang'].forEach(t=>document.getElementById('dtab-'+t).style.display=t===id?'block':'none');
+  document.querySelectorAll('.dash-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(id==='voortgang')buildStats();
+}
+
+// ══════════ AGENDA EXPORT ══════════
+function exportAgenda(){
+  const s=KLIM[getK()].s,pl=filtP();
+  const yr=new Date().getFullYear(),mo=String(cm+1).padStart(2,'0');
+  let ics=`BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Greenlabs//NL\n`;
+  pl.forEach(p=>{
+    const k=shiftK(p.k,s),c=k[cm],q=Math.max(1,Math.round(p.p*getP())),dt=`${yr}${mo}15`;
+    const ev=(sum,desc)=>`BEGIN:VEVENT\nDTSTART;VALUE=DATE:${dt}\nDTEND;VALUE=DATE:${dt}\nSUMMARY:${sum}\nDESCRIPTION:${desc}\nEND:VEVENT\n`;
+    if(c.includes('Z'))ics+=ev(`🌱 Zaaien: ${p.n}`,`${p.zt} — ${q} ${p.u}`);
+    if(c.includes('V'))ics+=ev(`🪴 Uitplanten: ${p.n}`,`${p.vt} — ${q} ${p.u}`);
+    if(c.includes('O'))ics+=ev(`🧺 Oogsten: ${p.n}`,p.ot);
+  });
+  ics+=`END:VCALENDAR`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  a.download=`greenlabs-${ML[cm].toLowerCase()}.ics`;a.click();
+}
+
+// ══════════ PLANNER ══════════
+function renderMstrip(){document.getElementById('mstrip').innerHTML=MN.map((m,i)=>`<button class="mbtn${i===cm?' active':''}" onclick="selM(${i})">${m}</button>`).join('');}
+function selM(i){cm=i;doneTasks=new Set();renderMstrip();renderMonth();buildTasks();updateMeter();saveState();}
+function renderMonth(){
+  const p=getP(),s=KLIM[getK()].s,pl=filtP(),m=cm;
+  document.getElementById('mhl').textContent=`${ML[m]} — ${SZ[m]}`;
+  document.getElementById('mtip').textContent=TIPS[m];
+  document.getElementById('cbadge').textContent=KLIM[getK()].l;
+  const z=[],v=[],o=[],w=[];
+  pl.forEach(pl=>{const k=shiftK(pl.k,s),c=k[m],q=Math.max(1,Math.round(pl.p*p));
+    if(c.includes('Z'))z.push({...pl,q});if(c.includes('V'))v.push({...pl,q});if(c.includes('O'))o.push({...pl,q});
+    if(k.slice(0,m).some(x=>x!=='-')&&!c.includes('Z')&&!c.includes('V')&&!c.includes('O'))w.push(pl);
+  });
+  function col(items,cls,ico,tit,tk,emp){
+    const rows=items.length?items.map(p=>`<div class="ti2"><div class="te2">${p.e}</div><div class="tin2"><div class="tn2">${p.n}</div><div class="td2">${p[tk]}</div></div><div class="tq2">${p.q} ${p.u}</div></div>`).join(''):`<div class="ec2">${emp}</div>`;
+    return`<div class="tc2 ${cls}"><div class="tc2-hd"><span>${ico}</span>${tit}</div><div class="tli2">${rows}</div></div>`;
+  }
+  const wr=w.slice(0,4).map(p=>`<div class="ti2"><div class="te2">${p.e}</div><div class="tin2"><div class="tn2">${p.n}</div><div class="td2">Controleer water, plagen en groei</div></div></div>`).join('')||`<div class="ec2">Geen actieve planten</div>`;
+  document.getElementById('tgrid').innerHTML=col(z,'cz2','🌱','Zaaien & Poten','zt','Niets te zaaien')+col(v,'cv2','🪴','Uitplanten / Verpotten','vt','Niets te verplanten')+col(o,'co2','🧺','Oogsten','ot','Nog geen oogst')+`<div class="tc2 cw2"><div class="tc2-hd"><span>💧</span>Verzorging</div><div class="tli2">${wr}</div></div>`;
+}
+function renderYgrid(){
+  const s=KLIM[getK()].s,pl=filtP();
+  const hdr=`<tr><th style="text-align:left;padding-left:11px">Plant</th>${MN.map(m=>`<th>${m}</th>`).join('')}</tr>`;
+  const rows=pl.map(p=>{const k=shiftK(p.k,s);return`<tr><td class="pn">${p.e} ${p.n}</td>${k.map((c,i)=>{const hi=i===cm?'background:#E8F5D8;':'';const Z=c.includes('Z'),V=c.includes('V'),O=c.includes('O');let d='';if(Z&&V)d=`<span class="dot dzv">🌱</span>`;else if(Z&&O)d=`<span class="dot dzo">🌱</span>`;else if(V&&O)d=`<span class="dot dvo">🪴</span>`;else if(Z)d=`<span class="dot dz">🌱</span>`;else if(V)d=`<span class="dot dv">🪴</span>`;else if(O)d=`<span class="dot do">🧺</span>`;return`<td style="${hi}">${d}</td>`;}).join('')}</tr>`;}).join('');
+  document.getElementById('ygrid').innerHTML=hdr+rows;
+}
+
+// ══════════ SHOP ══════════
+function buildShop(){
+  document.getElementById('shopCats').innerHTML=SHOP_CATS.map(c=>`<button class="shop-cat${c===activeSCat?' active':''}" onclick="filterShop('${c}')">${c}</button>`).join('');
+  const items=activeSCat==='Alle'?SHOP_ITEMS:SHOP_ITEMS.filter(i=>i.cat===activeSCat);
+  document.getElementById('shopGrid').innerHTML=items.map(i=>`
+    <div class="shop-card" onclick="shopClick('${i.url}','${i.name}')">
+      <div class="shop-img">${i.emoji}</div>
+      <div class="shop-info">
+        <div class="shop-name">${i.name}</div>
+        <div class="shop-desc">${i.desc}</div>
+        <div class="shop-bottom">
+          <div><div class="shop-price">${i.price}</div><div class="shop-price-sub">via ${i.partner}</div></div>
+          <button class="shop-btn">Bestel →</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function filterShop(cat){activeSCat=cat;buildShop();}
+function shopClick(url,name){
+  // Affiliate tracking (in productie: eigen tracking URL)
+  console.log(`Affiliate klik: ${name}`);
+  window.open(url,'_blank','noopener');
+}
+
+// ══════════ PLANTDOKTER ══════════
+function doDrop(e){e.preventDefault();document.getElementById('uz').classList.remove('dg');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))procPhoto(f);}
+function handlePhoto(e){const f=e.target.files[0];if(f)procPhoto(f);}
+function procPhoto(f){const r=new FileReader();r.onload=ev=>{photoB64=ev.target.result.split(',')[1];document.getElementById('prevImg').src=ev.target.result;document.getElementById('ppbox').style.display='block';document.getElementById('abtn').style.display='block';document.getElementById('dbox').style.display='none';};r.readAsDataURL(f);}
+async function analyzePlant(){
+  if(!photoB64)return;
+  const box=document.getElementById('dbox'),body=document.getElementById('dbbody');
+  box.style.display='block';
+  body.innerHTML=`<div class="spin-wrap"><div class="spinner"></div><br>AI analyseert...</div>`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photoB64}},{type:'text',text:`Tuinexpert diagnose in het Nederlands als HTML:\n<h4>🌿 Wat ik zie</h4>[plant + symptomen]\n<h4>⚠️ Mogelijke problemen</h4>[max 3 diagnoses]\n<h4>✅ Behandeling</h4><ul>[stappen]</ul>\n<h4>🛡️ Preventie</h4><ul>[tips]</ul>\nPraktisch en hoopvol.`}]}]})});
+    const d=await res.json();
+    body.innerHTML=d.content?.map(c=>c.text||'').join('')||'Geen antwoord.';
+  }catch(e){body.innerHTML='<p>Analyse mislukt. Probeer opnieuw.</p>';}
+}
+
+// ══════════ KEUKEN ══════════
+function buildVsel(){document.getElementById('vsel').innerHTML=filtP().map(p=>`<div class="vc${selVeg.includes(p.n)?' sel':''}" onclick="togV('${p.n}',this)">${p.e} ${p.n}</div>`).join('');}
+function togV(n,el){const i=selVeg.indexOf(n);if(i>=0){selVeg.splice(i,1);el.classList.remove('sel');}else{selVeg.push(n);el.classList.add('sel');}}
+async function loadKeuken(){
+  if(!selVeg.length){alert('Selecteer minstens één groente.');return;}
+  kResp={};activeKTab=null;
+  document.getElementById('kres').style.display='block';
+  document.getElementById('kcon').innerHTML=`<div class="spin-wrap"><div class="spinner"></div><br>AI denkt mee...</div>`;
+  const cats=[
+    {id:'bewaar',l:'📦 Bewaren',q:`Bewaartips voor: ${selVeg.join(', ')}. Per groente: houdbaarheid, methode, tekenen van bederf. HTML met <h4> per groente, <ul>. Nederlands.`},
+    {id:'recept',l:'🍽️ Recepten',q:`3 gezonde recepten met: ${selVeg.join(', ')}. Per recept: naam, beschrijving, ingrediënten, tijd. HTML <h4> per recept. Nederlands.`},
+    {id:'conserv',l:'🫙 Conserveren',q:`Conserveren voor winter: ${selVeg.join(', ')}. Invriezen, fermenteren, inmaken, drogen. HTML <h4> per methode. Nederlands.`},
+  ];
+  document.getElementById('rtabs').innerHTML=cats.map(c=>`<button class="rtab" id="rt-${c.id}" onclick="showKTab('${c.id}')">${c.l}</button>`).join('');
+  cats.forEach(c=>fetchKeuken(c));showKTab('bewaar');
+}
+async function fetchKeuken(cat){
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:cat.q}]})});
+    const d=await res.json();kResp[cat.id]=d.content?.map(c=>c.text||'').join('')||'Geen resultaat.';
+    if(activeKTab===cat.id)showKTab(cat.id);
+  }catch(e){kResp[cat.id]='<p>Laden mislukt.</p>';if(activeKTab===cat.id)showKTab(cat.id);}
+}
+function showKTab(id){
+  activeKTab=id;
+  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active'));
+  const el=document.getElementById('rt-'+id);if(el)el.classList.add('active');
+  document.getElementById('kcon').innerHTML=kResp[id]||`<div class="spin-wrap"><div class="spinner"></div><br>Laden...</div>`;
+}
+
+// ══════════ ACCOUNT ══════════
+function famCalc(){const n=parseInt(prompt('Hoeveel extra profielen wil je? (1, 2, 3...)','1'))||0;alert(`Met ${n} extra profiel${n===1?'':'en'}:\n\n€6 basis + ${n}× €2 = €${6+n*2}/maand\n\n✅ 14 dagen gratis proberen`);}
+
+// ══════════ RENDER ALL ══════════
+function renderAll(){
+  document.getElementById('cbadge').textContent=KLIM[getK()].l;
+  renderMstrip();renderMonth();renderYgrid();buildVsel();buildTasks();updateMeter();buildShop();buildHarvestSummary();
+  saveState();
+}
+
+// ══════════ PWA: manifest + service worker ══════════
+(function setupPWA(){
+  try{
+    const icon="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Crect width='512' height='512' rx='110' fill='%232D4A28'/%3E%3Ctext x='256' y='370' font-size='300' text-anchor='middle'%3E%F0%9F%8C%B1%3C/text%3E%3C/svg%3E";
+    const manifest={
+      name:'Greenlabs — Tuinplanner',short_name:'Greenlabs',
+      description:'Jouw persoonlijke tuinplanner voor zelfvoorzienend leven.',
+      start_url:'.',display:'standalone',background_color:'#F4EFE4',theme_color:'#2D4A28',
+      icons:[{src:icon,sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]
+    };
+    const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+    document.getElementById('manifestLink').href=URL.createObjectURL(blob);
+    // Service worker (cache shell voor offline gebruik)
+    if('serviceWorker' in navigator){
+      const sw=`
+        const C='greenlabs-v1';
+        self.addEventListener('install',e=>{self.skipWaiting();});
+        self.addEventListener('activate',e=>{e.waitUntil(self.clients.claim());});
+        self.addEventListener('fetch',e=>{
+          if(e.request.method!=='GET')return;
+          e.respondWith(
+            caches.open(C).then(cache=>
+              cache.match(e.request).then(hit=>{
+                const net=fetch(e.request).then(res=>{
+                  if(res&&res.status===200&&e.request.url.startsWith('http'))cache.put(e.request,res.clone());
+                  return res;
+                }).catch(()=>hit);
+                return hit||net;
+              })
+            )
+          );
+        });`;
+      const swUrl=URL.createObjectURL(new Blob([sw],{type:'text/javascript'}));
+      navigator.serviceWorker.register(swUrl).catch(()=>{});
+    }
+  }catch(e){}
+})();
+
+// ══════════ INIT ══════════
+const h=new Date().getHours();
+document.getElementById('greetMsg').textContent=`${h<12?'Goedemorgen':h<18?'Goedemiddag':'Goedenavond'} 🌱`;
+const hadData=loadState();
+renderAll();
+if(!userLat)setTimeout(detectLoc,400); else fetchWeer();
+</script>
+</body>
+</html>
