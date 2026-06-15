@@ -263,6 +263,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 </head>
 <body>
 
+<!-- ONBOARDING / WELKOM -->
+<div id="onboarding" style="display:none;position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#2D4A28,#1A3410);overflow-y:auto;">
+  <div style="max-width:480px;margin:0 auto;padding:40px 24px;color:#FDFAF4;min-height:100%;display:flex;flex-direction:column;justify-content:center;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-size:3.5rem;">🌱</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400;margin:8px 0;">Welkom bij Greenlabs</h1>
+      <p style="opacity:0.7;font-size:0.92rem;line-height:1.6;">Jouw persoonlijke tuinplanner. Laten we in 3 stapjes jouw tuin instellen — dan weet de app precies wat jij wanneer moet doen.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:22px;">
+      <label style="display:block;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">1. Voor hoeveel personen teel je?</label>
+      <input type="number" id="obPersonen" value="2" min="1" max="20" style="width:100%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);color:#FDFAF4;border-radius:8px;padding:11px 14px;font-size:1rem;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:18px;">
+
+      <label style="display:block;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">2. Hoeveel tuinruimte heb je?</label>
+      <select id="obRuimte" style="width:100%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);color:#FDFAF4;border-radius:8px;padding:11px 14px;font-size:1rem;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:18px;">
+        <option value="klein">Klein — balkon of ~10m²</option>
+        <option value="middel" selected>Middel — 20 tot 40m²</option>
+        <option value="groot">Groot — meer dan 40m²</option>
+      </select>
+
+      <label style="display:block;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">3. In welk klimaat woon je?</label>
+      <select id="obKlimaat" style="width:100%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);color:#FDFAF4;border-radius:8px;padding:11px 14px;font-size:1rem;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px;">
+        <option value="gematigd" selected>Gematigd (NL / BE / DE / UK)</option>
+        <option value="mediterraan">Mediterraan (ES / IT / GR)</option>
+        <option value="tropisch">Tropisch / subtropisch</option>
+        <option value="koud">Koud (NO / SE / FI / CA)</option>
+      </select>
+      <p style="font-size:0.72rem;opacity:0.5;margin-bottom:4px;">We vragen straks je locatie voor het weer — dat past je klimaat automatisch aan.</p>
+    </div>
+    <button onclick="finishOnboarding()" style="width:100%;margin-top:20px;background:#8BBF6A;color:#2D4A28;border:none;border-radius:10px;padding:15px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Begin met tuinieren 🌿</button>
+    <p style="text-align:center;font-size:0.72rem;opacity:0.45;margin-top:14px;">Gratis te gebruiken · Geen account nodig om te starten</p>
+  </div>
+</div>
+
+
 <!-- PWA INSTALL BANNER -->
 <div class="pwa-banner" id="pwaBanner">
   <div class="pwa-banner-icon">📱</div>
@@ -484,20 +518,40 @@ const SZ=['Winter','Winter','Lente','Lente','Lente','Zomer','Zomer','Zomer','Her
 const KLIM={gematigd:{l:'🌧️ Gematigd',s:0},mediterraan:{l:'☀️ Mediterraan',s:-1},tropisch:{l:'🌴 Tropisch',s:-2},koud:{l:'❄️ Koud',s:1}};
 const TIPS=['Tuin slaapt. Plan alvast: bestel zaden, maak teeltschema.','Tomaten, paprika binnen op warme vensterbank. Lente nadert!','Drukste zaaimaand! Sla en spinazie mogen ook buiten.','Koude-harde gewassen uitplanten. Aardappelen in de grond.','Na 15 mei geen nachtvorst meer. Alles naar buiten!','Oogstseizoen! Sla, spinazie, aardbeien. Dagelijks water geven.','Volle productie: tomaten, komkommer, courgette. Regelmatig oogsten.','Nazomer. Start herfst-zaaisels. Aardappelen rooien.','Herfstgewassen floreren: sla, spinazie, boerenkool.','Rooi knolgewassen vóór vorst. Plant knoflook voor volgend jaar.','Opruimen, mulchen, compost omzetten.','Rust en planning. Bekijk zaadcatalogussen.'];
 const PL=[
-  {n:'Tomaat',e:'🍅',k:['-','-','Z','-','V','O','O','O','O','-','-','-'],p:4,u:'planten',zt:'Zaai binnen op 20°C, 0.5cm diep',vt:'Buiten na laatste nachtvorst',ot:'±3kg per plant per seizoen',r:'middel',cat:'Groenten'},
-  {n:'Sla',e:'🥬',k:['-','Z','Z','V','V,O','Z,O','Z,O','Z,O','V,O','O','-','-'],p:6,u:'planten',zt:'Zaai elke 2-3 weken voor doorlopende oogst',vt:'Kan vroeg naar buiten, verdraagt lichte vorst',ot:'Snijd buitenste bladeren, plant groeit door',r:'klein',cat:'Bladgroenten'},
-  {n:'Komkommer',e:'🥒',k:['-','-','-','Z','V','O','O','O','-','-','-','-'],p:2,u:'planten',zt:'Zaai binnen op warme plek (25°C)',vt:'Uitplanten na 15 mei',ot:'Regelmatig oogsten = meer fruit',r:'middel',cat:'Groenten'},
-  {n:'Wortel',e:'🥕',k:['-','-','Z','Z','Z','Z,O','O','O','O','O','-','-'],p:30,u:'zaden (rij)',zt:'Direct buiten, 1cm diep in losse grond',vt:'Niet verpotten — direct op eindplek',ot:'Na 10-16 weken oogsten',r:'klein',cat:'Wortelgroenten'},
-  {n:'Courgette',e:'🫛',k:['-','-','-','Z','V','O','O','O','O','-','-','-'],p:1,u:'planten',zt:'Zaai binnen in pot, 2cm diep',vt:'Na half mei naar buiten',ot:'Oogst jong (15-20cm)',r:'middel',cat:'Groenten'},
-  {n:'Aardappel',e:'🥔',k:['-','-','-','Z','-','-','O','O','O','-','-','-'],p:10,u:'poters',zt:'Poot in april, 10-15cm diep',vt:'Aanaarden als loof 15cm hoog is',ot:'±3kg per plant',r:'groot',cat:'Knolgewassen'},
-  {n:'Boon',e:'🫘',k:['-','-','-','-','Z','Z,O','O','O','O','-','-','-'],p:20,u:'zaden',zt:'Direct buiten na 15 mei, 4cm diep',vt:'Geen verpotten — direct zaaien',ot:'Regelmatig plukken = meer oogst',r:'klein',cat:'Peulvruchten'},
-  {n:'Ui',e:'🧅',k:['Z','-','Z','V','-','-','-','O','O','-','-','Z'],p:15,u:'plantuitjes',zt:'Plant uitjes 3cm diep, 10cm afstand',vt:'Direct poten, geen verpotten',ot:'Oogst als loof omvalt',r:'klein',cat:'Knolgewassen'},
-  {n:'Aardbei',e:'🍓',k:['-','-','-','V','V','O','O','-','-','V','-','-'],p:6,u:'planten',zt:'Koop jonge planten of uitlopers',vt:'Plant april/mei of september',ot:'Juni-juli is piekseizoen',r:'klein',cat:'Fruit'},
-  {n:'Paprika',e:'🫑',k:['-','-','Z','-','V','V','O','O','O','-','-','-'],p:2,u:'planten',zt:'Zaai maart binnen op 25°C',vt:'Buiten pas eind mei',ot:'Begin groen, rijpt tot rood/geel',r:'middel',cat:'Groenten'},
-  {n:'Knoflook',e:'🧄',k:['-','-','-','-','-','-','O','O','-','-','Z','Z'],p:10,u:'teentjes',zt:'Plant okt/nov, spits omhoog 5cm diep',vt:'Direct in border',ot:'Oogst als loof bruin wordt',r:'klein',cat:'Knolgewassen'},
-  {n:'Spinazie',e:'🌿',k:['Z','Z','Z','Z,O','O','O','-','-','Z','O','O','Z'],p:15,u:'zaden (rij)',zt:'Zaai elke 3 weken doorlopend',vt:'Direct zaaien',ot:'Snijd buitenste bladeren',r:'klein',cat:'Bladgroenten'},
-  {n:'Pompoen',e:'🎃',k:['-','-','-','Z','V','V','O','O','O','-','-','-'],p:1,u:'planten',zt:'Zaai binnen april, warm',vt:'Na half mei buiten, 1m² ruimte',ot:'Bewaart maanden na oogst',r:'groot',cat:'Groenten'},
-  {n:'Broccoli',e:'🥦',k:['-','-','Z','Z','V','-','-','O','O','O','O','-'],p:3,u:'planten',zt:'Zaai binnen of buiten 0.5cm diep',vt:'40cm afstand na hardstelling',ot:'Oogst vóór bloei',r:'middel',cat:'Bladgroenten'},
+  {n:'Tomaat',e:'🍅',k:['-','-','Z','-','V','O','O','O','O','-','-','-'],p:4,u:'planten',zt:'Zaai binnen op 20°C, 0.5cm diep',vt:'Buiten na laatste nachtvorst',ot:'±3kg per plant per seizoen',r:'middel',cat:'Groenten',bw:'Op kamertemperatuur bewaren, nooit in de koelkast (verliest smaak). Houdbaar 5-7 dagen. Overschot: invriezen als saus of zongedroogd.',rc:'Verse tomatensaus, caprese met basilicum, geroosterde tomatensoep, of bruschetta.'},
+  {n:'Sla',e:'🥬',k:['-','Z','Z','V','V,O','Z,O','Z,O','Z,O','V,O','O','-','-'],p:6,u:'planten',zt:'Zaai elke 2-3 weken voor doorlopende oogst',vt:'Kan vroeg naar buiten, verdraagt lichte vorst',ot:'Snijd buitenste bladeren, plant groeit door',r:'klein',cat:'Bladgroenten',bw:'In vochtige doek in koelkast, 3-5 dagen houdbaar. Was pas vlak voor gebruik.',rc:'Frisse salade, wraps, of als bedje onder warme gerechten.'},
+  {n:'Komkommer',e:'🥒',k:['-','-','-','Z','V','O','O','O','-','-','-','-'],p:2,u:'planten',zt:'Zaai binnen op warme plek (25°C)',vt:'Uitplanten na 15 mei',ot:'Regelmatig oogsten = meer fruit',r:'middel',cat:'Groenten',bw:'Koelkast, maar niet te koud — 1 week houdbaar. Overschot: inmaken als augurk.',rc:'Tzatziki, frisse komkommersalade, gazpacho, of ingelegde augurken.'},
+  {n:'Wortel',e:'🥕',k:['-','-','Z','Z','Z','Z,O','O','O','O','O','-','-'],p:30,u:'zaden (rij)',zt:'Direct buiten, 1cm diep in losse grond',vt:'Niet verpotten — direct op eindplek',ot:'Na 10-16 weken oogsten',r:'klein',cat:'Wortelgroenten',bw:'Loof eraf, in koelkast of koele kelder. Maanden houdbaar in vochtig zand.',rc:'Wortelsoep, geroosterde wortels met honing, of rauw als snack.'},
+  {n:'Courgette',e:'🫛',k:['-','-','-','Z','V','O','O','O','O','-','-','-'],p:1,u:'planten',zt:'Zaai binnen in pot, 2cm diep',vt:'Na half mei naar buiten',ot:'Oogst jong (15-20cm)',r:'middel',cat:'Groenten',bw:'Koelkast, 1 week. Overschot: raspen en invriezen voor soep of cake.',rc:'Gevulde courgette, courgettesoep, courgettecake, of gegrild met olijfolie.'},
+  {n:'Aardappel',e:'🥔',k:['-','-','-','Z','-','-','O','O','O','-','-','-'],p:10,u:'poters',zt:'Poot in april, 10-15cm diep',vt:'Aanaarden als loof 15cm hoog is',ot:'±3kg per plant',r:'groot',cat:'Knolgewassen',bw:'Donker, koel en droog (niet koelkast). Maanden houdbaar. Weg van uien.',rc:'Gekookt, gebakken, puree, of stamppot met eigen groenten.'},
+  {n:'Boon',e:'🫘',k:['-','-','-','-','Z','Z,O','O','O','O','-','-','-'],p:20,u:'zaden',zt:'Direct buiten na 15 mei, 4cm diep',vt:'Geen verpotten — direct zaaien',ot:'Regelmatig plukken = meer oogst',r:'klein',cat:'Peulvruchten',bw:'Koelkast 4-5 dagen, of blancheren en invriezen voor de winter.',rc:'Boontjes met spek, in stoofpot, of als bijgerecht met knoflook.'},
+  {n:'Ui',e:'🧅',k:['Z','-','Z','V','-','-','-','O','O','-','-','Z'],p:15,u:'plantuitjes',zt:'Plant uitjes 3cm diep, 10cm afstand',vt:'Direct poten, geen verpotten',ot:'Oogst als loof omvalt',r:'klein',cat:'Knolgewassen',bw:'Goed gedroogd, in een net op een droge donkere plek. Maanden houdbaar.',rc:'Basis voor bijna elk gerecht, uiensoep, of gekarameliseerd.'},
+  {n:'Aardbei',e:'🍓',k:['-','-','-','V','V','O','O','-','-','V','-','-'],p:6,u:'planten',zt:'Koop jonge planten of uitlopers',vt:'Plant april/mei of september',ot:'Juni-juli is piekseizoen',r:'klein',cat:'Fruit',bw:'Ongewassen in koelkast, 2-3 dagen. Overschot: jam of invriezen.',rc:'Verse aardbeien met yoghurt, jam, smoothie, of in een fruitsalade.'},
+  {n:'Paprika',e:'🫑',k:['-','-','Z','-','V','V','O','O','O','-','-','-'],p:2,u:'planten',zt:'Zaai maart binnen op 25°C',vt:'Buiten pas eind mei',ot:'Begin groen, rijpt tot rood/geel',r:'middel',cat:'Groenten',bw:'Koelkast, 1-2 weken. Overschot: in reepjes invriezen.',rc:'Gevulde paprika, roerbak, geroosterd in olijfolie, of in ratatouille.'},
+  {n:'Knoflook',e:'🧄',k:['-','-','-','-','-','-','O','O','-','-','Z','Z'],p:10,u:'teentjes',zt:'Plant okt/nov, spits omhoog 5cm diep',vt:'Direct in border',ot:'Oogst als loof bruin wordt',r:'klein',cat:'Knolgewassen',bw:'Droog en luchtig, maanden houdbaar. Niet in koelkast.',rc:'Smaakmaker in vrijwel alles, geroosterde knoflook, of aioli.'},
+  {n:'Spinazie',e:'🌿',k:['Z','Z','Z','Z,O','O','O','-','-','Z','O','O','Z'],p:15,u:'zaden (rij)',zt:'Zaai elke 3 weken doorlopend',vt:'Direct zaaien',ot:'Snijd buitenste bladeren',r:'klein',cat:'Bladgroenten',bw:'Koelkast 2-3 dagen, of blancheren en invriezen in porties.',rc:'Roerbak, in een quiche, smoothie, of gestoofd met knoflook.'},
+  {n:'Pompoen',e:'🎃',k:['-','-','-','Z','V','V','O','O','O','-','-','-'],p:1,u:'planten',zt:'Zaai binnen april, warm',vt:'Na half mei buiten, 1m² ruimte',ot:'Bewaart maanden na oogst',r:'groot',cat:'Groenten',bw:'Hele pompoen op koele droge plek: maanden houdbaar. Aangesneden: koelkast.',rc:'Pompoensoep, geroosterde pompoen, pompoenrisotto, of in curry.'},
+  {n:'Broccoli',e:'🥦',k:['-','-','Z','Z','V','-','-','O','O','O','O','-'],p:3,u:'planten',zt:'Zaai binnen of buiten 0.5cm diep',vt:'40cm afstand na hardstelling',ot:'Oogst vóór bloei',r:'middel',cat:'Bladgroenten',bw:'Koelkast 4-5 dagen, of blancheren en invriezen.',rc:'Gestoomd, in roerbak, broccolisoep, of geroosterd met knoflook.'},
+  {n:'Radijs',e:'🔴',k:['-','Z','Z','Z,O','Z,O','O','O','O','Z,O','O','-','-'],p:25,u:'zaden (rij)',zt:'Zaai elke 2 weken, snelste groeier',vt:'Direct zaaien, geen verpotten',ot:'Al na 4 weken te oogsten',r:'klein',cat:'Wortelgroenten',bw:'Loof eraf, koelkast 1 week in vochtige doek.',rc:'Rauw in salade, op brood met boter en zout, of gepekeld.'},
+  {n:'Rode biet',e:'🟣',k:['-','-','Z','Z','Z','O','O','O','O','O','-','-'],p:15,u:'zaden (rij)',zt:'Direct buiten zaaien, 2cm diep',vt:'Dunnen tot 10cm afstand',ot:'Oogst als knol vuistgroot is',r:'klein',cat:'Wortelgroenten',bw:'Loof eraf, koelkast of kelder. Weken houdbaar.',rc:'Gekookte biet in salade, bietensoep (borsjt), of geroosterd.'},
+  {n:'Prei',e:'🌱',k:['-','Z','Z','-','V','V','-','-','O','O','O','O'],p:12,u:'planten',zt:'Zaai binnen feb/mrt',vt:'Uitplanten in diepe gaten (bleek schacht)',ot:'Hele winter oogstbaar',r:'middel',cat:'Groenten',bw:'Koelkast 1-2 weken. Kan ook in de grond blijven staan in de winter.',rc:'Preisoep, prei-aardappelstamppot, of gestoofd als bijgerecht.'},
+  {n:'Boerenkool',e:'🥬',k:['-','-','-','Z','V','V','-','-','O','O','O','O'],p:6,u:'planten',zt:'Zaai mei in pot',vt:'Uitplanten juni, 50cm afstand',ot:'Smaakt beter na de eerste vorst',r:'middel',cat:'Bladgroenten',bw:'Koelkast 1 week, of blancheren en invriezen.',rc:'Stamppot boerenkool, kale chips uit de oven, of in een groene smoothie.'},
+  {n:'Kropsla',e:'🥗',k:['-','-','Z','Z','V,O','O','O','O','O','O','-','-'],p:6,u:'planten',zt:'Zaai binnen, daarna uitplanten',vt:'30cm afstand',ot:'Oogst hele krop in één keer',r:'klein',cat:'Bladgroenten',bw:'Koelkast in vochtige doek, 5 dagen.',rc:'Klassieke kropsla salade, of als basis voor een maaltijdsalade.'},
+  {n:'Erwt',e:'🟢',k:['-','-','Z','Z','Z,O','O','O','O','-','-','-','-'],p:25,u:'zaden',zt:'Direct buiten zaaien maart, 4cm diep',vt:'Steun geven met takken of net',ot:'Pluk jong en zoet',r:'klein',cat:'Peulvruchten',bw:'Vers het lekkerst. Koelkast 3 dagen of dop en vries in.',rc:'Verse doperwten, erwtensoep, of door de risotto.'},
+  {n:'Aubergine',e:'🍆',k:['-','-','Z','-','V','V','O','O','O','-','-','-'],p:2,u:'planten',zt:'Zaai vroeg binnen op 25°C',vt:'Warmteminnend, pas eind mei buiten',ot:'Oogst als vrucht glanst',r:'middel',cat:'Groenten',bw:'Koelkast 5 dagen. Niet te koud bewaren.',rc:'Moussaka, baba ganoush, gegrilde aubergine, of in ratatouille.'},
+  {n:'Maïs',e:'🌽',k:['-','-','-','Z','V','V','-','O','O','-','-','-'],p:8,u:'planten',zt:'Zaai binnen april in potjes',vt:'Plant in blokken voor bestuiving',ot:'Oogst als korrels melkachtig zijn',r:'groot',cat:'Groenten',bw:'Vers het zoetst. Koelkast 2 dagen of kook en vries de korrels in.',rc:'Maïskolf van de BBQ, in een salsa, of door een salade.'},
+  {n:'Peterselie',e:'🌿',k:['-','-','Z','Z','V','O','O','O','O','O','-','-'],p:3,u:'planten',zt:'Zaai binnen of buiten, traag kiemend',vt:'Plant in pot of border',ot:'Knip naar behoefte, groeit door',r:'klein',cat:'Kruiden',bw:'Koelkast als boeketje in water, of fijngehakt invriezen in ijsblokjes.',rc:'Verse garnering, in tabouleh, of door aardappels en sauzen.'},
+  {n:'Basilicum',e:'🌿',k:['-','-','-','Z','V','O','O','O','O','-','-','-'],p:3,u:'planten',zt:'Zaai binnen op warme plek',vt:'Pas na 15 mei buiten, houdt van warmte',ot:'Toppen knippen voor bossige groei',r:'klein',cat:'Kruiden',bw:'Op kamertemperatuur in water. Of pesto maken en invriezen.',rc:'Verse pesto, op pizza, in caprese, of door pastasaus.'},
+  {n:'Bieslook',e:'🌱',k:['-','-','Z','V','O','O','O','O','O','O','-','-'],p:2,u:'planten',zt:'Zaai of koop plant, komt elk jaar terug',vt:'Plant in pot of border',ot:'Knip naar behoefte',r:'klein',cat:'Kruiden',bw:'Koelkast 5 dagen, of fijngeknipt invriezen.',rc:'Over aardappels, door roerei, in kwark, of als garnering.'},
+  {n:'Munt',e:'🌿',k:['-','-','V','V','O','O','O','O','O','O','-','-'],p:2,u:'planten',zt:'Plant in pot (woekert anders!)',vt:'Houd apart, groeit hard',ot:'Pluk blaadjes naar behoefte',r:'klein',cat:'Kruiden',bw:'Koelkast als boeketje, of drogen voor thee.',rc:'Verse muntthee, in een mojito, of door een fruitsalade.'},
+  {n:'Pastinaak',e:'🥕',k:['-','-','Z','Z','-','-','-','-','-','O','O','O'],p:15,u:'zaden (rij)',zt:'Direct buiten zaaien, traag kiemend',vt:'Dunnen tot 15cm',ot:'Smaakt zoeter na vorst',r:'klein',cat:'Wortelgroenten',bw:'Koele kelder of in de grond laten. Maanden houdbaar.',rc:'Geroosterde pastinaak, in een wintersoep, of door de stamppot.'},
+  {n:'Snijbiet',e:'🥬',k:['-','-','Z','Z','V','O','O','O','O','O','O','-'],p:6,u:'planten',zt:'Zaai direct buiten, makkelijk',vt:'30cm afstand',ot:'Snijd buitenste bladeren',r:'klein',cat:'Bladgroenten',bw:'Koelkast 3-4 dagen, of blancheren en invriezen.',rc:'Gestoofd als spinazie, in een quiche, of door een ovenschotel.'},
+  {n:'Bloemkool',e:'🥦',k:['-','-','Z','Z','V','-','-','O','O','O','-','-'],p:3,u:'planten',zt:'Zaai binnen, daarna uitplanten',vt:'50cm afstand, veel voeding nodig',ot:'Oogst als kool stevig en wit is',r:'middel',cat:'Bladgroenten',bw:'Koelkast 1 week, of in roosjes blancheren en invriezen.',rc:'Bloemkoolsoep, gegratineerd, geroosterd, of als rijst-vervanger.'},
+  {n:'Spruitjes',e:'🥬',k:['-','-','-','Z','V','V','-','-','-','O','O','O'],p:6,u:'planten',zt:'Zaai april in pot',vt:'Uitplanten mei/juni, stevig aandrukken',ot:'Smaken beter na de vorst',r:'middel',cat:'Bladgroenten',bw:'Koelkast 1 week, of aan de stronk laten en buiten oogsten.',rc:'Geroosterd met spek, gestoomd, of door een wintersalade.'},
+  {n:'Rabarber',e:'🌺',k:['-','-','V','O','O','O','-','-','-','-','-','-'],p:2,u:'planten',zt:'Plant wortelstok, komt elk jaar terug',vt:'Eenmalig planten, jaren oogst',ot:'Trek stelen, eet nooit de bladeren',r:'middel',cat:'Fruit',bw:'Koelkast 1 week, of in stukken invriezen.',rc:'Rabarbercompote, -taart, of -jam. Lekker met aardbei.',},
+  {n:'Frambozen',e:'🫐',k:['-','-','V','-','-','O','O','O','O','-','-','-'],p:4,u:'planten',zt:'Plant struiken, komen elk jaar terug',vt:'Eenmalig planten, steun geven',ot:'Pluk rijp en zacht',r:'middel',cat:'Fruit',bw:'Ongewassen koelkast 2 dagen, of plat invriezen.',rc:'Vers, in jam, door yoghurt, of in een smoothie.'},
+  {n:'Pepers',e:'🌶️',k:['-','-','Z','-','V','V','O','O','O','-','-','-'],p:2,u:'planten',zt:'Zaai vroeg binnen, warm',vt:'Pas eind mei buiten',ot:'Oogst groen of laat rood worden',r:'klein',cat:'Groenten',bw:'Koelkast 1-2 weken, of drogen/invriezen.',rc:'In curry, sambal, gedroogd als chilivlokken, of ingelegd.'},
+  {n:'Veldsla',e:'🌿',k:['Z','-','-','-','-','-','-','Z','Z,O','O','O','O'],p:15,u:'zaden (rij)',zt:'Zaai eind zomer voor winteroogst',vt:'Direct zaaien, winterhard',ot:'Oogst hele winter door',r:'klein',cat:'Bladgroenten',bw:'Koelkast 3 dagen, was vlak voor gebruik.',rc:'Frisse wintersalade met noten, of door een warme maaltijd.'},
 ];
 
 // SHOP PRODUCTEN (affiliate)
@@ -813,12 +867,21 @@ async function analyzePlant(){
   if(!photoB64)return;
   const box=document.getElementById('dbox'),body=document.getElementById('dbbody');
   box.style.display='block';
-  body.innerHTML=`<div class="spin-wrap"><div class="spinner"></div><br>AI analyseert...</div>`;
+  body.innerHTML=`<div class="spin-wrap"><div class="spinner"></div><br>Analyseren...</div>`;
+  const fallback=`<h4>🌿 Algemene plantcheck</h4>
+    <p>De AI-diagnose is op deze versie nog niet gekoppeld. Hier zijn de meest voorkomende oorzaken en oplossingen die je zelf kunt controleren:</p>
+    <h4>💛 Gele bladeren</h4><ul><li>Te veel water — laat de grond tussen het gieten opdrogen</li><li>Voedingstekort — geef organische mest</li></ul>
+    <h4>🟤 Bruine vlekken of randen</h4><ul><li>Schimmel — verwijder aangetaste bladeren, geef water bij de wortel i.p.v. over het blad</li><li>Te droog of zonnebrand — meer schaduw of water</li></ul>
+    <h4>🐛 Gaatjes of aangevreten blad</h4><ul><li>Slakken of rupsen — controleer 's avonds, gebruik biologische bestrijding</li><li>Luizen — afspuiten met water of zeepsop</li></ul>
+    <h4>🌱 Slappe plant</h4><ul><li>Watergebrek of juist te nat — voel de grond</li><li>Te weinig licht — verplaats naar zonnigere plek</li></ul>
+    <p style="margin-top:10px;color:var(--sage)"><strong>Tip:</strong> de volledige AI-diagnose per foto komt beschikbaar in de volgende versie.</p>`;
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photoB64}},{type:'text',text:`Tuinexpert diagnose in het Nederlands als HTML:\n<h4>🌿 Wat ik zie</h4>[plant + symptomen]\n<h4>⚠️ Mogelijke problemen</h4>[max 3 diagnoses]\n<h4>✅ Behandeling</h4><ul>[stappen]</ul>\n<h4>🛡️ Preventie</h4><ul>[tips]</ul>\nPraktisch en hoopvol.`}]}]})});
+    if(!res.ok)throw new Error('no api');
     const d=await res.json();
-    body.innerHTML=d.content?.map(c=>c.text||'').join('')||'Geen antwoord.';
-  }catch(e){body.innerHTML='<p>Analyse mislukt. Probeer opnieuw.</p>';}
+    const txt=d.content?.map(c=>c.text||'').join('');
+    body.innerHTML=txt||fallback;
+  }catch(e){body.innerHTML=fallback;}
 }
 
 // ══════════ KEUKEN ══════════
@@ -826,29 +889,31 @@ function buildVsel(){document.getElementById('vsel').innerHTML=filtP().map(p=>`<
 function togV(n,el){const i=selVeg.indexOf(n);if(i>=0){selVeg.splice(i,1);el.classList.remove('sel');}else{selVeg.push(n);el.classList.add('sel');}}
 async function loadKeuken(){
   if(!selVeg.length){alert('Selecteer minstens één groente.');return;}
-  kResp={};activeKTab=null;
   document.getElementById('kres').style.display='block';
-  document.getElementById('kcon').innerHTML=`<div class="spin-wrap"><div class="spinner"></div><br>AI denkt mee...</div>`;
-  const cats=[
-    {id:'bewaar',l:'📦 Bewaren',q:`Bewaartips voor: ${selVeg.join(', ')}. Per groente: houdbaarheid, methode, tekenen van bederf. HTML met <h4> per groente, <ul>. Nederlands.`},
-    {id:'recept',l:'🍽️ Recepten',q:`3 gezonde recepten met: ${selVeg.join(', ')}. Per recept: naam, beschrijving, ingrediënten, tijd. HTML <h4> per recept. Nederlands.`},
-    {id:'conserv',l:'🫙 Conserveren',q:`Conserveren voor winter: ${selVeg.join(', ')}. Invriezen, fermenteren, inmaken, drogen. HTML <h4> per methode. Nederlands.`},
-  ];
+  const chosen=selVeg.map(n=>PL.find(p=>p.n===n)).filter(Boolean);
+  // Ingebouwde tips — werken altijd, ook zonder internet/AI
+  const bewaar=`<h4>📦 Zo bewaar je jouw oogst</h4>`+chosen.map(p=>`<p><strong>${p.e} ${p.n}:</strong> ${p.bw}</p>`).join('');
+  const recept=`<h4>🍽️ Wat kun je ermee maken?</h4>`+chosen.map(p=>`<p><strong>${p.e} ${p.n}:</strong> ${p.rc}</p>`).join('')+
+    `<p style="margin-top:12px;color:var(--sage)"><strong>Tip:</strong> combineer meerdere oogsten in één maaltijd — een roerbak of ovenschotel met al je verse groenten is altijd een goed idee!</p>`;
+  const conserv=`<h4>🫙 Bewaren voor de winter</h4>
+    <p>De meeste groenten kun je op deze manieren langer houdbaar maken:</p>
+    <ul>
+      <li><strong>Invriezen:</strong> blancheer groenten kort (2-3 min koken, dan in ijswater), droog ze en vries in porties in. Werkt goed voor bonen, broccoli, spinazie en erwten.</li>
+      <li><strong>Inmaken:</strong> komkommer, biet en uien kun je inleggen in azijn met kruiden — maanden houdbaar.</li>
+      <li><strong>Drogen:</strong> kruiden, pepers en tomaten kun je drogen in de oven (laagste stand) of een droogapparaat.</li>
+      <li><strong>Koele opslag:</strong> aardappels, uien, pompoen, wortels en pastinaak blijven maanden goed op een donkere, koele, droge plek.</li>
+    </ul>
+    <p style="margin-top:10px;color:var(--sage)"><strong>Jouw selectie:</strong> ${chosen.map(p=>p.e+' '+p.n).join(', ')}</p>`;
+  kResp={bewaar,recept,conserv};
+  const cats=[{id:'bewaar',l:'📦 Bewaren'},{id:'recept',l:'🍽️ Recepten'},{id:'conserv',l:'🫙 Conserveren'}];
   document.getElementById('rtabs').innerHTML=cats.map(c=>`<button class="rtab" id="rt-${c.id}" onclick="showKTab('${c.id}')">${c.l}</button>`).join('');
-  cats.forEach(c=>fetchKeuken(c));showKTab('bewaar');
-}
-async function fetchKeuken(cat){
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:cat.q}]})});
-    const d=await res.json();kResp[cat.id]=d.content?.map(c=>c.text||'').join('')||'Geen resultaat.';
-    if(activeKTab===cat.id)showKTab(cat.id);
-  }catch(e){kResp[cat.id]='<p>Laden mislukt.</p>';if(activeKTab===cat.id)showKTab(cat.id);}
+  showKTab('bewaar');
 }
 function showKTab(id){
   activeKTab=id;
   document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active'));
   const el=document.getElementById('rt-'+id);if(el)el.classList.add('active');
-  document.getElementById('kcon').innerHTML=kResp[id]||`<div class="spin-wrap"><div class="spinner"></div><br>Laden...</div>`;
+  document.getElementById('kcon').innerHTML=kResp[id]||'<p>Selecteer groenten en klik op de knop.</p>';
 }
 
 // ══════════ ACCOUNT ══════════
@@ -905,6 +970,26 @@ document.getElementById('greetMsg').textContent=`${h<12?'Goedemorgen':h<18?'Goed
 const hadData=loadState();
 renderAll();
 if(!userLat)setTimeout(detectLoc,400); else fetchWeer();
+
+// ══════════ ONBOARDING ══════════
+function finishOnboarding(){
+  document.getElementById('personen').value=document.getElementById('obPersonen').value;
+  document.getElementById('ruimte').value=document.getElementById('obRuimte').value;
+  document.getElementById('klimaat').value=document.getElementById('obKlimaat').value;
+  try{localStorage.setItem('greenlabs_onboarded','1');}catch(e){}
+  document.getElementById('onboarding').style.display='none';
+  renderAll();
+  if(!userLat)setTimeout(detectLoc,300);
+}
+// Toon welkomscherm alleen bij eerste bezoek
+try{
+  if(!localStorage.getItem('greenlabs_onboarded')&&!hadData){
+    document.getElementById('onboarding').style.display='block';
+  }
+}catch(e){
+  // private mode: toon welkom toch één keer per sessie
+  if(!hadData)document.getElementById('onboarding').style.display='block';
+}
 </script>
 </body>
 </html>
