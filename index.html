@@ -341,6 +341,17 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 .spinner{display:inline-block;width:26px;height:26px;border:3px solid var(--surface2);border-top-color:var(--sage);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:var(--forest);color:var(--surface);padding:12px 20px;border-radius:30px;font-size:0.84rem;font-weight:500;z-index:300;opacity:0;transition:all .3s;pointer-events:none;box-shadow:var(--shadow-lg);white-space:nowrap;}
+.badge-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:var(--surface);border-radius:24px;padding:30px 34px;text-align:center;z-index:400;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.2,.9,.3,1.3);border:2px solid var(--mint);max-width:280px;}
+.badge-pop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.badge-pop-emoji{font-size:3.4rem;}
+.badge-pop-title{font-family:'Fraunces',serif;font-size:0.8rem;color:var(--sage);text-transform:uppercase;letter-spacing:0.08em;margin-top:6px;}
+.badge-pop-naam{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--forest);font-weight:500;margin-top:2px;}
+.badge-pop-uitleg{font-size:0.82rem;color:var(--muted);margin-top:5px;}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.badge-item{text-align:center;opacity:0.35;transition:opacity .2s;}
+.badge-item.got{opacity:1;}
+.badge-emoji{font-size:1.8rem;}
+.badge-naam{font-size:0.6rem;color:var(--muted);margin-top:3px;line-height:1.2;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 .philo{margin:26px 22px 8px;text-align:center;font-family:'Fraunces',serif;font-style:italic;font-size:0.92rem;color:var(--sage);line-height:1.5;}
@@ -493,6 +504,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 </div>
 
 <div class="acc-section">
+<div class="acc-label">Mijn mijlpalen</div>
+<div class="acc-card" style="padding:18px;">
+<div class="badge-grid" id="badgeGrid"></div>
+</div>
+</div>
+
+<div class="acc-section">
 <div class="acc-label">Mijn tuin instellen</div>
 <div class="acc-card" style="padding:17px;">
 <label style="font-size:0.8rem;font-weight:600;color:var(--forest);">Aantal personen</label>
@@ -510,6 +528,14 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <option value="tropisch">Tropisch / subtropisch</option>
 <option value="koud">Koud (NO/SE/FI/CA)</option>
 </select>
+<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Mijn doel</label>
+<select class="setting-input" id="setDoel" onchange="syncSettings()">
+<option value="30">Wat verse groenten (30%)</option>
+<option value="50">Flink wat zelf telen (50%)</option>
+<option value="85">Grotendeels zelfvoorzienend (85%)</option>
+<option value="100">Volledig van de supermarkt af (100%)</option>
+</select>
+<div style="font-size:0.7rem;color:var(--muted);margin-top:6px;line-height:1.4;">Je meter laat zien hoe ver je bent richting jouw eigen doel.</div>
 </div>
 </div>
 
@@ -660,6 +686,12 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 
 <input type="file" id="dokInput" accept="image/*" onchange="handleDok(event)">
 <div class="toast" id="toast"></div>
+<div class="badge-pop" id="badgePop">
+<div class="badge-pop-emoji" id="badgePopEmoji">🏆</div>
+<div class="badge-pop-title">Mijlpaal behaald!</div>
+<div class="badge-pop-naam" id="badgePopNaam">—</div>
+<div class="badge-pop-uitleg" id="badgePopUitleg">—</div>
+</div>
 
 <!-- ══ BOTTOM NAV ══ -->
 <div class="botnav">
@@ -895,9 +927,11 @@ let cm=new Date().getMonth();
 let myGarden=[]; // [{n:'Tomaat', status:'te_zaaien'}, ...]
 let doneTasks=new Set();
 let harvestLog={};
+let harvestHistory=[]; // [{n, datum, euro}] echte oogsten
+let badges=[]; // behaalde mijlpalen
 let userLat=null,userLon=null;
-let settings={personen:2,ruimte:'middel',klimaat:'gematigd'};
-let obData={personen:2,ruimte:'middel',klimaat:'gematigd'};
+let settings={personen:2,ruimte:'middel',klimaat:'gematigd',doel:85};
+let obData={personen:2,ruimte:'middel',klimaat:'gematigd',doel:85};
 let obStep=0, deferredPWA=null, addCat='Alle', detailPlant=null;
 
 // Status-stappen die een plant doorloopt
@@ -906,15 +940,53 @@ te_zaaien:{label:'Nog te zaaien',emoji:'🌰',next:'gezaaid',action:'Zaaien',col
 gezaaid:{label:'Gezaaid',emoji:'🌱',next:'uitgeplant',action:'Uitplanten',color:'tag-v'},
 uitgeplant:{label:'Groeit',emoji:'🌿',next:'groeit',action:null,color:'tag-w'},
 groeit:{label:'Klaar om te oogsten',emoji:'🧺',next:null,action:'Oogsten',color:'tag-o'},
+geoogst:{label:'Geoogst',emoji:'✅',next:'te_zaaien',action:'Opnieuw',color:'tag-z'},
+mislukt:{label:'Mislukt',emoji:'🥀',next:'te_zaaien',action:'Opnieuw proberen',color:'tag-w'},
 };
+// Groeiduur in weken (zaaien → oogstklaar). Realistisch per gewas.
+const GROEIWEKEN={
+'Radijs':4,'Sla':7,'Rucola':5,'Spinazie':6,'Veldsla':8,'Kropsla':8,'Postelein':6,'Snijbiet':8,
+'Tomaat':16,'Komkommer':10,'Courgette':9,'Paprika':18,'Aubergine':18,'Peper':18,'Boon':10,'Erwt':12,
+'Wortel':14,'Rode biet':12,'Pastinaak':20,'Ui':20,'Knoflook':36,'Aardappel':14,'Pompoen':16,'Maïs':14,
+'Broccoli':14,'Bloemkool':16,'Spruitjes':28,'Boerenkool':12,'Prei':30,'Witlof':30,'Selderij':16,'Venkel':14,
+'Aardbei':10,'Framboos':12,'Blauwe bes':12,'Appel':16,'Peer':16,'Druif':16,'Asperge':8,
+'Peterselie':10,'Basilicum':8,'Bieslook':10,'Munt':8,'Kervel':8,'Dille':8,'Tijm':10,'Rozemarijn':12,
+};
+function groeiWeken(n){return GROEIWEKEN[n]||10;}
+
+// Badges/mijlpalen
+const BADGES=[
+{id:'eerste_plant',emoji:'🌱',naam:'Eerste zaadje',uitleg:'Je eerste gewas toegevoegd',check:()=>myGarden.length>=1},
+{id:'vijf_planten',emoji:'🌿',naam:'Groene vingers',uitleg:'5 gewassen in je tuin',check:()=>myGarden.length>=5},
+{id:'tien_planten',emoji:'🌳',naam:'Echte tuinier',uitleg:'10 gewassen in je tuin',check:()=>myGarden.length>=10},
+{id:'eerste_oogst',emoji:'🧺',naam:'Eerste oogst',uitleg:'Je eerste oogst genoteerd',check:()=>harvestHistory.length>=1},
+{id:'tien_oogst',emoji:'🏆',naam:'Oogstmeester',uitleg:'10 keer geoogst',check:()=>harvestHistory.length>=10},
+{id:'bespaard_50',emoji:'💶',naam:'€50 bespaard',uitleg:'€50 bespaard met eigen oogst',check:()=>totaalBespaard()>=50},
+{id:'divers',emoji:'🌈',naam:'Kleurrijke tuin',uitleg:'Gewassen uit 4 categorieën',check:()=>new Set(myGarden.map(g=>plantByName(g.n)?.cat)).size>=4},
+{id:'kruiden',emoji:'🌿',naam:'Kruidentuin',uitleg:'3 kruiden in je tuin',check:()=>myGarden.filter(g=>plantByName(g.n)?.cat==='Kruiden').length>=3},
+];
+function totaalBespaard(){return harvestHistory.reduce((a,h)=>a+(h.euro||0),0);}
+function checkBadges(){
+let nieuw=null;
+BADGES.forEach(b=>{if(!badges.includes(b.id)&&b.check()){badges.push(b.id);nieuw=b;}});
+if(nieuw)setTimeout(()=>showBadge(nieuw),400);
+}
+function showBadge(b){
+const o=document.getElementById('badgePop');
+document.getElementById('badgePopEmoji').textContent=b.emoji;
+document.getElementById('badgePopNaam').textContent=b.naam;
+document.getElementById('badgePopUitleg').textContent=b.uitleg;
+o.classList.add('show');
+setTimeout(()=>o.classList.remove('show'),3200);
+}
 
 // ══════════ PERSIST ══════════
 const KEY='greenlabs_v2';
-function save(){try{localStorage.setItem(KEY,JSON.stringify({myGarden,doneTasks:[...doneTasks],doneMonth:cm,harvestLog,settings,userLat,userLon,loc:document.getElementById('locPill').textContent}));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({myGarden,doneTasks:[...doneTasks],doneMonth:cm,harvestLog,harvestHistory,badges,settings,userLat,userLon,loc:document.getElementById('locPill').textContent}));}catch(e){}}
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(!d)return false;
 // Migratie: oude opslag had lijst met namen → nu objecten met status
 myGarden=(d.myGarden||[]).map(g=>typeof g==='string'?{n:g,status:'te_zaaien'}:g);
-if(d.doneMonth===cm&&d.doneTasks)doneTasks=new Set(d.doneTasks);harvestLog=d.harvestLog||{};settings=d.settings||settings;userLat=d.userLat;userLon=d.userLon;if(d.loc&&d.loc.includes('📍')&&!d.loc.includes('Locatie'))document.getElementById('locPill').textContent=d.loc;return true;}catch(e){return false;}}
+if(d.doneMonth===cm&&d.doneTasks)doneTasks=new Set(d.doneTasks);harvestLog=d.harvestLog||{};harvestHistory=d.harvestHistory||[];badges=d.badges||[];settings=d.settings||settings;userLat=d.userLat;userLon=d.userLon;if(d.loc&&d.loc.includes('📍')&&!d.loc.includes('Locatie'))document.getElementById('locPill').textContent=d.loc;return true;}catch(e){return false;}}
 
 // ══════════ NAV ══════════
 function showScreen(id){
@@ -994,7 +1066,21 @@ document.getElementById('todayTasks').innerHTML=`<div class="empty-card"><div cl
 link.textContent='';return;
 }
 link.textContent=tasks.filter(t=>!doneTasks.has(t.id)).length+' open';
-if(!tasks.length){document.getElementById('todayTasks').innerHTML=`<div class="empty-card"><div class="empty-emoji">😌</div><div class="empty-title serif">Rustige maand</div><div class="empty-text">Geen taken in ${ML[cm]} voor jouw gewassen. Tijd om te genieten.</div></div>`;return;}
+if(!tasks.length){
+// Zijn er planten die groeien (gezaaid maar nog niet rijp)?
+const groeiend=myGarden.filter(g=>{const wk=wekenTotOogst(g);return wk!==null&&wk>0;});
+const isWinter=cm===10||cm===11||cm===0||cm===1;
+let body;
+if(groeiend.length){
+const lijst=groeiend.slice(0,3).map(g=>{const p=plantByName(g.n);const wk=wekenTotOogst(g);return `${p.e} ${p.n} — nog ±${wk} ${wk===1?'week':'weken'}`;}).join('<br>');
+body=`<div class="empty-card"><div class="empty-emoji">🌿</div><div class="empty-title serif">Alles groeit lekker door</div><div class="empty-text">Je hebt niets te doen vandaag — je planten zijn aan het groeien:<br><br>${lijst}</div></div>`;
+} else if(isWinter){
+body=`<div class="empty-card"><div class="empty-emoji">❄️</div><div class="empty-title serif">Rustige wintermaand</div><div class="empty-text">In de winter slaapt de tuin — dat hoort zo. Gebruik deze tijd om te plannen voor het voorjaar. Vanaf februari kun je weer binnen zaaien!</div><button class="btn btn-ghost" onclick="openAddSheet()">Plan vast je voorjaar</button></div>`;
+} else {
+body=`<div class="empty-card"><div class="empty-emoji">😌</div><div class="empty-title serif">Rustige dag</div><div class="empty-text">Geen taken in ${ML[cm]} voor jouw gewassen. Tijd om te genieten van je tuin.</div></div>`;
+}
+document.getElementById('todayTasks').innerHTML=body;return;
+}
 document.getElementById('todayTasks').innerHTML=tasks.map(t=>`
 <div class="task ${doneTasks.has(t.id)?'done':''}">
 <div class="task-check" onclick="toggleTask('${t.id}')">${doneTasks.has(t.id)?'✓':''}</div>
@@ -1009,68 +1095,114 @@ myGarden.forEach(g=>{
 const p=plantByName(g.n);if(!p)return;
 const q=Math.max(1,Math.round(p.p*settings.personen));
 const st=g.status||'te_zaaien';
-// Toon alléén de actie die past bij de huidige fase van DEZE plant,
-// en alleen als de kalender die actie deze maand toelaat.
 if(st==='te_zaaien'&&isMonthFor(p,'Z')){
 out.push({id:'z'+p.n,e:p.e,name:p.n,meta:p.zt+' · '+q+' '+p.u,type:'z'});
 } else if(st==='gezaaid'&&isMonthFor(p,'V')){
 out.push({id:'v'+p.n,e:p.e,name:p.n,meta:p.vt,type:'v'});
 } else if((st==='uitgeplant'||st==='groeit')&&isMonthFor(p,'O')){
+// Pas oogsten aanbieden als er genoeg groeitijd verstreken is sinds zaaien
+if(rijpGenoeg(g)){
 out.push({id:'o'+p.n,e:p.e,name:p.n,meta:p.ot,type:'o',crop:p.n});
+}
 }
 });
 return out;
+}
+// Is de plant lang genoeg geleden gezaaid om te oogsten?
+function rijpGenoeg(g){
+if(!g.gezaaidOp)return true; // geen zaaidatum bekend → vertrouw op de kalender
+const weken=(Date.now()-g.gezaaidOp)/(1000*60*60*24*7);
+return weken>=groeiWeken(g.n)*0.85; // 85% van de groeiduur = ongeveer rijp
+}
+// Hoeveel weken nog tot oogst?
+function wekenTotOogst(g){
+if(!g.gezaaidOp)return null;
+const verstreken=(Date.now()-g.gezaaidOp)/(1000*60*60*24*7);
+return Math.max(0,Math.ceil(groeiWeken(g.n)-verstreken));
 }
 function toggleTask(id){
 const crop=id.slice(1),type=id[0],g=gardenEntry(crop);
 if(doneTasks.has(id)){doneTasks.delete(id);}
 else{
 doneTasks.add(id);
-// Laat de plant een fase opschuiven wanneer je de taak afvinkt
 if(g){
-if(type==='z'){g.status='gezaaid';toast('🌱 Gezaaid! Volgende stap volgt vanzelf.');}
+if(type==='z'){g.status='gezaaid';g.gezaaidOp=Date.now();const wk=groeiWeken(crop);toast(`🌱 Gezaaid! Oogstklaar over ±${wk} weken.`);}
 else if(type==='v'){g.status='uitgeplant';toast('🪴 Uitgeplant — nu groeien maar.');}
-else if(type==='o'){g.status='groeit';harvestLog[crop]=(harvestLog[crop]||0)+1;toast('🧺 Geoogst — top!');}
+else if(type==='o'){registreerOogst(crop);g.status='groeit';}
 }
 }
-renderHome();save();
+checkBadges();renderHome();save();
 }
+// Echte oogst registreren met euro-waarde
+function registreerOogst(crop){
+const p=plantByName(crop);
+const euro=p?plantOpbrengstEuro(p)/Math.max(1,(p.k.join('').match(/O/g)||['O']).length):0; // waarde per oogstbeurt
+harvestLog[crop]=(harvestLog[crop]||0)+1;
+harvestHistory.push({n:crop,datum:Date.now(),euro:Math.round(euro*100)/100});
+toast(`🧺 Geoogst! +${fmtEuro(euro)} bespaard 🎉`);
+}
+// Jaarlijkse groente+fruit behoefte per persoon (kg) — bron: gemiddeld NL huishouden ±163kg
+const BEHOEFTE_PP=163;
+// Hoeveel kg levert jouw tuin theoretisch per jaar (alle gewassen samen)
+function tuinOpbrengstKg(){
+let kg=0;myGarden.forEach(g=>{const p=plantByName(g.n);const e=ECON[g.n];if(p&&e)kg+=e.kg*p.p*settings.personen;});
+return kg;
+}
+// Dekkingsgraad = welk deel van de behoefte van het huishouden je zelf teelt
+function dekkingPct(){
+const behoefte=BEHOEFTE_PP*settings.personen;
+if(behoefte<=0)return 0;
+const raw=(tuinOpbrengstKg()/behoefte)*100;
+return raw;
+}
+// De getoonde meter: dekking afgezet tegen het PERSOONLIJKE doel van de gebruiker
+function getDoel(){return settings.doel||85;} // standaard 85%, instelbaar
 function calcPct(){
 if(!myGarden.length)return 0;
-const base={klein:24,middel:46,groot:68}[settings.ruimte]||40;
-const variety=Math.min(20,myGarden.length*2.2);
-const harvests=Object.values(harvestLog).reduce((a,b)=>a+b,0);
-const hbon=Math.min(22,harvests*2.5);
-return Math.min(98,Math.round(base*0.45+variety+hbon));
+const dek=dekkingPct();
+const doel=getDoel();
+// toon voortgang naar je doel (kan niet boven 100 van je doel)
+return Math.min(100,Math.round((dek/doel)*100));
 }
+// Echte dekking in % van totale behoefte (voor tekst/besparing)
+function calcDekkingReeel(){return Math.min(100,Math.round(dekkingPct()));}
+
 function updateMeter(){
 const p=calcPct();
+const dek=calcDekkingReeel();
 document.getElementById('meterPct').innerHTML=p+'<small>%</small>';
 setTimeout(()=>document.getElementById('meterFill').style.width=p+'%',100);
 const sub=document.getElementById('meterSub');
 if(p===0)sub.textContent='Voeg gewassen toe om te starten.';
-else if(p<35)sub.textContent='Mooi begin! Blijf zaaien en oogsten.';
-else if(p<70)sub.textContent='Je bent goed op weg naar vrijheid.';
-else sub.textContent='Bijna onafhankelijk — geweldig!';
-renderGrowth(p);
+else if(p<30)sub.textContent=`Je dekt al ${dek}% van wat je huishouden eet. Mooi begin!`;
+else if(p<70)sub.textContent=`${dek}% van jullie groente & fruit komt al uit eigen tuin.`;
+else if(p<100)sub.textContent=`Bijna bij je doel! ${dek}% zelf geteeld.`;
+else sub.textContent=`Doel bereikt — ${dek}% zelfvoorzienend! 🎉`;
+// doel-label onder de balk
+const foot=document.querySelector('.meter-foot');
+if(foot)foot.innerHTML=`<span>Net begonnen</span><span>Jouw doel: ${getDoel()}% zelfvoorzienend</span>`;
+renderGrowth(p,dek);
 renderSavings();
 }
-// Toont waar het percentage naartoe groeit als de huidige planten geoogst worden
-function renderGrowth(now){
+// Toont waar je naartoe groeit
+function renderGrowth(now,dek){
 const el=document.getElementById('growthInfo');if(!el)return;
 if(!myGarden.length){el.innerHTML='';return;}
-// potentieel = percentage als ALLE huidige planten volgroeid + 1x geoogst zouden zijn
-const base={klein:24,middel:46,groot:68}[settings.ruimte]||40;
-const variety=Math.min(20,myGarden.length*2.2);
-const potentialHarvests=myGarden.length; // elk gewas minstens 1 oogst
-const hbon=Math.min(22,potentialHarvests*2.5);
-const potential=Math.min(98,Math.round(base*0.45+variety+hbon));
-// eerstvolgende oogstmaand bepalen
+// eerstvolgende oogst
 let soonest=null,soonName='';
 myGarden.forEach(g=>{const pl=plantByName(g.n);if(!pl)return;const k=shiftK(pl.k,KLIM[settings.klimaat].s);for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes('O')){if(soonest===null||i<soonest){soonest=i;soonName=ML[m];}break;}}});
-if(potential>now&&soonest!==null){
-el.innerHTML=`<div class="growth-row">📈 <span>Groeit naar <strong>${potential}%</strong> als je huidige oogst binnen is${soonest===0?' deze maand':' (vanaf '+soonName+')'}</span></div>`;
-}else el.innerHTML='';
+const tekorten=[];
+if(dek<getDoel()){
+// suggestie: welk type ontbreekt nog
+const cats=new Set(myGarden.map(g=>plantByName(g.n)?.cat));
+if(!cats.has('Knolgewassen'))tekorten.push('aardappels of uien (vullen veel kg)');
+else if(!cats.has('Groenten'))tekorten.push('tomaat of courgette');
+else tekorten.push('meer planten van wat je al hebt');
+}
+let html='';
+if(soonest!==null)html+=`<div class="growth-row">📈 <span>Volgende oogst${soonest===0?' deze maand':' in '+soonName}</span></div>`;
+if(tekorten.length)html+=`<div class="growth-row" style="color:var(--terra)">💡 <span>Tip om je doel te halen: voeg <strong>${tekorten[0]}</strong> toe</span></div>`;
+el.innerHTML=html;
 }
 // Toont besparing in euro's + tijdlijn van komende oogsten
 function renderSavings(){
@@ -1084,14 +1216,16 @@ const maand=jaar/12;
 // tijdlijn: per plant de eerstvolgende oogstmaand + waarde
 const items=myGarden.map(g=>{const p=plantByName(g.n);if(!p)return null;const k=shiftK(p.k,KLIM[settings.klimaat].s);let when=null,wm='';for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes('O')){when=i;wm=m;break;}}if(when===null)return null;return{p,when,wm,euro:plantOpbrengstEuro(p)};}).filter(Boolean).sort((a,b)=>a.when-b.when).slice(0,4);
 const tl=items.map(it=>`<div class="save-tl-item"><div class="stl-emoji">${it.p.e}</div><div class="stl-body"><div class="stl-name">${it.p.n}</div><div class="stl-when">${it.when===0?'Klaar deze maand':'Oogst in '+ML[it.wm]}</div></div><div class="stl-val">${fmtEuro(it.euro)}/jr</div></div>`).join('');
+const echtBespaard=totaalBespaard();
 card.innerHTML=`<div class="save-card">
+${echtBespaard>0?`<div style="background:var(--forest);color:var(--surface);border-radius:14px;padding:14px 16px;margin-bottom:14px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:1.8rem;font-weight:500;line-height:1">${fmtEuro(echtBespaard)}</div><div style="font-size:0.72rem;opacity:0.8;margin-top:3px">al écht bespaard met ${harvestHistory.length} ${harvestHistory.length===1?'oogst':'oogsten'} 🎉</div></div>`:''}
 <div class="save-big">
-<div class="save-box"><div class="save-amt">${fmtEuro(maand)}</div><div class="save-lbl">bespaard per maand</div></div>
-<div class="save-box year"><div class="save-amt">${fmtEuro(jaar)}</div><div class="save-lbl">bespaard per jaar</div></div>
+<div class="save-box"><div class="save-amt">${fmtEuro(maand)}</div><div class="save-lbl">mogelijk per maand</div></div>
+<div class="save-box year"><div class="save-amt">${fmtEuro(jaar)}</div><div class="save-lbl">mogelijk per jaar</div></div>
 </div>
 <div class="save-tl-title">📅 Wat eraan zit te komen</div>
 <div class="save-tl">${tl||'<div style="font-size:0.8rem;color:var(--muted)">Voeg gewassen toe om je oogstkalender te zien.</div>'}</div>
-<div style="font-size:0.66rem;color:var(--muted);margin-top:12px;line-height:1.4;">Schatting op basis van gemiddelde versprijzen in jouw regio. Werkelijke besparing hangt af van je oogst.</div>
+<div style="font-size:0.66rem;color:var(--muted);margin-top:12px;line-height:1.4;">Het grote bedrag is wat je écht bespaarde door te oogsten. De schattingen tonen je volledige potentieel, op basis van versprijzen in jouw regio.</div>
 </div>`;
 }
 
@@ -1127,8 +1261,16 @@ const st=g.status||'te_zaaien';
 const k=shiftK(p.k,KLIM[settings.klimaat].s);
 const findNext=(letter,word)=>{for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes(letter))return i===0?word+' deze maand':word+' in '+ML[m];}return null;};
 if(st==='te_zaaien'){return findNext('Z','Zaaien')||'Dit jaar niet meer te zaaien';}
-if(st==='gezaaid'){return findNext('V','Klaar om uit te planten')||'Groeit verder';}
-if(st==='uitgeplant'){return findNext('O','Oogsten')||'Groeit nog door';}
+if(st==='gezaaid'){
+const wk=wekenTotOogst(g);
+if(wk!==null&&wk>0)return `🌱 Groeit — nog ±${wk} ${wk===1?'week':'weken'} tot oogst`;
+return findNext('V','Klaar om uit te planten')||'Groeit verder';
+}
+if(st==='uitgeplant'){
+const wk=wekenTotOogst(g);
+if(wk!==null&&wk>0)return `🌿 Groeit — nog ±${wk} ${wk===1?'week':'weken'} tot oogst`;
+return rijpGenoeg(g)?(findNext('O','Klaar om te oogsten')||'Klaar om te oogsten'):'Groeit nog door';
+}
 if(st==='groeit'){return findNext('O','Opnieuw oogsten')||'Oogst afgerond';}
 return'';
 }
@@ -1185,7 +1327,7 @@ else{
 myGarden.push({n,status:'te_zaaien'});
 toast(n+' toegevoegd — start met zaaien 🌱');
 }
-save();renderAddGrid();
+checkBadges();save();renderAddGrid();
 }
 
 // ══════════ DETAIL ══════════
@@ -1205,10 +1347,20 @@ const steps=['te_zaaien','gezaaid','uitgeplant','groeit'];
 const curIdx=steps.indexOf(st);
 const dots=steps.map((s,i)=>`<div style="flex:1;text-align:center"><div style="width:30px;height:30px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:0.95rem;background:${i<=curIdx?'var(--mint)':'var(--surface2)'};border:2px solid ${i<=curIdx?'var(--mint)':'var(--line)'};">${STATUS[s].emoji}</div><div style="font-size:0.6rem;color:${i===curIdx?'var(--forest)':'var(--muted)'};margin-top:4px;font-weight:${i===curIdx?'700':'400'}">${STATUS[s].label.split(' ')[0]}</div></div>`).join('<div style="flex:0.3;height:2px;background:var(--line);margin-top:14px;"></div>');
 const nextBtn=cur.next?`<button class="btn btn-mint btn-full" style="margin-top:14px;" onclick="advancePlant('${n}')">${cur.next==='gezaaid'?'🌱 Ik heb gezaaid':cur.next==='uitgeplant'?'🪴 Ik heb uitgeplant':'🧺 Ik heb geoogst'}</button>`:`<button class="btn btn-mint btn-full" style="margin-top:14px;" onclick="advancePlant('${n}')">🧺 Nog een keer geoogst</button>`;
+// Groei-aftelling tonen als de plant gezaaid is
+let groeiLine='';
+if((st==='gezaaid'||st==='uitgeplant')){
+const wk=wekenTotOogst(g);
+if(wk!==null&&wk>0)groeiLine=`<div style="font-size:0.78rem;color:var(--sage);margin-top:10px;text-align:center">🌱 Nog ±${wk} ${wk===1?'week':'weken'} tot je kunt oogsten</div>`;
+else if(wk===0)groeiLine=`<div style="font-size:0.78rem;color:var(--forest);font-weight:600;margin-top:10px;text-align:center">🎉 Klaar om te oogsten!</div>`;
+}
+const failBtn=(st!=='te_zaaien')?`<button class="btn btn-ghost btn-sm btn-full" style="margin-top:8px;color:var(--terra)" onclick="markMislukt('${n}')">🥀 Helaas mislukt — opnieuw beginnen</button>`:'';
 statusBlock=`<div class="detail-block" style="background:var(--mint-soft);border-color:var(--mint);">
 <div class="db-label">🌿 Waar sta jij met deze plant?</div>
 <div style="display:flex;align-items:flex-start;margin-top:10px;">${dots}</div>
+${groeiLine}
 ${nextBtn}
+${failBtn}
 </div>`;
 }
 document.getElementById('dtBody').innerHTML=`
@@ -1219,6 +1371,7 @@ ${statusBlock}
 <div class="detail-block"><div class="db-label">🧺 Oogsten</div><div class="db-text">${p.ot}</div></div>
 <div class="detail-block"><div class="db-label">📦 Bewaren</div><div class="db-text">${p.bw}</div></div>
 <div class="detail-block"><div class="db-label">🍽️ In de keuken</div><div class="db-text">${p.rc}</div></div>
+<div class="detail-block" style="background:var(--mint-soft);border-color:var(--mint)"><div class="db-label">🛒 Wat heb je nodig?</div><div class="db-text" style="margin-bottom:10px">Bekijk zaden en benodigdheden voor ${p.n}.</div>${suppliesFor(p).map(s=>`<button class="btn btn-ghost btn-sm" style="margin:3px 4px 3px 0" onclick="shopGo('${s.zoek.replace(/'/g,'')}')">${s.ico} ${s.naam}</button>`).join('')}</div>
 <button class="btn btn-ghost btn-full" style="margin-top:6px;" onclick="removePlant('${p.n}');showScreen('tuin')">Verwijder uit mijn tuin</button>`;
 showScreen('detail');
 }
@@ -1227,13 +1380,20 @@ function advancePlant(n){
 const g=gardenEntry(n);if(!g)return;
 const cur=STATUS[g.status||'te_zaaien'];
 if(g.status==='groeit'||!cur.next){
-// al volgroeid → tel een extra oogst
-harvestLog[n]=(harvestLog[n]||0)+1;toast('🧺 Oogst genoteerd!');
+registreerOogst(n);
 }else{
 g.status=cur.next;
-if(g.status==='groeit'){harvestLog[n]=(harvestLog[n]||0)+1;}
-toast(g.status==='gezaaid'?'🌱 Gezaaid!':g.status==='uitgeplant'?'🪴 Uitgeplant!':'🧺 Geoogst — top!');
+if(g.status==='gezaaid'){g.gezaaidOp=Date.now();const wk=groeiWeken(n);toast(`🌱 Gezaaid! Oogstklaar over ±${wk} weken.`);}
+else if(g.status==='uitgeplant'){toast('🪴 Uitgeplant!');}
+else if(g.status==='groeit'){registreerOogst(n);}
 }
+checkBadges();save();openDetail(n);renderHome();
+}
+// Plant markeren als mislukt en opnieuw beginnen
+function markMislukt(n){
+const g=gardenEntry(n);if(!g)return;
+g.status='te_zaaien';delete g.gezaaidOp;
+toast('🥀 Geen zorgen — elke tuinier verliest planten. Probeer opnieuw!');
 save();openDetail(n);renderHome();
 }
 
@@ -1249,7 +1409,7 @@ c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter</h3><p>Maak een
 return;
 }
 const plants=gardenPlants();
-if(!plants.length){
+if(!plants.length&&id!=='shop'){
 c.innerHTML=`<div class="empty-card"><div class="empty-emoji">🍃</div><div class="empty-title serif">Nog niets te ontdekken</div><div class="empty-text">Voeg gewassen toe aan je tuin. Dan tonen we hier bewaartips en recepten die bij jouw oogst passen.</div><button class="btn btn-primary" onclick="openAddSheet()">＋ Voeg gewassen toe</button></div>`;
 return;
 }
@@ -1283,10 +1443,66 @@ return `<div class="recipe-card">
 </div>
 </div>`;
 }).join('');
+}else if(id==='bewaar'){
+const plants=gardenPlants();
+c.innerHTML=`<div class="discover-intro"><div class="di-title serif">Langer houdbaar</div><div class="di-text">Vers bewaren én methodes om je oogst maanden goed te houden — zodat je ook buiten het seizoen van eigen tuin eet.</div></div>`+
+plants.map(p=>{
+const methods=BEWAAR[p.n]||[];
+const verseTip=`<div class="rc-text" style="margin-bottom:${methods.length?'8px':'0'}">🧊 <strong>Vers:</strong> ${p.bw}</div>`;
+const methodCards=methods.map((mm,mi)=>{
+const stappen=mm.stap.map(s=>`<li>${s}</li>`).join('');
+return `<div style="border:1px solid var(--line);border-radius:13px;padding:12px 14px;margin-top:8px;background:var(--bg)">
+<div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.bw-arr').textContent=this.nextElementSibling.classList.contains('open')?'▲':'▼'">
+<div><span style="font-size:1.1rem">${mm.ico}</span> <strong style="font-size:0.86rem">${mm.m}</strong><div style="font-size:0.7rem;color:var(--sage);margin-top:1px">Houdbaar: ${mm.dur}</div></div>
+<span class="bw-arr" style="color:var(--sage)">▼</span>
+</div>
+<div class="rc-detail"><div class="rc-section-lbl" style="margin-top:8px">Stap voor stap</div><ol class="rc-steps">${stappen}</ol></div>
+</div>`;
+}).join('');
+return `<div class="recipe-card"><div class="rc-top"><div class="rc-emoji">${p.e}</div><div class="rc-name">${p.n}</div></div>${verseTip}${methodCards||(methods.length?'':'<div style="font-size:0.74rem;color:var(--muted)">Meer bewaarmethodes voor dit gewas komen binnenkort.</div>')}</div>`;
+}).join('');
+}else if(id==='shop'){
+renderShop(c);
 }else{
 const plants=gardenPlants();
-c.innerHTML=`<div class="discover-intro"><div class="di-title serif">Langer houdbaar</div><div class="di-text">Zo bewaar je jouw oogst en verspil je niets.</div></div>`+plants.map(p=>`<div class="recipe-card"><div class="rc-top"><div class="rc-emoji">${p.e}</div><div class="rc-name">${p.n}</div></div><div class="rc-text">${p.bw}</div></div>`).join('');
+c.innerHTML='';
 }
+}
+// ══════════ SHOP (per gewas + algemeen, met verborgen affiliate) ══════════
+function renderShop(c){
+const plants=gardenPlants();
+const algemeen=[
+{naam:'Biologische zaden-startpakket',zoek:'biologisch zaden pakket moestuin',ico:'🌱',pr:'vanaf €15'},
+{naam:'Verhoogde moestuinbak',zoek:'verhoogde moestuinbak hout',ico:'🪴',pr:'vanaf €45'},
+{naam:'Tuingereedschap starterset',zoek:'tuingereedschap set',ico:'🧰',pr:'vanaf €25'},
+{naam:'Biologische tuinaarde',zoek:'biologische tuinaarde groenten',ico:'🌍',pr:'vanaf €8'},
+{naam:'Gieter & broeskop',zoek:'gieter tuin',ico:'💧',pr:'vanaf €12'},
+{naam:'Weckpotten voor inmaken',zoek:'weckpotten inmaken set',ico:'🫙',pr:'vanaf €18'},
+];
+let perGewas='';
+if(plants.length){
+perGewas=`<div class="discover-intro"><div class="di-title serif">Voor jouw tuin</div><div class="di-text">Precies wat je nodig hebt voor de gewassen die jij teelt.</div></div>`+
+plants.map(p=>{
+const sup=suppliesFor(p);
+const items=sup.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)">
+<span style="font-size:1.2rem">${s.ico}</span>
+<div style="flex:1;font-size:0.84rem;font-weight:500">${s.naam}</div>
+<button class="btn btn-mint btn-sm" onclick="shopGo('${s.zoek.replace(/'/g,"")}')">Bekijk</button>
+</div>`).join('');
+return `<div class="recipe-card"><div class="rc-top"><div class="rc-emoji">${p.e}</div><div class="rc-name">${p.n}</div></div>${items}</div>`;
+}).join('');
+}
+const algCards=algemeen.map(a=>`<div class="recipe-card" style="display:flex;align-items:center;gap:12px">
+<div style="font-size:1.8rem">${a.ico}</div>
+<div style="flex:1"><div style="font-weight:600;font-size:0.9rem">${a.naam}</div><div style="font-size:0.74rem;color:var(--muted)">${a.pr}</div></div>
+<button class="btn btn-mint btn-sm" onclick="shopGo('${a.zoek.replace(/'/g,"")}')">Bekijk</button>
+</div>`).join('');
+c.innerHTML=perGewas+`<div class="discover-intro" style="margin-top:18px"><div class="di-title serif">Tuinwinkel</div><div class="di-text">Alles om te starten en je oogst te bewaren.</div></div>`+algCards+
+`<div style="font-size:0.68rem;color:var(--muted);text-align:center;margin:16px 22px 0;line-height:1.5">Greenlabs kan een kleine vergoeding ontvangen als je via deze links iets koopt. Voor jou verandert de prijs niet — zo houden we de app betaalbaar. 🌱</div>`;
+}
+function shopGo(zoek){
+// affiliate-link wordt automatisch opgebouwd; klant ziet gewoon de winkel
+window.open(affLink(zoek),'_blank','noopener');
 }
 let dokB64=null;
 function handleDok(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{dokB64=ev.target.result.split(',')[1];document.getElementById('dokImg').src=ev.target.result;document.getElementById('dokPreview').style.display='block';document.getElementById('dokResult').style.display='none';};r.readAsDataURL(f);}
@@ -1305,12 +1521,19 @@ function fillSettings(){
 document.getElementById('setPersonen').value=settings.personen;
 document.getElementById('setRuimte').value=settings.ruimte;
 document.getElementById('setKlimaat').value=settings.klimaat;
+const dl=document.getElementById('setDoel');if(dl)dl.value=settings.doel||85;
+renderBadges();
+}
+function renderBadges(){
+const el=document.getElementById('badgeGrid');if(!el)return;
+el.innerHTML=BADGES.map(b=>`<div class="badge-item ${badges.includes(b.id)?'got':''}"><div class="badge-emoji">${b.emoji}</div><div class="badge-naam">${b.naam}</div></div>`).join('');
 }
 function syncSettings(){
 settings.personen=parseInt(document.getElementById('setPersonen').value)||1;
 settings.ruimte=document.getElementById('setRuimte').value;
 settings.klimaat=document.getElementById('setKlimaat').value;
-save();toast('Opgeslagen ✓');
+const dl=document.getElementById('setDoel');if(dl)settings.doel=parseInt(dl.value)||85;
+save();renderHome();toast('Opgeslagen ✓');
 }
 function resetAll(){if(confirm('Je tuin en gegevens wissen? Dit kan niet ongedaan worden.')){localStorage.removeItem(KEY);localStorage.removeItem('gl_onboarded');location.reload();}}
 
@@ -1440,7 +1663,7 @@ function doLogout(){if(confirm('Uitloggen? Je tuin blijft op dit apparaat bewaar
 
 // ══════════ INIT ══════════
 const had=load();
-fillSettings();renderHome();refreshAccount();updateNotifUI();
+fillSettings();renderHome();refreshAccount();updateNotifUI();checkBadges();
 if(userLat)fetchWeer();
 scheduleNotif();
 let onboarded=false;try{onboarded=!!localStorage.getItem('gl_onboarded');}catch(e){}
