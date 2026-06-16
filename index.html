@@ -88,6 +88,20 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .growth-row{display:flex;align-items:center;gap:8px;margin-top:13px;padding-top:13px;border-top:1px solid var(--line);font-size:0.78rem;color:var(--sage);}
 .growth-row strong{color:var(--forest);}
 .save-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow);}
+.save-strip{margin:16px 14px 0;background:linear-gradient(120deg,var(--forest),var(--forest2));border-radius:18px;padding:15px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;box-shadow:var(--shadow);color:var(--surface);}
+.save-strip:active{transform:scale(0.99);}
+.save-strip-ico{font-size:1.6rem;}
+.save-strip-body{flex:1;}
+.save-strip-amt{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:500;line-height:1;}
+.save-strip-lbl{font-size:0.72rem;opacity:0.78;margin-top:2px;}
+.save-strip-arr{font-size:1.2rem;opacity:0.7;}
+.calc-overlay{position:fixed;inset:0;background:rgba(31,58,28,0.45);z-index:350;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(3px);}
+.calc-overlay.open{display:flex;}
+.calc-modal{background:var(--surface);border-radius:22px;padding:24px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
+.calc-modal h3{font-family:'Fraunces',serif;font-size:1.3rem;color:var(--forest);font-weight:500;margin-bottom:10px;}
+.calc-modal p{font-size:0.86rem;line-height:1.6;color:var(--ink);margin-bottom:10px;}
+.calc-modal .num{font-weight:700;color:var(--sage);}
+.plant-visual{width:100%;height:130px;display:flex;align-items:flex-end;justify-content:center;margin:6px 0;}
 .save-big{display:flex;gap:12px;margin-bottom:16px;}
 .save-box{flex:1;background:var(--mint-soft);border-radius:16px;padding:15px;text-align:center;}
 .save-box.year{background:var(--terra-soft);}
@@ -199,7 +213,8 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .add-legend b{color:var(--forest);}
 
 /* PLANT DETAIL */
-.detail-hero{background:linear-gradient(160deg,var(--forest),var(--forest2));padding:calc(20px + env(safe-area-inset-top)) 22px 26px;color:var(--surface);text-align:center;border-radius:0 0 28px 28px;}
+.detail-hero{background:linear-gradient(160deg,var(--forest),var(--forest2));padding:calc(20px + env(safe-area-inset-top)) 22px 26px;color:var(--surface);text-align:center;border-radius:0 0 28px 28px;position:relative;overflow:hidden;}
+.hero-botanical{position:absolute;inset:0;width:100%;height:100%;}
 .detail-emoji{font-size:3.4rem;}
 .detail-name{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:500;margin-top:4px;}
 .detail-cat{font-size:0.8rem;opacity:0.7;margin-top:2px;}
@@ -352,6 +367,16 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 .badge-item.got{opacity:1;}
 .badge-emoji{font-size:1.8rem;}
 .badge-naam{font-size:0.6rem;color:var(--muted);margin-top:3px;line-height:1.2;}
+.save-strip{display:flex;align-items:center;gap:13px;margin:16px 14px 0;background:linear-gradient(160deg,var(--mint-soft),var(--surface));border:1px solid var(--mint);border-radius:18px;padding:15px 17px;cursor:pointer;transition:transform .15s;box-shadow:var(--shadow);}
+.save-strip:active{transform:scale(0.99);}
+.save-strip-ico{font-size:1.7rem;}
+.save-strip-amt{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:500;color:var(--forest);}
+.save-strip-sub{font-size:0.72rem;color:var(--muted);margin-top:1px;}
+.calc-overlay{position:fixed;inset:0;background:rgba(31,58,28,0.5);z-index:400;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(3px);}
+.calc-overlay.open{display:flex;animation:fade .2s;}
+.calc-box{background:var(--surface);border-radius:22px;padding:26px;max-width:380px;width:100%;box-shadow:var(--shadow-lg);}
+.calc-title{font-size:1.3rem;color:var(--forest);font-weight:500;margin-bottom:12px;}
+.calc-text{font-size:0.9rem;line-height:1.65;color:var(--ink);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 .philo{margin:26px 22px 8px;text-align:center;font-family:'Fraunces',serif;font-style:italic;font-size:0.92rem;color:var(--sage);line-height:1.5;}
@@ -439,7 +464,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="meter-card">
 <div class="meter-top">
 <div>
-<div class="meter-label">Supermarkt-vrijheid</div>
+<div class="meter-label">Supermarkt-vrijheid <span onclick="event.stopPropagation();showCalcInfo('meter')" style="cursor:pointer;color:var(--muted);font-size:0.75rem;border:1px solid var(--line);border-radius:50%;padding:0 5px;margin-left:3px">?</span></div>
 <div class="meter-sub" id="meterSub">Hoe meer je zelf oogst, hoe vrijer je wordt.</div>
 </div>
 <div class="meter-pct" id="meterPct">0<small>%</small></div>
@@ -449,10 +474,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div id="growthInfo"></div>
 </div>
 
-<div class="sec" id="savingsSec" style="display:none">
-<div class="sec-head"><div class="sec-title">Wat het je oplevert</div></div>
-<div id="savingsCard"></div>
-</div>
+<div id="savingsStrip" style="display:none" onclick="showScreen('besparing')"></div>
 
 <div class="sec">
 <div class="sec-head"><div class="sec-title">Te doen vandaag</div><div class="sec-link" id="taskCountLink"></div></div>
@@ -460,6 +482,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 </div>
 
 <div class="philo">"Wie zaait, oogst meer dan groenten."</div>
+</div>
+
+<!-- ══ BESPARING ══ -->
+<div class="screen" id="screen-besparing">
+<div class="topbar"><div onclick="showScreen('home')" style="cursor:pointer"><div class="tb-title">‹ Besparing</div><div class="tb-sub">Wat zelf telen je oplevert</div></div><div class="loc-pill" onclick="showCalcInfo('besparing')">? Uitleg</div></div>
+<div class="sec" style="margin-top:6px"><div id="savingsCardFull"></div></div>
+<div style="height:20px"></div>
 </div>
 
 <!-- ══ TUIN ══ -->
@@ -515,12 +544,9 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="acc-card" style="padding:17px;">
 <label style="font-size:0.8rem;font-weight:600;color:var(--forest);">Aantal personen</label>
 <input type="number" class="setting-input" id="setPersonen" min="1" max="20" oninput="syncSettings()">
-<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Tuinruimte</label>
-<select class="setting-input" id="setRuimte" onchange="syncSettings()">
-<option value="klein">Klein — balkon / 10m²</option>
-<option value="middel">Middel — 20 tot 40m²</option>
-<option value="groot">Groot — 40m²+</option>
-</select>
+<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Tuinruimte: <span id="m2Label">30</span> m²</label>
+<input type="range" min="2" max="200" step="1" class="setting-input" id="setM2" style="padding:6px 0" oninput="document.getElementById('m2Label').textContent=this.value;syncSettings()">
+<div style="font-size:0.7rem;color:var(--muted);margin-top:4px;line-height:1.4;">Balkon ±5m² · kleine tuin ±15m² · ruime tuin 40m²+. Hiermee berekenen we of je planten passen.</div>
 <label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Klimaatzone</label>
 <select class="setting-input" id="setKlimaat" onchange="syncSettings()">
 <option value="gematigd">Gematigd (NL/BE/DE/UK)</option>
@@ -637,10 +663,19 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <!-- ══ PLANT DETAIL ══ -->
 <div class="screen" id="screen-detail">
 <div class="detail-hero">
-<div style="text-align:left;margin-bottom:8px;"><span style="cursor:pointer;font-size:0.9rem;opacity:0.8;" onclick="showScreen('tuin')">‹ Mijn tuin</span></div>
-<div class="detail-emoji" id="dtEmoji">🌱</div>
-<div class="detail-name serif" id="dtName">—</div>
-<div class="detail-cat" id="dtCat">—</div>
+<svg class="hero-botanical" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<g fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2">
+<path d="M40 200 Q40 120 70 90 Q40 110 38 70 M40 130 Q70 120 90 100 M40 150 Q15 140 5 115"/>
+<path d="M360 200 Q360 110 330 80 Q360 100 364 60 M360 120 Q330 110 312 92 M360 145 Q385 135 394 108"/>
+</g>
+<g fill="rgba(255,255,255,0.05)">
+<circle cx="70" cy="40" r="3"/><circle cx="120" cy="25" r="2"/><circle cx="300" cy="35" r="2.5"/><circle cx="340" cy="20" r="2"/>
+</g>
+</svg>
+<div style="text-align:left;margin-bottom:8px;position:relative;z-index:1"><span style="cursor:pointer;font-size:0.9rem;opacity:0.8;" onclick="showScreen('tuin')">‹ Mijn tuin</span></div>
+<div class="detail-emoji" id="dtEmoji" style="position:relative;z-index:1">🌱</div>
+<div class="detail-name serif" id="dtName" style="position:relative;z-index:1">—</div>
+<div class="detail-cat" id="dtCat" style="position:relative;z-index:1">—</div>
 </div>
 <div class="detail-body" id="dtBody"></div>
 </div>
@@ -691,6 +726,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="badge-pop-title">Mijlpaal behaald!</div>
 <div class="badge-pop-naam" id="badgePopNaam">—</div>
 <div class="badge-pop-uitleg" id="badgePopUitleg">—</div>
+</div>
+<div class="calc-overlay" id="calcInfo" onclick="if(event.target===this)closeCalcInfo()">
+<div class="calc-box">
+<div class="calc-title serif" id="calcInfoTitle">—</div>
+<div class="calc-text" id="calcInfoText">—</div>
+<button class="btn btn-primary btn-full" style="margin-top:18px" onclick="closeCalcInfo()">Duidelijk!</button>
+</div>
 </div>
 
 <!-- ══ BOTTOM NAV ══ -->
@@ -826,6 +868,52 @@ return e.kg*p.p*settings.personen*e.prijs*reg.mult; // €/jaar voor jouw aantal
 function muntTeken(){return(PRIJSREGIO[settings.klimaat]||PRIJSREGIO.gematigd).munt;}
 function fmtEuro(v){return muntTeken()+Math.round(v);}
 
+// ══════════ RUIMTE (m² per eenheid 'p') ══════════
+// Hoeveel m² één 'p'-eenheid van een gewas nodig heeft (incl. looppad-aandeel)
+const RUIMTE_M2={
+'Tomaat':0.5,'Sla':0.1,'Komkommer':0.6,'Wortel':0.02,'Courgette':1.0,'Aardappel':0.3,'Boon':0.05,
+'Ui':0.03,'Aardbei':0.15,'Paprika':0.4,'Knoflook':0.03,'Spinazie':0.04,'Pompoen':1.5,'Broccoli':0.5,
+'Radijs':0.01,'Rode biet':0.05,'Prei':0.05,'Boerenkool':0.5,'Erwt':0.05,'Aubergine':0.5,'Maïs':0.25,
+'Peterselie':0.1,'Basilicum':0.1,'Bieslook':0.1,'Munt':0.15,'Pastinaak':0.05,'Snijbiet':0.15,
+'Bloemkool':0.6,'Spruitjes':0.6,'Rabarber':1.0,'Framboos':0.8,'Peper':0.4,'Veldsla':0.04,
+'Selderij':0.2,'Venkel':0.15,'Witlof':0.1,'Rucola':0.04,'Postelein':0.04,'Asperge':0.5,
+'Appel':6,'Peer':6,'Blauwe bes':1.5,'Druif':2,'Kervel':0.1,'Dille':0.1,'Tijm':0.1,'Rozemarijn':0.2,
+};
+function ruimteM2(n){return RUIMTE_M2[n]||0.2;}
+// Hoeveel m² jouw huidige tuin nodig heeft
+function benodigdeM2(){
+let m=0;myGarden.forEach(g=>{m+=ruimteM2(g.n)*(plantByName(g.n)?.p||1)*settings.personen;});
+return m;
+}
+function beschikbareM2(){return settings.m2||{klein:10,middel:30,groot:60}[settings.ruimte]||30;}
+
+// ══════════ COMBINATIES (companion planting) ══════════
+// Gewassen die elkaar helpen groeien (klassieke combinaties)
+const COMBOS={
+'Tomaat':['Basilicum','Ui','Peterselie','Wortel'],
+'Wortel':['Ui','Prei','Sla','Radijs'],
+'Sla':['Wortel','Radijs','Komkommer','Bieslook'],
+'Komkommer':['Sla','Boon','Dille','Maïs'],
+'Aardappel':['Boon','Maïs','Boerenkool'],
+'Boon':['Maïs','Komkommer','Aardappel','Courgette'],
+'Ui':['Wortel','Rode biet','Sla','Tomaat'],
+'Maïs':['Boon','Courgette','Pompoen'],
+'Courgette':['Boon','Maïs','Munt'],
+'Pompoen':['Maïs','Boon'],
+'Aardbei':['Sla','Spinazie','Bieslook'],
+'Paprika':['Basilicum','Ui','Tomaat'],
+'Broccoli':['Ui','Bieslook','Rode biet'],
+'Kool':['Ui','Bieslook','Aardappel'],
+};
+function combosVoor(n){return(COMBOS[n]||[]).filter(c=>PL.some(p=>p.n===c));}
+
+// ══════════ ABONNEMENT / AFSCHERMING ══════════
+// Gratis = max 5 gewassen + basisfuncties. Groen = alles.
+const GRATIS_LIMIET=5;
+function isPremium(){try{return localStorage.getItem('gl_premium')==='1';}catch(e){return false;}}
+function setPremium(v){try{v?localStorage.setItem('gl_premium','1'):localStorage.removeItem('gl_premium');}catch(e){}}
+function magNogToevoegen(){return isPremium()||myGarden.length<GRATIS_LIMIET;}
+
 // ══════════════════════════════════════════════════════════════
 // AFFILIATE CONFIG — vul hier later je eigen partner-codes in.
 // Zet je code achter 'tag'. De app bouwt de links dan automatisch met jouw code.
@@ -930,8 +1018,8 @@ let harvestLog={};
 let harvestHistory=[]; // [{n, datum, euro}] echte oogsten
 let badges=[]; // behaalde mijlpalen
 let userLat=null,userLon=null;
-let settings={personen:2,ruimte:'middel',klimaat:'gematigd',doel:85};
-let obData={personen:2,ruimte:'middel',klimaat:'gematigd',doel:85};
+let settings={personen:2,ruimte:'middel',m2:30,klimaat:'gematigd',doel:85,startMaand:null};
+let obData={personen:2,ruimte:'middel',m2:30,klimaat:'gematigd',doel:85};
 let obStep=0, deferredPWA=null, addCat='Alle', detailPlant=null;
 
 // Status-stappen die een plant doorloopt
@@ -998,7 +1086,10 @@ window.scrollTo(0,0);
 if(id==='tuin')renderGarden();
 if(id==='ontdek')discTab(currentDisc,null);
 if(id==='home')renderHome();
+if(id==='besparing')renderSavings();
 if(id==='account'){fillSettings();refreshAccount();updateNotifUI();}
+// Besparing en Plan zijn 'sub'-schermen → markeer Home als actief in de balk
+if(id==='besparing'||id==='plan'||id==='detail'){const hn=document.getElementById('nav-home');if(hn&&id!=='detail')hn.classList.add('active');}
 }
 
 // ══════════ LOCATIE + WEER ══════════
@@ -1149,12 +1240,19 @@ let kg=0;myGarden.forEach(g=>{const p=plantByName(g.n);const e=ECON[g.n];if(p&&e
 return kg;
 }
 // Dekkingsgraad = welk deel van de behoefte van het huishouden je zelf teelt
+// Houdt rekening met beschikbare ruimte: meer planten dan je m² aankan telt niet mee
 function dekkingPct(){
 const behoefte=BEHOEFTE_PP*settings.personen;
 if(behoefte<=0)return 0;
-const raw=(tuinOpbrengstKg()/behoefte)*100;
+let kg=tuinOpbrengstKg();
+// ruimte-correctie: als je tuin meer m² nodig heeft dan beschikbaar, schaal de opbrengst terug
+const nodig=benodigdeM2(),beschikbaar=beschikbareM2();
+if(nodig>beschikbaar&&nodig>0)kg=kg*(beschikbaar/nodig);
+const raw=(kg/behoefte)*100;
 return raw;
 }
+// Past je tuin nog in je ruimte?
+function ruimteVol(){return benodigdeM2()>beschikbareM2();}
 // De getoonde meter: dekking afgezet tegen het PERSOONLIJKE doel van de gebruiker
 function getDoel(){return settings.doel||85;} // standaard 85%, instelbaar
 function calcPct(){
@@ -1201,33 +1299,80 @@ else tekorten.push('meer planten van wat je al hebt');
 }
 let html='';
 if(soonest!==null)html+=`<div class="growth-row">📈 <span>Volgende oogst${soonest===0?' deze maand':' in '+soonName}</span></div>`;
-if(tekorten.length)html+=`<div class="growth-row" style="color:var(--terra)">💡 <span>Tip om je doel te halen: voeg <strong>${tekorten[0]}</strong> toe</span></div>`;
+// Ruimte-waarschuwing als de tuin niet meer past
+if(ruimteVol()){
+const nodig=Math.ceil(benodigdeM2());
+html+=`<div class="growth-row" style="color:var(--terra)">📐 <span>Je tuin vraagt ±${nodig}m², je hebt ${beschikbareM2()}m². Vergroot je ruimte of kies compacte gewassen.</span></div>`;
+} else if(tekorten.length){
+html+=`<div class="growth-row" style="color:var(--terra)">💡 <span>Tip om je doel te halen: voeg <strong>${tekorten[0]}</strong> toe</span></div>`;
+}
+// Combinatie-tip: stel een goede buur voor bij een gewas dat je hebt
+const comboTip=combinatieTip();
+if(comboTip)html+=`<div class="growth-row" style="color:var(--sage)">🤝 <span>${comboTip}</span></div>`;
 el.innerHTML=html;
+}
+// Zoekt een goede companion die je nog niet hebt
+function combinatieTip(){
+for(const g of myGarden){
+const buren=combosVoor(g.n).filter(b=>!inGarden(b));
+if(buren.length)return `<strong>${buren[0]}</strong> groeit goed naast je ${g.n}`;
+}
+return null;
 }
 // Toont besparing in euro's + tijdlijn van komende oogsten
 function renderSavings(){
-const sec=document.getElementById('savingsSec'),card=document.getElementById('savingsCard');
-if(!sec||!card)return;
-if(!myGarden.length){sec.style.display='none';return;}
-sec.style.display='block';
-// jaarbesparing = som van opbrengst per plant in jouw tuin
+const strip=document.getElementById('savingsStrip');
+const full=document.getElementById('savingsCardFull');
+if(!myGarden.length){if(strip)strip.style.display='none';if(full)full.innerHTML='';return;}
 let jaar=0;myGarden.forEach(g=>{const p=plantByName(g.n);if(p)jaar+=plantOpbrengstEuro(p);});
 const maand=jaar/12;
-// tijdlijn: per plant de eerstvolgende oogstmaand + waarde
-const items=myGarden.map(g=>{const p=plantByName(g.n);if(!p)return null;const k=shiftK(p.k,KLIM[settings.klimaat].s);let when=null,wm='';for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes('O')){when=i;wm=m;break;}}if(when===null)return null;return{p,when,wm,euro:plantOpbrengstEuro(p)};}).filter(Boolean).sort((a,b)=>a.when-b.when).slice(0,4);
-const tl=items.map(it=>`<div class="save-tl-item"><div class="stl-emoji">${it.p.e}</div><div class="stl-body"><div class="stl-name">${it.p.n}</div><div class="stl-when">${it.when===0?'Klaar deze maand':'Oogst in '+ML[it.wm]}</div></div><div class="stl-val">${fmtEuro(it.euro)}/jr</div></div>`).join('');
 const echtBespaard=totaalBespaard();
-card.innerHTML=`<div class="save-card">
-${echtBespaard>0?`<div style="background:var(--forest);color:var(--surface);border-radius:14px;padding:14px 16px;margin-bottom:14px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:1.8rem;font-weight:500;line-height:1">${fmtEuro(echtBespaard)}</div><div style="font-size:0.72rem;opacity:0.8;margin-top:3px">al écht bespaard met ${harvestHistory.length} ${harvestHistory.length===1?'oogst':'oogsten'} 🎉</div></div>`:''}
+// Compacte strip op Home — nodigt uit om door te tikken
+if(strip){
+strip.style.display='block';
+strip.className='';
+strip.innerHTML=`<div class="save-strip">
+<div class="save-strip-ico">💶</div>
+<div style="flex:1">
+<div class="save-strip-amt">${echtBespaard>0?fmtEuro(echtBespaard)+' bespaard':fmtEuro(maand)+' / maand mogelijk'}</div>
+<div class="save-strip-sub">${echtBespaard>0?`met ${harvestHistory.length} ${harvestHistory.length===1?'oogst':'oogsten'} — tik voor details`:'Bekijk wat zelf telen oplevert'}</div>
+</div>
+<div style="color:var(--muted)">›</div>
+</div>`;
+}
+// Volledige kaart op de Besparing-pagina
+if(full){
+const items=myGarden.map(g=>{const p=plantByName(g.n);if(!p)return null;const k=shiftK(p.k,KLIM[settings.klimaat].s);let when=null,wm='';for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes('O')){when=i;wm=m;break;}}if(when===null)return null;return{p,when,wm,euro:plantOpbrengstEuro(p)};}).filter(Boolean).sort((a,b)=>a.when-b.when);
+const tl=items.map(it=>`<div class="save-tl-item"><div class="stl-emoji">${it.p.e}</div><div class="stl-body"><div class="stl-name">${it.p.n}</div><div class="stl-when">${it.when===0?'Klaar deze maand':'Oogst in '+ML[it.wm]}</div></div><div class="stl-val">${fmtEuro(it.euro)}/jr</div></div>`).join('');
+full.innerHTML=`<div class="save-card">
+${echtBespaard>0?`<div style="background:var(--forest);color:var(--surface);border-radius:14px;padding:18px 16px;margin-bottom:14px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:2.2rem;font-weight:500;line-height:1">${fmtEuro(echtBespaard)}</div><div style="font-size:0.74rem;opacity:0.8;margin-top:4px">al écht bespaard met ${harvestHistory.length} ${harvestHistory.length===1?'oogst':'oogsten'} 🎉</div></div>`:''}
 <div class="save-big">
 <div class="save-box"><div class="save-amt">${fmtEuro(maand)}</div><div class="save-lbl">mogelijk per maand</div></div>
 <div class="save-box year"><div class="save-amt">${fmtEuro(jaar)}</div><div class="save-lbl">mogelijk per jaar</div></div>
 </div>
-<div class="save-tl-title">📅 Wat eraan zit te komen</div>
+<div class="save-tl-title">📅 Jouw oogstkalender</div>
 <div class="save-tl">${tl||'<div style="font-size:0.8rem;color:var(--muted)">Voeg gewassen toe om je oogstkalender te zien.</div>'}</div>
-<div style="font-size:0.66rem;color:var(--muted);margin-top:12px;line-height:1.4;">Het grote bedrag is wat je écht bespaarde door te oogsten. De schattingen tonen je volledige potentieel, op basis van versprijzen in jouw regio.</div>
-</div>`;
+<div style="font-size:0.66rem;color:var(--muted);margin-top:12px;line-height:1.4;">Het grote bedrag is wat je écht bespaarde door te oogsten. De schattingen tonen je volledige potentieel, op basis van versprijzen in jouw regio. Tik op "Uitleg" om te zien hoe we rekenen.</div>
+</div>
+${harvestHistory.length?`<div class="save-card" style="margin-top:12px"><div class="save-tl-title">🧺 Jouw oogstgeschiedenis</div><div class="save-tl">${harvestHistory.slice().reverse().slice(0,10).map(hh=>{const p=plantByName(hh.n);const d=new Date(hh.datum);return `<div class="save-tl-item"><div class="stl-emoji">${p?p.e:'🌿'}</div><div class="stl-body"><div class="stl-name">${hh.n}</div><div class="stl-when">${d.getDate()} ${ML[d.getMonth()]}</div></div><div class="stl-val">+${fmtEuro(hh.euro)}</div></div>`;}).join('')}</div></div>`:''}`;
 }
+}
+// Uitleg-popup: hoe zijn de cijfers berekend?
+function showCalcInfo(welk){
+let titel,tekst;
+if(welk==='meter'){
+titel='🌿 Hoe berekenen we je vrijheid?';
+tekst=`We gaan uit van wat een gemiddeld huishouden per jaar aan groente en fruit eet: ongeveer <strong>163 kg per persoon</strong>.<br><br>Voor jouw ${settings.personen} ${settings.personen===1?'persoon':'personen'} is dat <strong>${163*settings.personen} kg per jaar</strong>.<br><br>We tellen op hoeveel kilo jouw gewassen samen kunnen opleveren, en delen dat door die behoefte. Dat is je echte dekking. De meter zet die dekking af tegen jouw gekozen doel (${getDoel()}%).`;
+} else {
+titel='💶 Hoe berekenen we je besparing?';
+tekst=`Per gewas weten we de gemiddelde opbrengst in kilo's en de gemiddelde <strong>supermarktprijs per kilo</strong> in jouw regio.<br><br>Opbrengst × prijs × jouw aantal personen = wat je zou betalen in de winkel.<br><br>Het grote groene bedrag is anders: dat is wat je <strong>écht</strong> hebt bespaard, opgeteld telkens als je een oogst noteert. Geen schatting, maar jouw werkelijke oogst.`;
+}
+const o=document.getElementById('calcInfo');
+document.getElementById('calcInfoTitle').innerHTML=titel;
+document.getElementById('calcInfoText').innerHTML=tekst;
+o.classList.add('open');
+}
+function closeCalcInfo(){document.getElementById('calcInfo').classList.remove('open');}
 
 // ══════════ TUIN ══════════
 function renderGarden(){
@@ -1286,13 +1431,19 @@ document.getElementById('addCatChips').innerHTML=cats.map(c=>`<button class="cat
 function setAddCat(c){addCat=c;renderCatChips();renderAddGrid();}
 // Is dit gewas een aanrader voor jouw ruimte & klimaat?
 function isRecommended(p){
-// Ruimte: kleine tuin → alleen compacte gewassen; middel → niet de hele grote; groot → alles mag
-const ruimteOk = settings.ruimte==='klein' ? p.r==='klein' : settings.ruimte==='middel' ? p.r!=='groot' : true;
-// Klimaat: warmteminnende gewassen zijn in koud klimaat lastiger; in mediterraan/tropisch juist top
+// Ruimte op basis van échte m²: weinig ruimte → compacte gewassen aanraden
+const beschikbaar=beschikbareM2();
+let ruimteOk;
+if(beschikbaar<=12)ruimteOk=p.r==='klein';
+else if(beschikbaar<=35)ruimteOk=p.r!=='groot';
+else ruimteOk=true;
+// Klimaat: warmteminnende gewassen lastig in koud klimaat
 const warm=['Tomaat','Komkommer','Paprika','Aubergine','Peper','Maïs','Pompoen','Basilicum','Courgette'];
 let klimaatOk=true;
 if(settings.klimaat==='koud'&&warm.includes(p.n))klimaatOk=false;
-return ruimteOk&&klimaatOk;
+// Combinatie-bonus: groeit goed naast iets dat je al hebt
+const combo=myGarden.some(g=>combosVoor(g.n).includes(p.n));
+return (ruimteOk&&klimaatOk)||combo;
 }
 function renderAddGrid(){
 const q=(document.getElementById('addSearch').value||'').toLowerCase();
@@ -1519,7 +1670,7 @@ if(!r.ok)throw 0;const d=await r.json();body.innerHTML=d.content?.map(c=>c.text|
 // ══════════ ACCOUNT ══════════
 function fillSettings(){
 document.getElementById('setPersonen').value=settings.personen;
-document.getElementById('setRuimte').value=settings.ruimte;
+const mm=document.getElementById('setM2');if(mm){mm.value=settings.m2||30;const ml=document.getElementById('m2Label');if(ml)ml.textContent=settings.m2||30;}
 document.getElementById('setKlimaat').value=settings.klimaat;
 const dl=document.getElementById('setDoel');if(dl)dl.value=settings.doel||85;
 renderBadges();
@@ -1530,10 +1681,10 @@ el.innerHTML=BADGES.map(b=>`<div class="badge-item ${badges.includes(b.id)?'got'
 }
 function syncSettings(){
 settings.personen=parseInt(document.getElementById('setPersonen').value)||1;
-settings.ruimte=document.getElementById('setRuimte').value;
+const mm=document.getElementById('setM2');if(mm)settings.m2=parseInt(mm.value)||30;
 settings.klimaat=document.getElementById('setKlimaat').value;
 const dl=document.getElementById('setDoel');if(dl)settings.doel=parseInt(dl.value)||85;
-save();renderHome();toast('Opgeslagen ✓');
+save();renderHome();
 }
 function resetAll(){if(confirm('Je tuin en gegevens wissen? Dit kan niet ongedaan worden.')){localStorage.removeItem(KEY);localStorage.removeItem('gl_onboarded');location.reload();}}
 
@@ -1574,6 +1725,8 @@ function obAdj(d){obData.personen=Math.max(1,Math.min(20,obData.personen+d));doc
 function obPick(key,val,el){obData[key]=val;el.parentElement.querySelectorAll('.ob-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
 function finishOnboarding(){
 settings={...obData};
+// Zet een m²-startwaarde op basis van de gekozen ruimte
+if(!settings.m2)settings.m2={klein:8,middel:30,groot:60}[settings.ruimte]||30;
 try{localStorage.setItem('gl_onboarded','1');}catch(e){}
 document.getElementById('onboarding').style.display='none';
 fillSettings();renderHome();save();
