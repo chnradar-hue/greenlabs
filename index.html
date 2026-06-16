@@ -1945,5 +1945,13 @@ let onboarded=false;try{onboarded=!!localStorage.getItem('gl_onboarded');}catch(
 if(!onboarded&&!had){document.getElementById('onboarding').style.display='block';}
 else if(!userLat){setTimeout(detectLoc,500);}
 </script>
+
+<!-- ══ VERCEL WEB ANALYTICS ══ -->
+<!-- Telt automatisch bezoekers & paginaweergaven zodra de app op Vercel staat. -->
+<!-- Werkt alleen op de live site (greenlabs-nu.vercel.app), niet in een lokale preview. -->
+<script>
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
