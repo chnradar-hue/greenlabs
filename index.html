@@ -205,6 +205,8 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .add-badge{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--mint);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;opacity:0;transition:opacity .15s;}
 .add-item.added .add-badge{opacity:1;}
 .add-item.rec{border-color:var(--mint);box-shadow:0 0 0 1px var(--mint);}
+.add-item.vol{opacity:0.5;}
+.add-item.vol .add-emoji{filter:grayscale(0.6);}
 .add-rec-tag{position:absolute;top:9px;left:9px;background:var(--mint);color:var(--forest);font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:0.02em;}
 .add-group-title{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--forest);font-weight:500;padding:0 22px;margin:18px 0 9px;display:flex;align-items:center;gap:8px;}
 .add-group-title:first-child{margin-top:4px;}
@@ -568,15 +570,9 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="acc-section">
 <div class="acc-label">Abonnement</div>
 <div class="acc-card">
-<div class="acc-row" onclick="showScreen('plan')">
-<div class="acc-row-ico">🌿</div>
-<div class="acc-row-body"><div class="acc-row-t">Greenlabs Groen</div><div class="acc-row-s">Ontgrendel alle gewassen, weer & meer</div></div>
-<div class="acc-row-arr">›</div>
-</div>
-<div class="acc-row" onclick="showScreen('plan')">
-<div class="acc-row-ico">👨‍👩‍👧</div>
-<div class="acc-row-body"><div class="acc-row-t">Tuin delen met familie</div><div class="acc-row-s">Voeg profielen toe voor je gezin</div></div>
-<div class="acc-row-arr">›</div>
+<div class="acc-row" style="cursor:default">
+<div class="acc-row-ico">🎁</div>
+<div class="acc-row-body"><div class="acc-row-t">Alles gratis tijdens onze lancering</div><div class="acc-row-s">Geniet van alle functies. We bouwen ondertussen aan nog meer moois.</div></div>
 </div>
 </div>
 </div>
@@ -644,7 +640,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <li>Taken naar je agenda</li>
 <li>14 dagen gratis proberen</li>
 </ul>
-<button class="btn btn-mint btn-full" onclick="toast('Betalingen koppelen we in de volgende stap 🌱')">Probeer 14 dagen gratis</button>
+<button class="btn btn-mint btn-full" onclick="setPro(true);toast('Welkom bij Greenlabs Groen! 🌿');showScreen('home')">Probeer 14 dagen gratis</button>
 </div>
 <div class="plan-card">
 <div class="plan-name">👨‍👩‍👧 Familie</div>
@@ -686,12 +682,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="sheet-grip"></div>
 <div class="sheet-head">
 <div class="sheet-title serif">Voeg toe aan je tuin</div>
-<div class="sheet-sub">Kies wat je wilt gaan kweken</div>
+<div class="sheet-sub" id="addSheetSub">Kies wat je wilt gaan kweken</div>
 </div>
 <div class="search-box">
 <span>🔍</span><input type="text" id="addSearch" placeholder="Zoek een gewas..." oninput="renderAddGrid()">
 </div>
-<div class="add-legend">🌟 <span><b>Groen randje = aanrader</b> voor jouw ruimte & klimaat. Past extra goed bij jouw tuin.</span></div>
+<div class="add-legend">🌟 <span><b>Groen randje = aanrader</b>. Items met "Vol" passen niet meer in jouw m².</span></div>
+<div style="padding:0 22px 12px"><button class="btn btn-mint btn-full" onclick="vulSlimIn()">✨ Vul mijn tuin slim in voor mijn ruimte</button></div>
 <div class="cat-chips" id="addCatChips"></div>
 <div id="addGroups"></div>
 <div style="padding:16px 22px 0;"><button class="btn btn-primary btn-full" onclick="closeAddSheet()">Klaar</button></div>
@@ -732,6 +729,16 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="calc-title serif" id="calcInfoTitle">—</div>
 <div class="calc-text" id="calcInfoText">—</div>
 <button class="btn btn-primary btn-full" style="margin-top:18px" onclick="closeCalcInfo()">Duidelijk!</button>
+</div>
+</div>
+
+<div class="calc-overlay" id="upgradeOverlay" onclick="if(event.target===this)closeUpgrade()">
+<div class="calc-box" style="text-align:center">
+<div style="font-size:2.6rem">🌿</div>
+<div class="calc-title serif" style="margin-top:6px">Word zelfvoorzienend</div>
+<div class="calc-text" id="upgradeText" style="margin-top:8px">—</div>
+<button class="btn btn-mint btn-full" style="margin-top:18px" onclick="goToPlan()">Bekijk Greenlabs Groen</button>
+<div style="font-size:0.78rem;color:var(--muted);margin-top:12px;cursor:pointer" onclick="closeUpgrade()">Misschien later</div>
 </div>
 </div>
 
@@ -1309,6 +1316,16 @@ html+=`<div class="growth-row" style="color:var(--terra)">💡 <span>Tip om je d
 // Combinatie-tip: stel een goede buur voor bij een gewas dat je hebt
 const comboTip=combinatieTip();
 if(comboTip)html+=`<div class="growth-row" style="color:var(--sage)">🤝 <span>${comboTip}</span></div>`;
+// 'Binnen een jaar zelfvoorzienend' — toon voortgang vanaf je startpunt
+if(settings.startTijd){
+const maandenBezig=Math.floor((Date.now()-settings.startTijd)/(1000*60*60*24*30));
+const resterend=Math.max(0,12-maandenBezig);
+if(now>=100){
+html+=`<div class="growth-row" style="color:var(--forest)">🎯 <span><strong>Doel bereikt!</strong> Je staat op je streefniveau.</span></div>`;
+} else if(resterend>0){
+html+=`<div class="growth-row">🗓️ <span>Nog <strong>${resterend} ${resterend===1?'maand':'maanden'}</strong> tot je 1-jaarsdoel — je bent op ${now}% van de weg</span></div>`;
+}
+}
 el.innerHTML=html;
 }
 // Zoekt een goede companion die je nog niet hebt
@@ -1429,44 +1446,107 @@ const cats=['Alle',...new Set(PL.map(p=>p.cat))];
 document.getElementById('addCatChips').innerHTML=cats.map(c=>`<button class="cat-chip ${c===addCat?'active':''}" onclick="setAddCat('${c}')">${c}</button>`).join('');
 }
 function setAddCat(c){addCat=c;renderCatChips();renderAddGrid();}
+// Ruimte die één eenheid van dit gewas inneemt voor jouw huishouden
+function plantRuimteVoorMij(p){return ruimteM2(p.n)*(p.p||1)*settings.personen;}
+// Resterende vrije m² in je tuin
+function vrijeM2(){return Math.max(0,beschikbareM2()-benodigdeM2());}
+// Past dit gewas nog in je vrije ruimte?
+function plantPast(p){return inGarden(p.n)||plantRuimteVoorMij(p)<=vrijeM2()+0.001;}
 // Is dit gewas een aanrader voor jouw ruimte & klimaat?
 function isRecommended(p){
-// Ruimte op basis van échte m²: weinig ruimte → compacte gewassen aanraden
 const beschikbaar=beschikbareM2();
 let ruimteOk;
 if(beschikbaar<=12)ruimteOk=p.r==='klein';
 else if(beschikbaar<=35)ruimteOk=p.r!=='groot';
 else ruimteOk=true;
-// Klimaat: warmteminnende gewassen lastig in koud klimaat
 const warm=['Tomaat','Komkommer','Paprika','Aubergine','Peper','Maïs','Pompoen','Basilicum','Courgette'];
 let klimaatOk=true;
 if(settings.klimaat==='koud'&&warm.includes(p.n))klimaatOk=false;
-// Combinatie-bonus: groeit goed naast iets dat je al hebt
 const combo=myGarden.some(g=>combosVoor(g.n).includes(p.n));
 return (ruimteOk&&klimaatOk)||combo;
 }
+// Opbrengst per m² (kg) — voor efficiënte indeling: wat levert per vierkante meter het meeste op
+function opbrengstPerM2(p){
+const e=ECON[p.n];const m=ruimteM2(p.n);
+if(!e||!m)return 0;
+return (e.kg)/m; // kg per m² per eenheid
+}
+// Slimme tuinindeling: vult je beschikbare m² zo productief mogelijk,
+// met variatie (niet alles van één soort) en passend bij klimaat/ruimte
+function vulSlimIn(){
+if(!isPro()&&myGarden.length>=GRATIS_MAX){showUpgrade('gewassen');return;}
+const budget=beschikbareM2();
+const klein=budget<=10;
+// kandidaten passend bij klimaat & ruimte
+let kandidaten=PL.filter(p=>{
+const warm=['Tomaat','Komkommer','Paprika','Aubergine','Peper','Maïs','Pompoen','Basilicum','Courgette'];
+if(settings.klimaat==='koud'&&warm.includes(p.n))return false;
+if(budget<=12&&p.r==='groot')return false;
+if(klein&&ruimteM2(p.n)>0.6)return false; // kleine tuin: geen ruimtevreters
+return !inGarden(p.n);
+});
+// Score = mix van opbrengst/m² én dagelijkse bruikbaarheid (variatie belonen)
+const dagelijks=['Sla','Tomaat','Wortel','Komkommer','Ui','Courgette','Radijs','Spinazie','Paprika','Aardbei','Basilicum','Rucola','Snijbiet','Boon'];
+function score(p){
+let s=opbrengstPerM2(p);
+if(dagelijks.includes(p.n))s*=1.6; // dingen die je vaak eet: voorrang
+if(p.cat==='Kruiden')s*=1.2; // kruiden zijn waardevol per m²
+return s;
+}
+kandidaten.sort((a,b)=>score(b)-score(a));
+// Streef naar een gevarieerde tuin: spreiding over categorieën
+const maxItems=isPro()?14:GRATIS_MAX;
+const maxPerCat=klein?2:3;
+let gebruikt=benodigdeM2(),toegevoegd=0;const perCat={};
+// ronde 1: pak per categorie de beste, zodat je variatie krijgt
+const cats=[...new Set(kandidaten.map(p=>p.cat))];
+let blijfGaan=true;
+while(blijfGaan&&myGarden.length<maxItems){
+blijfGaan=false;
+for(const cat of cats){
+if(myGarden.length>=maxItems)break;
+if((perCat[cat]||0)>=maxPerCat)continue;
+const next=kandidaten.find(p=>p.cat===cat&&!inGarden(p.n)&&gebruikt+plantRuimteVoorMij(p)<=budget+0.001);
+if(next){myGarden.push({n:next.n,status:'te_zaaien'});gebruikt+=plantRuimteVoorMij(next);perCat[cat]=(perCat[cat]||0)+1;toegevoegd++;blijfGaan=true;}
+}
+}
+checkBadges();save();renderAddGrid();renderGarden();renderHome();
+if(toegevoegd)toast(`🌱 ${toegevoegd} gewassen slim ingedeeld voor ${budget}m²`);
+else toast('Je tuin zit al vol — mooi zo!');
+}
 function renderAddGrid(){
+const sub=document.getElementById('addSheetSub');
+const vrij=vrijeM2().toFixed(1),totaal=beschikbareM2();
+if(sub){
+const ruimteTxt=`📐 ${vrij}m² vrij van ${totaal}m²`;
+sub.innerHTML=isPro()?ruimteTxt:`${ruimteTxt} · gratis ${myGarden.length}/${GRATIS_MAX}`;
+}
 const q=(document.getElementById('addSearch').value||'').toLowerCase();
 let items=PL.filter(p=>(addCat==='Alle'||p.cat===addCat)&&p.n.toLowerCase().includes(q));
-// Groepeer per categorie
 const groups={};
 items.forEach(p=>{(groups[p.cat]=groups[p.cat]||[]).push(p);});
-// Volgorde van categorieën
 const order=['Groenten','Bladgroenten','Wortelgroenten','Knolgewassen','Peulvruchten','Fruit','Kruiden'];
 const cats=Object.keys(groups).sort((a,b)=>{const ia=order.indexOf(a),ib=order.indexOf(b);return(ia<0?99:ia)-(ib<0?99:ib);});
 const icoMap={'Groenten':'🥬','Bladgroenten':'🥗','Wortelgroenten':'🥕','Knolgewassen':'🧅','Peulvruchten':'🫛','Fruit':'🍓','Kruiden':'🌿'};
 if(!cats.length){document.getElementById('addGroups').innerHTML='<div style="padding:20px 22px;color:var(--muted);font-size:0.85rem;text-align:center">Niets gevonden — probeer een andere zoekterm.</div>';return;}
-// Sorteer binnen elke groep: aanraders eerst
 document.getElementById('addGroups').innerHTML=cats.map(cat=>{
-const sorted=groups[cat].sort((a,b)=>(isRecommended(b)-isRecommended(a)));
+// sorteer: aanraders eerst, dan passend, niet-passend onderaan
+const sorted=groups[cat].sort((a,b)=>{
+const fa=plantPast(a)?1:0,fb=plantPast(b)?1:0;
+if(fa!==fb)return fb-fa;
+return isRecommended(b)-isRecommended(a);
+});
 const cards=sorted.map(p=>{
-const rec=isRecommended(p)&&!inGarden(p.n);
-return `<div class="add-item ${inGarden(p.n)?'added':''} ${rec?'rec':''}" onclick="togglePlant('${p.n}',this)">
+const past=plantPast(p);
+const rec=isRecommended(p)&&!inGarden(p.n)&&past;
+const ruimte=plantRuimteVoorMij(p);
+return `<div class="add-item ${inGarden(p.n)?'added':''} ${rec?'rec':''} ${!past?'vol':''}" onclick="${past?`togglePlant('${p.n}',this)`:`toast('Hier is geen ruimte meer voor — ±${ruimte.toFixed(1)}m² nodig')`}">
 ${rec?'<div class="add-rec-tag">★ Aanrader</div>':''}
+${!past?'<div class="add-rec-tag" style="background:var(--terra);color:#fff">Vol</div>':''}
 <div class="add-badge">✓</div>
 <div class="add-emoji">${p.e}</div>
 <div class="add-name">${p.n}</div>
-<div class="add-cat">${p.cat}</div>
+<div class="add-cat">${p.cat} · ${ruimte<0.1?'<0.1':ruimte.toFixed(1)}m²</div>
 </div>`;
 }).join('');
 return `<div class="add-group-title">${icoMap[cat]||'🌱'} ${cat} <span class="add-group-count">${groups[cat].length}</span></div><div class="add-grid">${cards}</div>`;
@@ -1475,6 +1555,10 @@ return `<div class="add-group-title">${icoMap[cat]||'🌱'} ${cat} <span class="
 function togglePlant(n,el){
 if(inGarden(n)){myGarden=myGarden.filter(g=>g.n!==n);}
 else{
+// Gratis-versie: maximaal 5 gewassen. Daarna upgrade nodig.
+if(!isPro()&&myGarden.length>=GRATIS_MAX){
+closeAddSheet();showUpgrade('gewassen');return;
+}
 myGarden.push({n,status:'te_zaaien'});
 toast(n+' toegevoegd — start met zaaien 🌱');
 }
@@ -1556,6 +1640,19 @@ document.querySelectorAll('.disc-tab').forEach(t=>t.classList.remove('active'));
 if(btn)btn.classList.add('active');else{const tabs=document.querySelectorAll('.disc-tab');const idx={recept:0,bewaar:1,shop:2,dokter:3}[id];if(tabs[idx])tabs[idx].classList.add('active');}
 const c=document.getElementById('discContent');
 if(id==='dokter'){
+if(GRATIS_FASE){
+// AI nog in aanbouw → toon een nuttige, gratis checklist i.p.v. een loze knop
+c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter 🔬</h3><p>De slimme foto-diagnose komt eraan. Gebruik zolang deze checklist om veelvoorkomende problemen zelf op te lossen.</p></div>
+<div class="recipe-card" style="margin-top:14px"><div class="rc-label">💛 Gele bladeren</div><div class="rc-text">Vaak te veel water. Laat de grond opdrogen tussen het gieten. Kan ook voedingstekort zijn — geef organische mest.</div></div>
+<div class="recipe-card"><div class="rc-label">🟤 Bruine vlekken</div><div class="rc-text">Meestal schimmel. Verwijder aangetast blad, geef water bij de wortel (niet op het blad) en zorg voor luchtcirculatie.</div></div>
+<div class="recipe-card"><div class="rc-label">🐛 Aangevreten blad</div><div class="rc-text">Slakken (controleer 's avonds met een zaklamp) of luizen (afspuiten met water of zachte zeepoplossing).</div></div>
+<div class="recipe-card"><div class="rc-label">🥀 Slappe plant</div><div class="rc-text">Te weinig of juist te veel water. Voel de grond: droog = water geven, drassig = laten opdrogen en minder gieten.</div></div>`;
+return;
+}
+if(!isPro()){
+c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter 🔬</h3><p>Maak een foto van een zieke plant en krijg direct een diagnose met behandelplan. Deze AI-functie zit in Greenlabs Groen.</p><button class="btn btn-mint btn-full" onclick="showUpgrade('ai')">Ontgrendel de Plantdokter</button></div>`;
+return;
+}
 c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter</h3><p>Maak een foto van je plant. We bekijken wat er speelt en geven je een helder behandelplan.</p><div class="dok-upload" onclick="document.getElementById('dokInput').click()"><div class="dok-ico">📷</div><p>Tik om een foto te kiezen</p></div></div><div class="dok-preview" id="dokPreview"><img id="dokImg" src=""><button class="btn btn-terra btn-full" style="margin-top:10px;" onclick="analyzeDok()">🔬 Bekijk mijn plant</button></div><div class="dok-result" id="dokResult"><div class="dr-head">🌿 Diagnose</div><div class="dr-body" id="dokBody"></div></div>`;
 return;
 }
@@ -1727,6 +1824,8 @@ function finishOnboarding(){
 settings={...obData};
 // Zet een m²-startwaarde op basis van de gekozen ruimte
 if(!settings.m2)settings.m2={klein:8,middel:30,groot:60}[settings.ruimte]||30;
+// Leg het startpunt vast — zo kunnen we tonen hoe ver je bent richting 'binnen een jaar zelfvoorzienend'
+settings.startTijd=Date.now();
 try{localStorage.setItem('gl_onboarded','1');}catch(e){}
 document.getElementById('onboarding').style.display='none';
 fillSettings();renderHome();save();
@@ -1770,22 +1869,45 @@ localStorage.setItem('gl_notif_day',today);
 },3000);
 }
 
+// ══════════ ABONNEMENT / GATING ══════════
+// LANCERING: nu draait alleen de GRATIS versie — alles is ontgrendeld terwijl we
+// de betaalde functies (AI, cloud) afbouwen. Zet GRATIS_FASE op false om straks
+// de limieten en abonnementen weer te activeren.
+const GRATIS_FASE=true;
+const GRATIS_MAX=999; // tijdens gratis-fase geen limiet
+function isPro(){if(GRATIS_FASE)return true;try{return localStorage.getItem('gl_pro')==='1';}catch(e){return false;}}
+function setPro(v){try{v?localStorage.setItem('gl_pro','1'):localStorage.removeItem('gl_pro');}catch(e){}refreshAccount();renderHome();}
+function showUpgrade(reden){
+if(GRATIS_FASE){toast('Alles is nu gratis tijdens onze lancering 🌱');return;}
+const teksten={
+gewassen:`Je gratis tuin is vol! Met <strong>Greenlabs Groen</strong> plant je onbeperkt gewassen en word je écht zelfvoorzienend.`,
+ai:`De AI Plantdokter zit in <strong>Greenlabs Groen</strong>. Upgrade om foto-diagnoses te krijgen.`,
+weer:`Weer & tuintips op maat zitten in <strong>Greenlabs Groen</strong>.`,
+};
+document.getElementById('upgradeText').innerHTML=teksten[reden]||teksten.gewassen;
+document.getElementById('upgradeOverlay').classList.add('open');
+}
+function closeUpgrade(){document.getElementById('upgradeOverlay').classList.remove('open');}
+function goToPlan(){closeUpgrade();showScreen('plan');}
+
 // ══════════ ACCOUNT (lokaal) ══════════
 let authMode='register';
 function getUser(){try{return JSON.parse(localStorage.getItem('gl_user'));}catch(e){return null;}}
 function refreshAccount(){
 const u=getUser();
+const pro=isPro();
+const plan=GRATIS_FASE?'Gratis tijdens lancering 🌱':(pro?'Greenlabs Groen 🌿':'Greenlabs Starter · gratis');
 const av=document.getElementById('accAvatar'),nm=document.getElementById('accName'),sub=document.getElementById('accSub');
 const rt=document.getElementById('authRowT'),rs=document.getElementById('authRowS');
 if(u){
 if(av)av.textContent=u.naam?u.naam[0].toUpperCase():'🌱';
 if(nm)nm.textContent=u.naam||'Mijn tuin';
-if(sub)sub.textContent=u.email+' · Starter';
+if(sub)sub.textContent=u.email+(GRATIS_FASE?' · Gratis':(pro?' · Groen':' · Starter'));
 if(rt)rt.textContent='Uitloggen';
 if(rs)rs.textContent='Je bent ingelogd als '+u.email;
 document.getElementById('authRow').setAttribute('onclick','doLogout()');
 }else{
-if(av)av.textContent='🌱';if(nm)nm.textContent='Jouw tuin';if(sub)sub.textContent='Greenlabs Starter · gratis';
+if(av)av.textContent='🌱';if(nm)nm.textContent='Jouw tuin';if(sub)sub.textContent=plan;
 if(rt)rt.textContent='Maak een account';if(rs)rs.textContent='Bewaar je tuin veilig en op al je apparaten';
 document.getElementById('authRow').setAttribute('onclick','openAuth()');
 }
