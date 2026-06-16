@@ -85,6 +85,22 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .meter-track{height:11px;background:var(--surface2);border-radius:30px;overflow:hidden;border:1px solid var(--line);}
 .meter-fill{height:100%;border-radius:30px;background:linear-gradient(90deg,var(--mint),#A9D384);transition:width 1s cubic-bezier(.2,.8,.2,1);}
 .meter-foot{display:flex;justify-content:space-between;font-size:0.66rem;color:var(--muted);margin-top:7px;}
+.growth-row{display:flex;align-items:center;gap:8px;margin-top:13px;padding-top:13px;border-top:1px solid var(--line);font-size:0.78rem;color:var(--sage);}
+.growth-row strong{color:var(--forest);}
+.save-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow);}
+.save-big{display:flex;gap:12px;margin-bottom:16px;}
+.save-box{flex:1;background:var(--mint-soft);border-radius:16px;padding:15px;text-align:center;}
+.save-box.year{background:var(--terra-soft);}
+.save-amt{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:500;color:var(--forest);line-height:1;}
+.save-lbl{font-size:0.68rem;color:var(--muted);margin-top:4px;}
+.save-tl-title{font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--terra);margin-bottom:10px;}
+.save-tl{display:flex;flex-direction:column;gap:8px;}
+.save-tl-item{display:flex;align-items:center;gap:11px;}
+.stl-emoji{font-size:1.2rem;width:30px;text-align:center;}
+.stl-body{flex:1;}
+.stl-name{font-size:0.84rem;font-weight:600;}
+.stl-when{font-size:0.7rem;color:var(--muted);}
+.stl-val{font-size:0.82rem;font-weight:700;color:var(--sage);white-space:nowrap;}
 
 /* SECTION */
 .sec{margin:24px 22px 0;}
@@ -174,6 +190,13 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .add-cat{font-size:0.68rem;color:var(--muted);margin-top:1px;}
 .add-badge{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--mint);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;opacity:0;transition:opacity .15s;}
 .add-item.added .add-badge{opacity:1;}
+.add-item.rec{border-color:var(--mint);box-shadow:0 0 0 1px var(--mint);}
+.add-rec-tag{position:absolute;top:9px;left:9px;background:var(--mint);color:var(--forest);font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:0.02em;}
+.add-group-title{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--forest);font-weight:500;padding:0 22px;margin:18px 0 9px;display:flex;align-items:center;gap:8px;}
+.add-group-title:first-child{margin-top:4px;}
+.add-group-count{font-size:0.66rem;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif;background:var(--surface2);padding:2px 8px;border-radius:20px;}
+.add-legend{margin:0 22px 14px;background:var(--mint-soft);border-radius:12px;padding:11px 14px;font-size:0.74rem;color:var(--sage);line-height:1.5;display:flex;align-items:center;gap:8px;}
+.add-legend b{color:var(--forest);}
 
 /* PLANT DETAIL */
 .detail-hero{background:linear-gradient(160deg,var(--forest),var(--forest2));padding:calc(20px + env(safe-area-inset-top)) 22px 26px;color:var(--surface);text-align:center;border-radius:0 0 28px 28px;}
@@ -204,6 +227,19 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .rc-name{font-weight:600;font-size:0.96rem;color:var(--forest);}
 .rc-text{font-size:0.85rem;line-height:1.6;color:var(--ink);}
 .rc-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--terra);margin-bottom:5px;}
+.rc-meta{display:flex;gap:12px;font-size:0.7rem;color:var(--muted);margin-top:3px;}
+.rc-tags{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0;}
+.rc-tag{font-size:0.66rem;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--surface2);color:var(--muted);}
+.rc-tag.have{background:var(--mint);color:var(--forest);}
+.rc-section-lbl{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--terra);margin:13px 0 6px;}
+.rc-ingr{list-style:none;font-size:0.83rem;line-height:1.7;}
+.rc-ingr li{display:flex;gap:8px;align-items:flex-start;}
+.rc-ingr li::before{content:'•';color:var(--mint);font-weight:700;}
+.rc-steps{font-size:0.83rem;line-height:1.65;padding-left:18px;margin:6px 0 0;}
+.rc-steps li{margin-bottom:6px;}
+.rc-toggle{font-size:0.8rem;color:var(--sage);font-weight:600;cursor:pointer;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);}
+.rc-detail{display:none;margin-top:4px;}
+.rc-detail.open{display:block;}
 
 /* DOKTER */
 .dok-card{margin:0 22px;background:linear-gradient(160deg,var(--forest),var(--forest2));border-radius:22px;padding:24px 22px;color:var(--surface);text-align:center;}
@@ -399,6 +435,12 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 </div>
 <div class="meter-track"><div class="meter-fill" id="meterFill" style="width:0%"></div></div>
 <div class="meter-foot"><span>Net begonnen</span><span>Zelfvoorzienend</span></div>
+<div id="growthInfo"></div>
+</div>
+
+<div class="sec" id="savingsSec" style="display:none">
+<div class="sec-head"><div class="sec-title">Wat het je oplevert</div></div>
+<div id="savingsCard"></div>
 </div>
 
 <div class="sec">
@@ -425,6 +467,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="disc-tabs">
 <button class="disc-tab active" onclick="discTab('recept',this)">🍽️ Recepten</button>
 <button class="disc-tab" onclick="discTab('bewaar',this)">📦 Bewaren</button>
+<button class="disc-tab" onclick="discTab('shop',this)">🛒 Benodigdheden</button>
 <button class="disc-tab" onclick="discTab('dokter',this)">🔬 Plantdokter</button>
 </div>
 <div class="disc-content" id="discContent"></div>
@@ -587,8 +630,9 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="search-box">
 <span>🔍</span><input type="text" id="addSearch" placeholder="Zoek een gewas..." oninput="renderAddGrid()">
 </div>
+<div class="add-legend">🌟 <span><b>Groen randje = aanrader</b> voor jouw ruimte & klimaat. Past extra goed bij jouw tuin.</span></div>
 <div class="cat-chips" id="addCatChips"></div>
-<div class="add-grid" id="addGrid"></div>
+<div id="addGroups"></div>
 <div style="padding:16px 22px 0;"><button class="btn btn-primary btn-full" onclick="closeAddSheet()">Klaar</button></div>
 </div>
 </div>
@@ -669,9 +713,182 @@ const PL=[
 {n:'Framboos',e:'🫐',k:['-','-','V','-','-','O','O','O','O','-','-','-'],p:4,u:'planten',zt:'Plant struiken, komen elk jaar terug',vt:'Eenmalig planten, steun geven',ot:'Pluk rijp en zacht',r:'middel',cat:'Fruit',bw:'Ongewassen koelkast 2 dagen, of plat invriezen.',rc:'Vers, in jam, door yoghurt, of in smoothie.'},
 {n:'Peper',e:'🌶️',k:['-','-','Z','-','V','V','O','O','O','-','-','-'],p:2,u:'planten',zt:'Zaai vroeg binnen, warm',vt:'Pas eind mei buiten',ot:'Oogst groen of laat rood worden',r:'klein',cat:'Groenten',bw:'Koelkast 1-2 weken, of drogen/invriezen.',rc:'In curry, sambal, gedroogd als chilivlokken.'},
 {n:'Veldsla',e:'🌿',k:['Z','-','-','-','-','-','-','Z','Z,O','O','O','O'],p:15,u:'zaden (rij)',zt:'Zaai eind zomer voor winteroogst',vt:'Direct zaaien, winterhard',ot:'Oogst hele winter door',r:'klein',cat:'Bladgroenten',bw:'Koelkast 3 dagen, was vlak voor gebruik.',rc:'Frisse wintersalade met noten, of door een maaltijd.'},
+{n:'Selderij',e:'🌿',k:['-','-','Z','Z','V','V','-','O','O','O','-','-'],p:4,u:'planten',zt:'Zaai binnen feb/maart',vt:'Uitplanten mei, 30cm afstand',ot:'Snijd stengels naar behoefte',r:'middel',cat:'Groenten',bw:'Koelkast 1-2 weken in folie, of fijngesneden invriezen voor soep.',rc:'Soepgroente, in bouillon, of rauw met dip.'},
+{n:'Venkel',e:'🌿',k:['-','-','-','Z','Z','V','O','O','O','O','-','-'],p:4,u:'planten',zt:'Zaai mei voor herfstoogst',vt:'Uitplanten, 25cm afstand',ot:'Oogst als knol vuistgroot is',r:'middel',cat:'Groenten',bw:'Koelkast 1 week, of in stukken invriezen.',rc:'Gegrild, in salade, of gestoofd bij vis.'},
+{n:'Witlof',e:'🥬',k:['-','-','-','-','Z','Z','-','-','-','O','O','O'],p:10,u:'planten',zt:'Zaai mei, forceer wortels in winter in het donker',vt:'Wortels oogsten, dan binnen forceren',ot:'Oogst de witte kroppen in winter',r:'middel',cat:'Bladgroenten',bw:'Koelkast in het donker 1 week (licht maakt bitter).',rc:'Gegratineerd met ham, rauw in salade, of gestoofd.'},
+{n:'Rucola',e:'🌿',k:['-','Z','Z','Z,O','Z,O','O','O','O','Z,O','O','-','-'],p:15,u:'zaden (rij)',zt:'Zaai elke 2-3 weken, snelle groeier',vt:'Direct zaaien',ot:'Snijd jonge blaadjes',r:'klein',cat:'Bladgroenten',bw:'Koelkast 3 dagen in vochtige doek.',rc:'Peperige salade, op pizza, of door pasta.'},
+{n:'Postelein',e:'🌿',k:['-','-','-','Z','Z,O','O','O','O','O','-','-','-'],p:12,u:'zaden (rij)',zt:'Zaai vanaf april direct buiten',vt:'Direct zaaien',ot:'Snijd jonge scheuten',r:'klein',cat:'Bladgroenten',bw:'Koelkast 2-3 dagen, vers het lekkerst.',rc:'Gestoofd als spinazie, of rauw in salade.'},
+{n:'Asperge',e:'🌿',k:['-','-','V','O','O','O','-','-','-','-','-','-'],p:8,u:'planten',zt:'Plant wortels (kronen), oogst pas na 2 jaar',vt:'Eenmalig planten, jaren oogst',ot:'Steek de stengels in april-juni',r:'groot',cat:'Groenten',bw:'Koelkast rechtop in water, 3-4 dagen.',rc:'Klassiek met ei en ham, gegrild, of in een soep.'},
+{n:'Appel',e:'🍎',k:['-','-','V','-','-','-','-','-','O','O','O','-'],p:1,u:'boom',zt:'Plant een jonge boom (najaar/voorjaar)',vt:'Eenmalig planten, jaren oogst',ot:'Pluk als de appel makkelijk loslaat',r:'groot',cat:'Fruit',bw:'Koele kelder maandenlang, of verwerk tot moes/sap.',rc:'Vers, appelmoes, appeltaart, of gedroogde ringen.'},
+{n:'Peer',e:'🍐',k:['-','-','V','-','-','-','-','-','O','O','-','-'],p:1,u:'boom',zt:'Plant een jonge boom',vt:'Eenmalig planten, jaren oogst',ot:'Pluk iets onrijp, rijpt na',r:'groot',cat:'Fruit',bw:'Koel bewaren, rijpt na op kamertemperatuur. Inmaken kan.',rc:'Vers, gestoofd, in taart, of als compote.'},
+{n:'Blauwe bes',e:'🫐',k:['-','-','V','-','-','-','O','O','O','-','-','-'],p:3,u:'struiken',zt:'Plant struiken in zure grond',vt:'Eenmalig planten, jaren oogst',ot:'Pluk als de bessen diepblauw zijn',r:'middel',cat:'Fruit',bw:'Koelkast 1 week, of los invriezen op een plaat.',rc:'Vers, in pannenkoeken, jam, of door yoghurt.'},
+{n:'Druif',e:'🍇',k:['-','-','V','-','-','-','-','-','O','O','-','-'],p:1,u:'planten',zt:'Plant een wijnstok tegen een warme muur',vt:'Eenmalig planten, snoei jaarlijks',ot:'Oogst als de trossen zoet zijn',r:'middel',cat:'Fruit',bw:'Koelkast 1 week, of verwerk tot sap/rozijnen.',rc:'Vers, bij kaas, als sap, of gedroogd tot rozijnen.'},
+{n:'Kervel',e:'🌿',k:['-','Z','Z','Z,O','O','O','O','O','Z,O','O','-','-'],p:3,u:'planten',zt:'Zaai direct buiten, halfschaduw',vt:'Direct zaaien',ot:'Knip blaadjes naar behoefte',r:'klein',cat:'Kruiden',bw:'Koelkast als boeketje, of fijngehakt invriezen.',rc:'In kervelsoep, door sla, of bij vis.'},
+{n:'Dille',e:'🌿',k:['-','-','Z','Z','V','O','O','O','O','-','-','-'],p:3,u:'planten',zt:'Zaai direct buiten in de zon',vt:'Direct zaaien',ot:'Knip naar behoefte',r:'klein',cat:'Kruiden',bw:'Koelkast 5 dagen, of invriezen/drogen.',rc:'Bij vis, in augurken, of door een dressing.'},
+{n:'Tijm',e:'🌿',k:['-','-','V','V','O','O','O','O','O','O','-','-'],p:2,u:'planten',zt:'Koop plant of zaai, komt elk jaar terug',vt:'Plant in pot of border, volle zon',ot:'Knip takjes naar behoefte',r:'klein',cat:'Kruiden',bw:'Vers of gedroogd — droogt heel goed, hele winter houdbaar.',rc:'Bij vlees, in stoofpot, of door geroosterde groenten.'},
+{n:'Rozemarijn',e:'🌿',k:['-','-','V','V','O','O','O','O','O','O','O','-'],p:1,u:'planten',zt:'Koop plant, meerjarig en winterhard',vt:'Plant in pot of border, volle zon',ot:'Knip takjes het hele jaar',r:'klein',cat:'Kruiden',bw:'Vers het hele jaar te knippen, of drogen.',rc:'Bij lamsvlees, aardappels uit de oven, of in olie.'},
 ];
 
+// ══════════ BEWAARMETHODES (uitgebreid, klikbaar met stappen) ══════════
+// Per gewas: meerdere methodes om het LANG goed te houden, met stappen
+const BEWAAR={
+'Tomaat':[
+{m:'Tomatensaus invriezen',dur:'tot 12 maanden',ico:'🥫',stap:['Snijd 2 kg tomaten grof.','Kook ze 30 min in met ui, knoflook en kruiden.','Pureer en laat afkoelen.','Vries in porties in (ijsblokjesbak of zakjes).','Zo heb je het hele jaar verse saus.']},
+{m:'Zongedroogde tomaten',dur:'tot 6 maanden',ico:'☀️',stap:['Halveer de tomaten en verwijder zaadjes.','Leg op een bakplaat, bestrooi met zout.','Droog 6-8 uur in de oven op 80°C.','Bewaar in een pot met olijfolie.']},
+{m:'Passata inmaken',dur:'tot 12 maanden',ico:'🫙',stap:['Maak gladde tomatensaus.','Vul steriele weckpotten tot 1 cm onder de rand.','Verhit de potten 30 min in kokend water (au bain-marie).','Laat afkoelen — de deksels trekken vacuüm.']},
+],
+'Aardbei':[
+{m:'Aardbeienjam',dur:'tot 12 maanden',ico:'🍯',stap:['Weeg 1 kg aardbeien en 700 g geleisuiker.','Verwarm samen tot het kookt, 4 min doorkoken.','Schep in steriele potten en sluit direct.','Zet ondersteboven om vacuüm te trekken.']},
+{m:'Invriezen',dur:'tot 12 maanden',ico:'❄️',stap:['Was en dep de aardbeien droog.','Leg los op een plaat in de vriezer (1 uur).','Doe daarna over in een zak — zo plakken ze niet.']},
+],
+'Courgette':[
+{m:'Geraspt invriezen',dur:'tot 10 maanden',ico:'❄️',stap:['Rasp de courgette grof.','Knijp het meeste vocht eruit.','Vries in porties in voor soep of cake.']},
+{m:'Ingelegde courgette',dur:'tot 6 maanden',ico:'🫙',stap:['Snijd in dunne plakken.','Leg in een pot met azijn, suiker, zout en dille.','Bewaar koel — klaar na 2 dagen.']},
+],
+'Boon':[{m:'Blancheren & invriezen',dur:'tot 12 maanden',ico:'❄️',stap:['Maak de bonen schoon.','Kook 3 minuten en spoel direct koud.','Dep droog en vries in porties in.']},
+{m:'Ingemaakte boontjes',dur:'tot 12 maanden',ico:'🫙',stap:['Blancheer de bonen kort.','Pak in weckpotten met pekel (water + zout).','Verhit de potten 90 min au bain-marie.']}],
+'Appel':[{m:'Appelmoes',dur:'tot 12 maanden',ico:'🍯',stap:['Schil en snijd 1,5 kg appels.','Kook zacht met een scheutje water en kaneel.','Pureer en vul steriele potten.','Verhit 20 min au bain-marie of vries in.']},
+{m:'Gedroogde ringen',dur:'tot 6 maanden',ico:'☀️',stap:['Snijd appels in dunne ringen.','Droog 4-6 uur in de oven op 70°C.','Bewaar luchtdicht.']}],
+'Pompoen':[{m:'Hele bewaring',dur:'3-6 maanden',ico:'🏠',stap:['Laat een stuk steel zitten.','Bewaar koel en droog (10-15°C).','Niet op een koude vloer — gebruik karton.']},
+{m:'Pompoenblokjes invriezen',dur:'tot 12 maanden',ico:'❄️',stap:['Schil en snijd in blokjes.','Blancheer 2 min of rooster kort.','Vries in porties in.']}],
+'Knoflook':[{m:'Vlechten & drogen',dur:'tot 8 maanden',ico:'🧄',stap:['Laat het loof drogen na de oogst.','Vlecht de bollen samen.','Hang op een droge, donkere plek.']}],
+'Ui':[{m:'Drogen & opslaan',dur:'tot 6 maanden',ico:'🧅',stap:['Laat de uien 2 weken drogen.','Knip het loof af als het verdord is.','Bewaar in een net op een droge plek.']}],
+'Peper':[{m:'Drogen tot chilivlokken',dur:'tot 12 maanden',ico:'☀️',stap:['Rijg de pepers aan een draad.','Hang te drogen op een warme plek.','Vermaal tot vlokken als ze knapperig zijn.']},
+{m:'Invriezen',dur:'tot 12 maanden',ico:'❄️',stap:['Was en dep droog.','Vries heel of in stukjes in — geen blancheren nodig.']}],
+'Basilicum':[{m:'Pesto invriezen',dur:'tot 8 maanden',ico:'🌿',stap:['Maak pesto van basilicum, olie, noten en kaas.','Vries in een ijsblokjesbak in.','Pak per blokje wat je nodig hebt.']}],
+'Spinazie':[{m:'Blancheren & invriezen',dur:'tot 10 maanden',ico:'❄️',stap:['Laat de spinazie kort slinken in kokend water.','Knijp het vocht eruit.','Vorm balletjes en vries in.']}],
+'Wortel':[{m:'In zand bewaren',dur:'tot 4 maanden',ico:'🏠',stap:['Verwijder het loof.','Leg in een bak met vochtig zand.','Bewaar koel — ze blijven maanden vers.']}],
+'Rode biet':[{m:'Inmaken (zoetzuur)',dur:'tot 12 maanden',ico:'🫙',stap:['Kook de bietjes gaar en pel ze.','Snijd in plakken, leg in potten.','Giet er hete azijn met suiker en kruiden over.']}],
+'Boerenkool':[{m:'Invriezen',dur:'tot 10 maanden',ico:'❄️',stap:['Was en snijd de boerenkool.','Blancheer 2 minuten.','Dep droog en vries in.']}],
+'Framboos':[{m:'Frambozenjam',dur:'tot 12 maanden',ico:'🍯',stap:['1 kg frambozen met 700 g geleisuiker.','4 minuten koken.','In steriele potten, direct sluiten.']}],
+'Blauwe bes':[{m:'Los invriezen',dur:'tot 12 maanden',ico:'❄️',stap:['Was en dep de bessen droog.','Vries los op een plaat in.','Doe over in een zak.']}],
+};
+
+// ══════════ ECONOMIE ══════════
+// Geschatte jaaropbrengst (kg) per eenheid 'p', en basisprijs €/kg (NL-supermarkt 2025 niveau)
+const ECON={
+'Tomaat':{kg:3,prijs:3.20},'Sla':{kg:0.3,prijs:2.80},'Komkommer':{kg:2,prijs:2.40},
+'Wortel':{kg:0.08,prijs:1.50},'Courgette':{kg:3,prijs:2.60},'Aardappel':{kg:1.5,prijs:1.40},
+'Boon':{kg:0.06,prijs:4.00},'Ui':{kg:0.12,prijs:1.30},'Aardbei':{kg:0.4,prijs:6.50},
+'Paprika':{kg:1.2,prijs:3.80},'Knoflook':{kg:0.05,prijs:8.00},'Spinazie':{kg:0.06,prijs:3.50},
+'Pompoen':{kg:4,prijs:1.80},'Broccoli':{kg:0.5,prijs:2.90},'Radijs':{kg:0.03,prijs:2.50},
+'Rode biet':{kg:0.2,prijs:2.20},'Prei':{kg:0.3,prijs:2.40},'Boerenkool':{kg:0.6,prijs:2.30},
+'Erwt':{kg:0.05,prijs:5.00},'Aubergine':{kg:1.5,prijs:3.60},'Maïs':{kg:0.4,prijs:2.50},
+'Peterselie':{kg:0.08,prijs:14.0},'Basilicum':{kg:0.06,prijs:18.0},'Bieslook':{kg:0.05,prijs:15.0},
+'Munt':{kg:0.06,prijs:14.0},'Pastinaak':{kg:0.25,prijs:2.60},'Snijbiet':{kg:0.4,prijs:3.00},
+'Bloemkool':{kg:0.6,prijs:2.70},'Spruitjes':{kg:0.5,prijs:2.80},'Rabarber':{kg:1.5,prijs:3.20},
+'Framboos':{kg:0.5,prijs:12.0},'Peper':{kg:0.3,prijs:9.00},'Veldsla':{kg:0.05,prijs:4.50},
+'Selderij':{kg:0.4,prijs:2.20},'Venkel':{kg:0.3,prijs:3.00},'Witlof':{kg:0.3,prijs:2.80},
+'Rucola':{kg:0.05,prijs:4.50},'Postelein':{kg:0.06,prijs:4.00},'Asperge':{kg:0.3,prijs:9.00},
+'Appel':{kg:20,prijs:2.20},'Peer':{kg:18,prijs:2.40},'Blauwe bes':{kg:1,prijs:14.0},
+'Druif':{kg:5,prijs:3.50},'Kervel':{kg:0.06,prijs:14.0},'Dille':{kg:0.06,prijs:14.0},
+'Tijm':{kg:0.05,prijs:16.0},'Rozemarijn':{kg:0.08,prijs:14.0},
+};
+// Prijspeil per klimaatzone/regio — gekoppeld aan waar je woont
+const PRIJSREGIO={gematigd:{mult:1.0,munt:'€'},mediterraan:{mult:0.75,munt:'€'},koud:{mult:1.25,munt:'€'},tropisch:{mult:0.85,munt:'€'}};
+function plantOpbrengstEuro(p){
+const e=ECON[p.n];if(!e)return 0;
+const reg=PRIJSREGIO[settings.klimaat]||PRIJSREGIO.gematigd;
+return e.kg*p.p*settings.personen*e.prijs*reg.mult; // €/jaar voor jouw aantal
+}
+function muntTeken(){return(PRIJSREGIO[settings.klimaat]||PRIJSREGIO.gematigd).munt;}
+function fmtEuro(v){return muntTeken()+Math.round(v);}
+
+// ══════════════════════════════════════════════════════════════
+// AFFILIATE CONFIG — vul hier later je eigen partner-codes in.
+// Zet je code achter 'tag'. De app bouwt de links dan automatisch met jouw code.
+// Voorbeeld Bol.com: vraag een account aan op partner.bol.com → je krijgt een 'site id'.
+// ══════════════════════════════════════════════════════════════
+const AFFILIATE={
+actief:false, // zet op true zodra je codes hebt ingevuld
+partners:{
+bol:{naam:'Bol.com',tag:'JOUW_BOL_SITE_ID',base:'https://www.bol.com/nl/nl/s/?searchtext='},
+amazon:{naam:'Amazon',tag:'JOUW_AMAZON_TAG',base:'https://www.amazon.nl/s?k='},
+},
+voorkeur:'bol' // welke partner standaard gebruikt wordt
+};
+function affLink(zoekterm){
+const part=AFFILIATE.partners[AFFILIATE.voorkeur]||AFFILIATE.partners.bol;
+const q=encodeURIComponent(zoekterm);
+if(AFFILIATE.partners.bol===part){
+// Bol: voegt je site id toe zodra actief
+return part.base+q+(AFFILIATE.actief&&part.tag!=='JOUW_BOL_SITE_ID'?'&suuid='+part.tag:'');
+}
+if(AFFILIATE.partners.amazon===part){
+return part.base+q+(AFFILIATE.actief&&part.tag!=='JOUW_AMAZON_TAG'?'&tag='+part.tag:'');
+}
+return part.base+q;
+}
+
+// Welke benodigdheden hoort bij welk type gewas
+function suppliesFor(p){
+const items=[];
+// Zaden of planten
+if(p.u.includes('zaden')||p.u==='planten'||p.u.includes('rij'))items.push({naam:p.n+' zaden',zoek:p.n+' zaden biologisch',ico:'🌱'});
+if(p.u==='poters')items.push({naam:'Pootaardappelen',zoek:'pootaardappelen',ico:'🥔'});
+if(p.u==='plantuitjes')items.push({naam:'Plantuitjes',zoek:'plantuitjes',ico:'🧅'});
+if(p.u==='teentjes')items.push({naam:'Pootknoflook',zoek:'pootknoflook',ico:'🧄'});
+if(p.u==='boom'||p.u==='struiken'||p.u==='planten'&&p.cat==='Fruit')items.push({naam:p.n+'boom/struik',zoek:p.n+' plant kopen',ico:'🌳'});
+// Algemeen op basis van ruimte
+if(p.r==='klein')items.push({naam:'Plantenbak / pot',zoek:'plantenbak balkon',ico:'🪴'});
+else items.push({naam:'Tuingrond / potgrond',zoek:'biologische tuinaarde groenten',ico:'🌍'});
+return items;
+}
+
 const TIPS=['Tuin slaapt. Plan alvast en bestel zaden.','Tomaten en paprika kunnen binnen op de vensterbank.','Drukste zaaimaand! Bijna alles start nu.','Uitplanten en aardappels poten.','Na 15 mei mag alles naar buiten.','Oogstseizoen begint — dagelijks water geven.','Volle productie. Regelmatig oogsten loont.','Nazomer — start herfst-zaaisels.','Herfstgewassen floreren in koel weer.','Rooi knolgewassen vóór de vorst.','Tijd om op te ruimen en te mulchen.','Rust en plannen voor volgend jaar.'];
+
+// ══════════ RECEPTEN ══════════
+// needs = gewassen die in het recept zitten. Recept verschijnt als je MINSTENS één 'needs'-gewas in je tuin hebt.
+const RECEPTEN=[
+{naam:'Verse tomatensoep',emoji:'🍅',tijd:'30 min',pers:4,needs:['Tomaat','Ui','Knoflook','Basilicum'],
+ingr:['1 kg verse tomaten','1 ui','2 tenen knoflook','1 el olijfolie','500 ml groentebouillon','handje basilicum','peper & zout'],
+stap:['Snijd de tomaten grof en snipper de ui en knoflook.','Fruit ui en knoflook zacht in de olijfolie.','Voeg de tomaten toe en bak 5 minuten mee.','Giet de bouillon erbij en laat 20 minuten zachtjes koken.','Pureer de soep glad en breng op smaak met peper en zout.','Serveer met verse basilicum erover.']},
+{naam:'Caprese salade',emoji:'🍅',tijd:'10 min',pers:2,needs:['Tomaat','Basilicum'],
+ingr:['3 rijpe tomaten','1 bol mozzarella','verse basilicum','olijfolie','balsamico','peper & zout'],
+stap:['Snijd de tomaten en mozzarella in plakken.','Leg ze om en om op een bord.','Verdeel de basilicumblaadjes ertussen.','Besprenkel met olijfolie en balsamico.','Breng op smaak met peper en zout.']},
+{naam:'Komkommer-tzatziki',emoji:'🥒',tijd:'15 min',pers:4,needs:['Komkommer','Knoflook','Munt'],
+ingr:['1 komkommer','250 g Griekse yoghurt','1 teen knoflook','blaadjes munt','1 el olijfolie','snufje zout'],
+stap:['Rasp de komkommer en knijp het vocht eruit.','Pers de knoflook en hak de munt fijn.','Meng alles door de yoghurt.','Voeg olijfolie en zout toe.','Laat 30 minuten in de koelkast trekken.']},
+{naam:'Frisse zomersalade',emoji:'🥗',tijd:'15 min',pers:2,needs:['Sla','Komkommer','Tomaat','Radijs','Wortel'],
+ingr:['1 krop sla','½ komkommer','2 tomaten','handje radijs','1 wortel','olijfolie & citroen'],
+stap:['Scheur de sla en doe in een kom.','Snijd komkommer, tomaat en radijs in plakjes.','Rasp of snijd de wortel in linten.','Meng alles voorzichtig.','Maak aan met olijfolie en een scheut citroen.']},
+{naam:'Geroosterde wortel met honing',emoji:'🥕',tijd:'35 min',pers:4,needs:['Wortel'],
+ingr:['500 g wortels','2 el olijfolie','1 el honing','tijm','peper & zout'],
+stap:['Verwarm de oven voor op 200°C.','Schil de wortels en snijd in repen.','Meng met olie, honing, tijm, peper en zout.','Spreid uit op een bakplaat.','Rooster 30 minuten tot ze zacht en goudbruin zijn.']},
+{naam:'Courgettesoep',emoji:'🥒',tijd:'30 min',pers:4,needs:['Courgette','Ui','Knoflook'],
+ingr:['2 courgettes','1 ui','1 teen knoflook','750 ml bouillon','scheutje room','peper & zout'],
+stap:['Snipper ui en knoflook, snijd de courgette in stukken.','Fruit ui en knoflook in een pan.','Voeg courgette toe en bak kort mee.','Giet bouillon erbij, kook 15 minuten.','Pureer glad, voeg room toe en breng op smaak.']},
+{naam:'Aardappel-preistamppot',emoji:'🥔',tijd:'30 min',pers:4,needs:['Aardappel','Prei','Ui'],
+ingr:['1 kg aardappels','2 stengels prei','1 ui','scheut melk','klontje boter','peper & zout'],
+stap:['Schil en kook de aardappels gaar in 20 minuten.','Snijd de prei in ringen en bak zacht met de ui.','Giet de aardappels af en stamp met melk en boter.','Schep de prei erdoor.','Breng op smaak met peper en zout.']},
+{naam:'Ratatouille',emoji:'🍆',tijd:'45 min',pers:4,needs:['Aubergine','Courgette','Paprika','Tomaat','Ui','Knoflook'],
+ingr:['1 aubergine','1 courgette','1 paprika','3 tomaten','1 ui','2 tenen knoflook','olijfolie','kruiden'],
+stap:['Snijd alle groenten in blokjes.','Fruit ui en knoflook in olijfolie.','Voeg paprika en aubergine toe, bak 5 minuten.','Doe courgette en tomaat erbij.','Laat 25 minuten zachtjes sudderen.','Breng op smaak met kruiden, peper en zout.']},
+{naam:'Spinazie-quiche',emoji:'🌿',tijd:'50 min',pers:4,needs:['Spinazie','Ui','Knoflook'],
+ingr:['300 g spinazie','1 rol bladerdeeg','3 eieren','100 ml room','1 ui','50 g kaas'],
+stap:['Verwarm de oven op 180°C.','Bekleed een vorm met bladerdeeg.','Bak ui zacht en laat de spinazie slinken.','Klop eieren met room, peper en zout.','Verdeel spinazie over het deeg, giet eiermengsel erover.','Bestrooi met kaas en bak 35 minuten goudbruin.']},
+{naam:'Bietensalade met geitenkaas',emoji:'🟣',tijd:'20 min',pers:2,needs:['Rode biet','Sla'],
+ingr:['3 gekookte bietjes','handje sla','50 g geitenkaas','walnoten','honing-mosterddressing'],
+stap:['Snijd de bietjes in partjes.','Verdeel de sla over een bord.','Leg de biet erop met brokjes geitenkaas.','Strooi walnoten erover.','Besprenkel met de dressing.']},
+{naam:'Snelle pestopasta',emoji:'🌿',tijd:'20 min',pers:2,needs:['Basilicum','Knoflook','Tomaat'],
+ingr:['200 g pasta','grote bos basilicum','1 teen knoflook','30 g pijnboompitten','50 g Parmezaan','olijfolie','enkele tomaatjes'],
+stap:['Kook de pasta volgens de verpakking.','Maal basilicum, knoflook, pitten, kaas en olie tot pesto.','Halveer de tomaatjes.','Meng de pesto door de warme pasta.','Garneer met tomaat en wat extra kaas.']},
+{naam:'Pompoensoep',emoji:'🎃',tijd:'40 min',pers:4,needs:['Pompoen','Ui','Wortel'],
+ingr:['1 kg pompoen','1 ui','1 wortel','1 l bouillon','scheutje kokosmelk','snuf kerrie'],
+stap:['Snijd pompoen, ui en wortel in stukken.','Fruit de ui glazig.','Voeg pompoen en wortel toe, bak kort.','Giet bouillon erbij en kook 25 minuten.','Pureer glad, roer kokosmelk en kerrie erdoor.']},
+{naam:'Boontjes met knoflook',emoji:'🫛',tijd:'15 min',pers:4,needs:['Boon','Knoflook'],
+ingr:['400 g verse bonen','2 tenen knoflook','olijfolie','peper & zout','schilfertje amandel'],
+stap:['Maak de bonen schoon en kook 8 minuten beetgaar.','Pers de knoflook.','Verhit olie en bak de knoflook kort.','Schep de bonen erdoor.','Breng op smaak en strooi amandel erover.']},
+{naam:'Aardbeien met munt',emoji:'🍓',tijd:'10 min',pers:2,needs:['Aardbei','Munt'],
+ingr:['250 g aardbeien','blaadjes munt','1 tl honing','scheutje citroen'],
+stap:['Was en halveer de aardbeien.','Hak de munt fijn.','Meng aardbeien met honing en citroen.','Strooi de munt erover.','Laat 10 minuten staan en serveer.']},
+{naam:'Gevulde paprika',emoji:'🫑',tijd:'45 min',pers:4,needs:['Paprika','Tomaat','Ui','Maïs'],
+ingr:['4 paprika\'s','1 ui','2 tomaten','100 g rijst','handje maïs','kaas','kruiden'],
+stap:['Verwarm de oven op 180°C.','Kook de rijst gaar.','Bak ui, tomaat en maïs en meng met de rijst.','Snijd de kapjes van de paprika en verwijder de zaadlijsten.','Vul de paprika\'s, bestrooi met kaas.','Bak 30 minuten in de oven.']},
+{naam:'Groene smoothie',emoji:'🥬',tijd:'5 min',pers:1,needs:['Spinazie','Boerenkool','Munt'],
+ingr:['handje spinazie of boerenkool','1 banaan','blaadjes munt','200 ml water of sap','½ appel'],
+stap:['Doe alles in een blender.','Mix glad in 30 seconden.','Voeg water toe tot gewenste dikte.','Schenk in een glas en geniet.']},
+];
 
 // ══════════ STATE ══════════
 let cm=new Date().getMonth();
@@ -835,6 +1052,47 @@ if(p===0)sub.textContent='Voeg gewassen toe om te starten.';
 else if(p<35)sub.textContent='Mooi begin! Blijf zaaien en oogsten.';
 else if(p<70)sub.textContent='Je bent goed op weg naar vrijheid.';
 else sub.textContent='Bijna onafhankelijk — geweldig!';
+renderGrowth(p);
+renderSavings();
+}
+// Toont waar het percentage naartoe groeit als de huidige planten geoogst worden
+function renderGrowth(now){
+const el=document.getElementById('growthInfo');if(!el)return;
+if(!myGarden.length){el.innerHTML='';return;}
+// potentieel = percentage als ALLE huidige planten volgroeid + 1x geoogst zouden zijn
+const base={klein:24,middel:46,groot:68}[settings.ruimte]||40;
+const variety=Math.min(20,myGarden.length*2.2);
+const potentialHarvests=myGarden.length; // elk gewas minstens 1 oogst
+const hbon=Math.min(22,potentialHarvests*2.5);
+const potential=Math.min(98,Math.round(base*0.45+variety+hbon));
+// eerstvolgende oogstmaand bepalen
+let soonest=null,soonName='';
+myGarden.forEach(g=>{const pl=plantByName(g.n);if(!pl)return;const k=shiftK(pl.k,KLIM[settings.klimaat].s);for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes('O')){if(soonest===null||i<soonest){soonest=i;soonName=ML[m];}break;}}});
+if(potential>now&&soonest!==null){
+el.innerHTML=`<div class="growth-row">📈 <span>Groeit naar <strong>${potential}%</strong> als je huidige oogst binnen is${soonest===0?' deze maand':' (vanaf '+soonName+')'}</span></div>`;
+}else el.innerHTML='';
+}
+// Toont besparing in euro's + tijdlijn van komende oogsten
+function renderSavings(){
+const sec=document.getElementById('savingsSec'),card=document.getElementById('savingsCard');
+if(!sec||!card)return;
+if(!myGarden.length){sec.style.display='none';return;}
+sec.style.display='block';
+// jaarbesparing = som van opbrengst per plant in jouw tuin
+let jaar=0;myGarden.forEach(g=>{const p=plantByName(g.n);if(p)jaar+=plantOpbrengstEuro(p);});
+const maand=jaar/12;
+// tijdlijn: per plant de eerstvolgende oogstmaand + waarde
+const items=myGarden.map(g=>{const p=plantByName(g.n);if(!p)return null;const k=shiftK(p.k,KLIM[settings.klimaat].s);let when=null,wm='';for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes('O')){when=i;wm=m;break;}}if(when===null)return null;return{p,when,wm,euro:plantOpbrengstEuro(p)};}).filter(Boolean).sort((a,b)=>a.when-b.when).slice(0,4);
+const tl=items.map(it=>`<div class="save-tl-item"><div class="stl-emoji">${it.p.e}</div><div class="stl-body"><div class="stl-name">${it.p.n}</div><div class="stl-when">${it.when===0?'Klaar deze maand':'Oogst in '+ML[it.wm]}</div></div><div class="stl-val">${fmtEuro(it.euro)}/jr</div></div>`).join('');
+card.innerHTML=`<div class="save-card">
+<div class="save-big">
+<div class="save-box"><div class="save-amt">${fmtEuro(maand)}</div><div class="save-lbl">bespaard per maand</div></div>
+<div class="save-box year"><div class="save-amt">${fmtEuro(jaar)}</div><div class="save-lbl">bespaard per jaar</div></div>
+</div>
+<div class="save-tl-title">📅 Wat eraan zit te komen</div>
+<div class="save-tl">${tl||'<div style="font-size:0.8rem;color:var(--muted)">Voeg gewassen toe om je oogstkalender te zien.</div>'}</div>
+<div style="font-size:0.66rem;color:var(--muted);margin-top:12px;line-height:1.4;">Schatting op basis van gemiddelde versprijzen in jouw regio. Werkelijke besparing hangt af van je oogst.</div>
+</div>`;
 }
 
 // ══════════ TUIN ══════════
@@ -884,25 +1142,50 @@ const cats=['Alle',...new Set(PL.map(p=>p.cat))];
 document.getElementById('addCatChips').innerHTML=cats.map(c=>`<button class="cat-chip ${c===addCat?'active':''}" onclick="setAddCat('${c}')">${c}</button>`).join('');
 }
 function setAddCat(c){addCat=c;renderCatChips();renderAddGrid();}
+// Is dit gewas een aanrader voor jouw ruimte & klimaat?
+function isRecommended(p){
+// Ruimte: kleine tuin → alleen compacte gewassen; middel → niet de hele grote; groot → alles mag
+const ruimteOk = settings.ruimte==='klein' ? p.r==='klein' : settings.ruimte==='middel' ? p.r!=='groot' : true;
+// Klimaat: warmteminnende gewassen zijn in koud klimaat lastiger; in mediterraan/tropisch juist top
+const warm=['Tomaat','Komkommer','Paprika','Aubergine','Peper','Maïs','Pompoen','Basilicum','Courgette'];
+let klimaatOk=true;
+if(settings.klimaat==='koud'&&warm.includes(p.n))klimaatOk=false;
+return ruimteOk&&klimaatOk;
+}
 function renderAddGrid(){
 const q=(document.getElementById('addSearch').value||'').toLowerCase();
 let items=PL.filter(p=>(addCat==='Alle'||p.cat===addCat)&&p.n.toLowerCase().includes(q));
-document.getElementById('addGrid').innerHTML=items.map(p=>`
-<div class="add-item ${inGarden(p.n)?'added':''}" onclick="togglePlant('${p.n}',this)">
+// Groepeer per categorie
+const groups={};
+items.forEach(p=>{(groups[p.cat]=groups[p.cat]||[]).push(p);});
+// Volgorde van categorieën
+const order=['Groenten','Bladgroenten','Wortelgroenten','Knolgewassen','Peulvruchten','Fruit','Kruiden'];
+const cats=Object.keys(groups).sort((a,b)=>{const ia=order.indexOf(a),ib=order.indexOf(b);return(ia<0?99:ia)-(ib<0?99:ib);});
+const icoMap={'Groenten':'🥬','Bladgroenten':'🥗','Wortelgroenten':'🥕','Knolgewassen':'🧅','Peulvruchten':'🫛','Fruit':'🍓','Kruiden':'🌿'};
+if(!cats.length){document.getElementById('addGroups').innerHTML='<div style="padding:20px 22px;color:var(--muted);font-size:0.85rem;text-align:center">Niets gevonden — probeer een andere zoekterm.</div>';return;}
+// Sorteer binnen elke groep: aanraders eerst
+document.getElementById('addGroups').innerHTML=cats.map(cat=>{
+const sorted=groups[cat].sort((a,b)=>(isRecommended(b)-isRecommended(a)));
+const cards=sorted.map(p=>{
+const rec=isRecommended(p)&&!inGarden(p.n);
+return `<div class="add-item ${inGarden(p.n)?'added':''} ${rec?'rec':''}" onclick="togglePlant('${p.n}',this)">
+${rec?'<div class="add-rec-tag">★ Aanrader</div>':''}
 <div class="add-badge">✓</div>
 <div class="add-emoji">${p.e}</div>
 <div class="add-name">${p.n}</div>
 <div class="add-cat">${p.cat}</div>
-</div>`).join('');
+</div>`;
+}).join('');
+return `<div class="add-group-title">${icoMap[cat]||'🌱'} ${cat} <span class="add-group-count">${groups[cat].length}</span></div><div class="add-grid">${cards}</div>`;
+}).join('');
 }
 function togglePlant(n,el){
-if(inGarden(n)){myGarden=myGarden.filter(g=>g.n!==n);el.classList.remove('added');}
+if(inGarden(n)){myGarden=myGarden.filter(g=>g.n!==n);}
 else{
-// Nieuwe plant begint altijd bij het begin: nog te zaaien
-myGarden.push({n,status:'te_zaaien'});el.classList.add('added');
+myGarden.push({n,status:'te_zaaien'});
 toast(n+' toegevoegd — start met zaaien 🌱');
 }
-save();
+save();renderAddGrid();
 }
 
 // ══════════ DETAIL ══════════
@@ -959,7 +1242,7 @@ let currentDisc='recept';
 function discTab(id,btn){
 currentDisc=id;
 document.querySelectorAll('.disc-tab').forEach(t=>t.classList.remove('active'));
-if(btn)btn.classList.add('active');else{const tabs=document.querySelectorAll('.disc-tab');const idx={recept:0,bewaar:1,dokter:2}[id];if(tabs[idx])tabs[idx].classList.add('active');}
+if(btn)btn.classList.add('active');else{const tabs=document.querySelectorAll('.disc-tab');const idx={recept:0,bewaar:1,shop:2,dokter:3}[id];if(tabs[idx])tabs[idx].classList.add('active');}
 const c=document.getElementById('discContent');
 if(id==='dokter'){
 c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter</h3><p>Maak een foto van je plant. We bekijken wat er speelt en geven je een helder behandelplan.</p><div class="dok-upload" onclick="document.getElementById('dokInput').click()"><div class="dok-ico">📷</div><p>Tik om een foto te kiezen</p></div></div><div class="dok-preview" id="dokPreview"><img id="dokImg" src=""><button class="btn btn-terra btn-full" style="margin-top:10px;" onclick="analyzeDok()">🔬 Bekijk mijn plant</button></div><div class="dok-result" id="dokResult"><div class="dr-head">🌿 Diagnose</div><div class="dr-body" id="dokBody"></div></div>`;
@@ -971,8 +1254,37 @@ c.innerHTML=`<div class="empty-card"><div class="empty-emoji">🍃</div><div cla
 return;
 }
 if(id==='recept'){
-c.innerHTML=`<div class="discover-intro"><div class="di-title serif">Jouw oogst, jouw maaltijden</div><div class="di-text">Recepten op basis van wat er nu in jouw tuin groeit.</div></div>`+plants.map(p=>`<div class="recipe-card"><div class="rc-top"><div class="rc-emoji">${p.e}</div><div class="rc-name">${p.n}</div></div><div class="rc-text">${p.rc}</div></div>`).join('');
+const mine=myGarden.map(g=>g.n);
+// Match recepten: minstens 1 gewas uit jouw tuin. Sorteer op aantal matches (combi's eerst).
+const matched=RECEPTEN.map(r=>{
+const have=r.needs.filter(n=>mine.includes(n));
+return {r,have,score:have.length};
+}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+if(!matched.length){
+c.innerHTML=`<div class="empty-card"><div class="empty-emoji">🍽️</div><div class="empty-title serif">Nog geen recepten</div><div class="empty-text">Voeg gewassen toe die in onze recepten voorkomen, zoals tomaat, sla of courgette. Dan verschijnen hier passende recepten.</div><button class="btn btn-primary" onclick="openAddSheet()">＋ Voeg gewassen toe</button></div>`;
+return;
+}
+c.innerHTML=`<div class="discover-intro"><div class="di-title serif">Jouw oogst, jouw maaltijden</div><div class="di-text">Echte recepten met de groenten en kruiden uit jouw tuin. ${matched.length} ${matched.length===1?'recept past':'recepten passen'} bij wat je teelt.</div></div>`+
+matched.map((x,i)=>{
+const r=x.r;
+const tags=r.needs.map(n=>{const have=mine.includes(n);const pl=plantByName(n);return `<span class="rc-tag ${have?'have':''}">${have?'✓ ':''}${pl?pl.e:''} ${n}</span>`;}).join('');
+const ingr=r.ingr.map(i=>`<li>${i}</li>`).join('');
+const stappen=r.stap.map(s=>`<li>${s}</li>`).join('');
+const combiLabel=x.score>1?`<span class="rc-tag have" style="background:var(--terra);color:#fff">🌿 ${x.score} uit jouw tuin</span> `:'';
+return `<div class="recipe-card">
+<div class="rc-top"><div class="rc-emoji">${r.emoji}</div><div><div class="rc-name">${r.naam}</div><div class="rc-meta"><span>⏱️ ${r.tijd}</span><span>👥 ${r.pers} pers.</span></div></div></div>
+<div class="rc-tags">${combiLabel}${tags}</div>
+<div class="rc-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Verberg recept':'▼ Bekijk het volledige recept'">▼ Bekijk het volledige recept</div>
+<div class="rc-detail">
+<div class="rc-section-lbl">Ingrediënten</div>
+<ul class="rc-ingr">${ingr}</ul>
+<div class="rc-section-lbl">Bereiding</div>
+<ol class="rc-steps">${stappen}</ol>
+</div>
+</div>`;
+}).join('');
 }else{
+const plants=gardenPlants();
 c.innerHTML=`<div class="discover-intro"><div class="di-title serif">Langer houdbaar</div><div class="di-text">Zo bewaar je jouw oogst en verspil je niets.</div></div>`+plants.map(p=>`<div class="recipe-card"><div class="rc-top"><div class="rc-emoji">${p.e}</div><div class="rc-name">${p.n}</div></div><div class="rc-text">${p.bw}</div></div>`).join('');
 }
 }
