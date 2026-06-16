@@ -1823,5 +1823,9 @@ let onboarded=false;try{onboarded=!!localStorage.getItem('gl_onboarded');}catch(
 if(!onboarded&&!had){document.getElementById('onboarding').style.display='block';}
 else if(!userLat){setTimeout(detectLoc,500);}
 </script>
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>

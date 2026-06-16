@@ -1,0 +1,28 @@
+{
+  "name": "greenlabs",
+  "version": "1.0.0",
+  "description": "Greenlabs — samen zelfvoorzienend. Jouw rustige tuingids van zaadje tot bord.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chnradar-hue/greenlabs.git"
+  },
+  "keywords": [
+    "gardening",
+    "garden",
+    "planting",
+    "vegetables"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chnradar-hue/greenlabs/issues"
+  },
+  "homepage": "https://github.com/chnradar-hue/greenlabs#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
