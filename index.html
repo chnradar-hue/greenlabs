@@ -675,7 +675,7 @@ const TIPS=['Tuin slaapt. Plan alvast en bestel zaden.','Tomaten en paprika kunn
 
 // ══════════ STATE ══════════
 let cm=new Date().getMonth();
-let myGarden=[]; // ['Tomaat','Sla',...]
+let myGarden=[]; // [{n:'Tomaat', status:'te_zaaien'}, ...]
 let doneTasks=new Set();
 let harvestLog={};
 let userLat=null,userLon=null;
@@ -683,10 +683,21 @@ let settings={personen:2,ruimte:'middel',klimaat:'gematigd'};
 let obData={personen:2,ruimte:'middel',klimaat:'gematigd'};
 let obStep=0, deferredPWA=null, addCat='Alle', detailPlant=null;
 
+// Status-stappen die een plant doorloopt
+const STATUS={
+te_zaaien:{label:'Nog te zaaien',emoji:'🌰',next:'gezaaid',action:'Zaaien',color:'tag-z'},
+gezaaid:{label:'Gezaaid',emoji:'🌱',next:'uitgeplant',action:'Uitplanten',color:'tag-v'},
+uitgeplant:{label:'Groeit',emoji:'🌿',next:'groeit',action:null,color:'tag-w'},
+groeit:{label:'Klaar om te oogsten',emoji:'🧺',next:null,action:'Oogsten',color:'tag-o'},
+};
+
 // ══════════ PERSIST ══════════
 const KEY='greenlabs_v2';
 function save(){try{localStorage.setItem(KEY,JSON.stringify({myGarden,doneTasks:[...doneTasks],doneMonth:cm,harvestLog,settings,userLat,userLon,loc:document.getElementById('locPill').textContent}));}catch(e){}}
-function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(!d)return false;myGarden=d.myGarden||[];if(d.doneMonth===cm&&d.doneTasks)doneTasks=new Set(d.doneTasks);harvestLog=d.harvestLog||{};settings=d.settings||settings;userLat=d.userLat;userLon=d.userLon;if(d.loc&&d.loc.includes('📍')&&!d.loc.includes('Locatie'))document.getElementById('locPill').textContent=d.loc;return true;}catch(e){return false;}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(!d)return false;
+// Migratie: oude opslag had lijst met namen → nu objecten met status
+myGarden=(d.myGarden||[]).map(g=>typeof g==='string'?{n:g,status:'te_zaaien'}:g);
+if(d.doneMonth===cm&&d.doneTasks)doneTasks=new Set(d.doneTasks);harvestLog=d.harvestLog||{};settings=d.settings||settings;userLat=d.userLat;userLon=d.userLon;if(d.loc&&d.loc.includes('📍')&&!d.loc.includes('Locatie'))document.getElementById('locPill').textContent=d.loc;return true;}catch(e){return false;}}
 
 // ══════════ NAV ══════════
 function showScreen(id){
@@ -741,7 +752,11 @@ window._forecast=d;
 // ══════════ HELPERS ══════════
 function shiftK(k,s){if(!s)return k;const n=k.length;return k.map((_,i)=>k[((i-s)%n+n)%n]);}
 function plantByName(n){return PL.find(p=>p.n===n);}
-function gardenPlants(){return myGarden.map(plantByName).filter(Boolean);}
+function gardenPlants(){return myGarden.map(g=>plantByName(g.n)).filter(Boolean);}
+function gardenEntry(n){return myGarden.find(g=>g.n===n);}
+function inGarden(n){return myGarden.some(g=>g.n===n);}
+// Mag een actie nu? Alleen als de kalender het toelaat ÉN de plant in de juiste status zit
+function isMonthFor(p,letter){return shiftK(p.k,KLIM[settings.klimaat].s)[cm].includes(letter);}
 
 // ══════════ HOME ══════════
 function renderHome(){
@@ -772,17 +787,35 @@ document.getElementById('todayTasks').innerHTML=tasks.map(t=>`
 </div>`).join('');
 }
 function todaysTasks(){
-const s=KLIM[settings.klimaat].s,out=[];
-gardenPlants().forEach(p=>{
-const c=shiftK(p.k,s)[cm],q=Math.max(1,Math.round(p.p*settings.personen));
-if(c.includes('Z'))out.push({id:'z'+p.n,e:p.e,name:p.n,meta:p.zt+' · '+q+' '+p.u,type:'z'});
-if(c.includes('V'))out.push({id:'v'+p.n,e:p.e,name:p.n,meta:p.vt,type:'v'});
-if(c.includes('O'))out.push({id:'o'+p.n,e:p.e,name:p.n,meta:p.ot,type:'o',crop:p.n});
+const out=[];
+myGarden.forEach(g=>{
+const p=plantByName(g.n);if(!p)return;
+const q=Math.max(1,Math.round(p.p*settings.personen));
+const st=g.status||'te_zaaien';
+// Toon alléén de actie die past bij de huidige fase van DEZE plant,
+// en alleen als de kalender die actie deze maand toelaat.
+if(st==='te_zaaien'&&isMonthFor(p,'Z')){
+out.push({id:'z'+p.n,e:p.e,name:p.n,meta:p.zt+' · '+q+' '+p.u,type:'z'});
+} else if(st==='gezaaid'&&isMonthFor(p,'V')){
+out.push({id:'v'+p.n,e:p.e,name:p.n,meta:p.vt,type:'v'});
+} else if((st==='uitgeplant'||st==='groeit')&&isMonthFor(p,'O')){
+out.push({id:'o'+p.n,e:p.e,name:p.n,meta:p.ot,type:'o',crop:p.n});
+}
 });
 return out;
 }
 function toggleTask(id){
-if(doneTasks.has(id))doneTasks.delete(id);else{doneTasks.add(id);if(id[0]==='o'){const c=id.slice(1);harvestLog[c]=(harvestLog[c]||0)+1;toast('🧺 Oogst genoteerd — top!');}}
+const crop=id.slice(1),type=id[0],g=gardenEntry(crop);
+if(doneTasks.has(id)){doneTasks.delete(id);}
+else{
+doneTasks.add(id);
+// Laat de plant een fase opschuiven wanneer je de taak afvinkt
+if(g){
+if(type==='z'){g.status='gezaaid';toast('🌱 Gezaaid! Volgende stap volgt vanzelf.');}
+else if(type==='v'){g.status='uitgeplant';toast('🪴 Uitgeplant — nu groeien maar.');}
+else if(type==='o'){g.status='groeit';harvestLog[crop]=(harvestLog[crop]||0)+1;toast('🧺 Geoogst — top!');}
+}
+}
 renderHome();save();
 }
 function calcPct(){
@@ -807,7 +840,8 @@ else sub.textContent='Bijna onafhankelijk — geweldig!';
 // ══════════ TUIN ══════════
 function renderGarden(){
 document.getElementById('tuinSub').textContent=myGarden.length?`${myGarden.length} ${myGarden.length===1?'gewas':'gewassen'} · ${ML[cm]}`:'Nog leeg';
-const oogstNu=gardenPlants().filter(p=>shiftK(p.k,KLIM[settings.klimaat].s)[cm].includes('O')).length;
+// "Nu te oogsten" = planten die echt klaar zijn (status groeit/uitgeplant) én waarvan de kalender oogst toelaat
+const oogstNu=myGarden.filter(g=>{const p=plantByName(g.n);return p&&(g.status==='groeit'||g.status==='uitgeplant')&&isMonthFor(p,'O');}).length;
 document.getElementById('gardenStats').innerHTML=`
 <div class="gstat"><div class="gstat-v">${myGarden.length}</div><div class="gstat-l">Gewassen</div></div>
 <div class="gstat"><div class="gstat-v">${oogstNu}</div><div class="gstat-l">Nu te oogsten</div></div>
@@ -816,25 +850,31 @@ if(!myGarden.length){
 document.getElementById('gardenList').innerHTML=`<div class="empty-card"><div class="empty-emoji">🌿</div><div class="empty-title serif">Begin jouw tuin</div><div class="empty-text">Kies de groenten en het fruit dat jij lekker vindt. Wij vertellen je precies wanneer je wat moet doen.</div><button class="btn btn-primary" onclick="openAddSheet()">＋ Eerste gewas kiezen</button></div>`;
 return;
 }
-const s=KLIM[settings.klimaat].s;
-document.getElementById('gardenList').innerHTML=gardenPlants().map(p=>{
-const c=shiftK(p.k,s)[cm];let phase='Rustig',pc='';
-if(c.includes('O')){phase='Oogsten 🧺';}else if(c.includes('Z')){phase='Zaaien 🌱';}else if(c.includes('V')){phase='Uitplanten 🪴';}
-const next=nextAction(p,s);
+document.getElementById('gardenList').innerHTML=myGarden.map(g=>{
+const p=plantByName(g.n);if(!p)return'';
+const st=STATUS[g.status||'te_zaaien'];
+const next=nextAction(g);
 return `<div class="gplant" onclick="openDetail('${p.n}')">
 <div class="gplant-emoji">${p.e}</div>
 <div class="gplant-body"><div class="gplant-name">${p.n}</div><div class="gplant-status">${next}</div></div>
-<div class="gplant-phase">${phase}</div>
+<div class="gplant-phase">${st.emoji} ${st.label}</div>
 <div class="gplant-x" onclick="event.stopPropagation();removePlant('${p.n}')">✕</div>
 </div>`;
 }).join('');
 }
-function nextAction(p,s){
-const k=shiftK(p.k,s);
-for(let i=0;i<12;i++){const m=(cm+i)%12,c=k[m];if(c.includes('O'))return'Oogsten in '+ML[m];if(c.includes('Z'))return'Zaaien in '+ML[m];if(c.includes('V'))return'Uitplanten in '+ML[m];}
-return'Geen actie dit jaar';
+// Vertelt wat de volgende stap is, op basis van waar DEZE plant nu staat
+function nextAction(g){
+const p=plantByName(g.n);if(!p)return'';
+const st=g.status||'te_zaaien';
+const k=shiftK(p.k,KLIM[settings.klimaat].s);
+const findNext=(letter,word)=>{for(let i=0;i<12;i++){const m=(cm+i)%12;if(k[m].includes(letter))return i===0?word+' deze maand':word+' in '+ML[m];}return null;};
+if(st==='te_zaaien'){return findNext('Z','Zaaien')||'Dit jaar niet meer te zaaien';}
+if(st==='gezaaid'){return findNext('V','Klaar om uit te planten')||'Groeit verder';}
+if(st==='uitgeplant'){return findNext('O','Oogsten')||'Groeit nog door';}
+if(st==='groeit'){return findNext('O','Opnieuw oogsten')||'Oogst afgerond';}
+return'';
 }
-function removePlant(n){myGarden=myGarden.filter(x=>x!==n);renderGarden();renderHome();save();toast(n+' verwijderd');}
+function removePlant(n){myGarden=myGarden.filter(g=>g.n!==n);renderGarden();renderHome();save();toast(n+' verwijderd');}
 
 // ══════════ ADD SHEET ══════════
 function openAddSheet(){document.getElementById('addSheet').classList.add('open');renderCatChips();renderAddGrid();}
@@ -848,7 +888,7 @@ function renderAddGrid(){
 const q=(document.getElementById('addSearch').value||'').toLowerCase();
 let items=PL.filter(p=>(addCat==='Alle'||p.cat===addCat)&&p.n.toLowerCase().includes(q));
 document.getElementById('addGrid').innerHTML=items.map(p=>`
-<div class="add-item ${myGarden.includes(p.n)?'added':''}" onclick="togglePlant('${p.n}',this)">
+<div class="add-item ${inGarden(p.n)?'added':''}" onclick="togglePlant('${p.n}',this)">
 <div class="add-badge">✓</div>
 <div class="add-emoji">${p.e}</div>
 <div class="add-name">${p.n}</div>
@@ -856,8 +896,12 @@ document.getElementById('addGrid').innerHTML=items.map(p=>`
 </div>`).join('');
 }
 function togglePlant(n,el){
-if(myGarden.includes(n)){myGarden=myGarden.filter(x=>x!==n);el.classList.remove('added');}
-else{myGarden.push(n);el.classList.add('added');toast(n+' toegevoegd 🌱');}
+if(inGarden(n)){myGarden=myGarden.filter(g=>g.n!==n);el.classList.remove('added');}
+else{
+// Nieuwe plant begint altijd bij het begin: nog te zaaien
+myGarden.push({n,status:'te_zaaien'});el.classList.add('added');
+toast(n+' toegevoegd — start met zaaien 🌱');
+}
 save();
 }
 
@@ -870,7 +914,22 @@ document.getElementById('dtCat').textContent=p.cat;
 const s=KLIM[settings.klimaat].s,k=shiftK(p.k,s);
 const tl=k.map((c,i)=>{let bg='var(--surface2)',ic='';if(c.includes('O')){bg='var(--terra-soft)';ic='🧺';}else if(c.includes('Z')){bg='var(--mint-soft)';ic='🌱';}else if(c.includes('V')){bg='#FBEFD4';ic='🪴';}return `<div class="tl-month"><div class="tl-bar" style="background:${bg};${i===cm?'outline:2px solid var(--sage);':''}">${ic}</div><div class="tl-m">${MN[i]}</div></div>`;}).join('');
 const q=Math.max(1,Math.round(p.p*settings.personen));
+const g=gardenEntry(n);
+let statusBlock='';
+if(g){
+const st=g.status||'te_zaaien',cur=STATUS[st];
+const steps=['te_zaaien','gezaaid','uitgeplant','groeit'];
+const curIdx=steps.indexOf(st);
+const dots=steps.map((s,i)=>`<div style="flex:1;text-align:center"><div style="width:30px;height:30px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:0.95rem;background:${i<=curIdx?'var(--mint)':'var(--surface2)'};border:2px solid ${i<=curIdx?'var(--mint)':'var(--line)'};">${STATUS[s].emoji}</div><div style="font-size:0.6rem;color:${i===curIdx?'var(--forest)':'var(--muted)'};margin-top:4px;font-weight:${i===curIdx?'700':'400'}">${STATUS[s].label.split(' ')[0]}</div></div>`).join('<div style="flex:0.3;height:2px;background:var(--line);margin-top:14px;"></div>');
+const nextBtn=cur.next?`<button class="btn btn-mint btn-full" style="margin-top:14px;" onclick="advancePlant('${n}')">${cur.next==='gezaaid'?'🌱 Ik heb gezaaid':cur.next==='uitgeplant'?'🪴 Ik heb uitgeplant':'🧺 Ik heb geoogst'}</button>`:`<button class="btn btn-mint btn-full" style="margin-top:14px;" onclick="advancePlant('${n}')">🧺 Nog een keer geoogst</button>`;
+statusBlock=`<div class="detail-block" style="background:var(--mint-soft);border-color:var(--mint);">
+<div class="db-label">🌿 Waar sta jij met deze plant?</div>
+<div style="display:flex;align-items:flex-start;margin-top:10px;">${dots}</div>
+${nextBtn}
+</div>`;
+}
 document.getElementById('dtBody').innerHTML=`
+${statusBlock}
 <div class="detail-block"><div class="db-label">📆 Jouw jaarkalender</div><div class="detail-timeline">${tl}</div></div>
 <div class="detail-block"><div class="db-label">🌱 Zaaien</div><div class="db-text">${p.zt}<br><strong>Voor ${settings.personen} ${settings.personen===1?'persoon':'personen'}:</strong> ${q} ${p.u}</div></div>
 <div class="detail-block"><div class="db-label">🪴 Uitplanten</div><div class="db-text">${p.vt}</div></div>
@@ -879,6 +938,20 @@ document.getElementById('dtBody').innerHTML=`
 <div class="detail-block"><div class="db-label">🍽️ In de keuken</div><div class="db-text">${p.rc}</div></div>
 <button class="btn btn-ghost btn-full" style="margin-top:6px;" onclick="removePlant('${p.n}');showScreen('tuin')">Verwijder uit mijn tuin</button>`;
 showScreen('detail');
+}
+// Plant een fase vooruit zetten vanuit het detailscherm
+function advancePlant(n){
+const g=gardenEntry(n);if(!g)return;
+const cur=STATUS[g.status||'te_zaaien'];
+if(g.status==='groeit'||!cur.next){
+// al volgroeid → tel een extra oogst
+harvestLog[n]=(harvestLog[n]||0)+1;toast('🧺 Oogst genoteerd!');
+}else{
+g.status=cur.next;
+if(g.status==='groeit'){harvestLog[n]=(harvestLog[n]||0)+1;}
+toast(g.status==='gezaaid'?'🌱 Gezaaid!':g.status==='uitgeplant'?'🪴 Uitgeplant!':'🧺 Geoogst — top!');
+}
+save();openDetail(n);renderHome();
 }
 
 // ══════════ ONTDEK ══════════
