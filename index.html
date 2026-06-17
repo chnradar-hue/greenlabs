@@ -207,6 +207,9 @@ background:radial-gradient(circle,rgba(136,184,106,0.22),transparent 70%);border
 .add-item.rec{border-color:var(--mint);box-shadow:0 0 0 1px var(--mint);}
 .add-item.vol{opacity:0.5;}
 .add-item.vol .add-emoji{filter:grayscale(0.6);}
+.ruil-opt{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s;}
+.ruil-opt:active{transform:scale(0.98);}
+.ruil-opt:hover{border-color:var(--mint);}
 .add-rec-tag{position:absolute;top:9px;left:9px;background:var(--mint);color:var(--forest);font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:0.02em;}
 .add-group-title{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--forest);font-weight:500;padding:0 22px;margin:18px 0 9px;display:flex;align-items:center;gap:8px;}
 .add-group-title:first-child{margin-top:4px;}
@@ -330,6 +333,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 
 /* ── ONBOARDING ── */
 #onboarding{position:fixed;inset:0;z-index:1000;background:linear-gradient(165deg,#1F3A1C,#0F2410);overflow-y:auto;display:none;}
+#langPicker{position:fixed;inset:0;z-index:1100;background:linear-gradient(165deg,#1F3A1C,#0F2410);overflow-y:auto;display:none;}
+.lang-opt{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.18);border-radius:15px;padding:16px 18px;cursor:pointer;transition:all .15s;}
+.lang-opt:active{transform:scale(0.98);}
+.lang-opt:hover{background:rgba(255,255,255,0.14);border-color:var(--mint);}
+.lang-flag{font-size:1.7rem;}
+.lang-name{flex:1;color:var(--surface);font-weight:600;font-size:1rem;}
+.lang-arr{color:rgba(255,255,255,0.5);font-size:1.1rem;}
 .ob-wrap{min-height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding:calc(30px + env(safe-area-inset-top)) 26px calc(30px + env(safe-area-inset-bottom));}
 .ob-step{display:none;flex:1;flex-direction:column;animation:fade .4s;}
 .ob-step.active{display:flex;}
@@ -387,6 +397,20 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <body>
 
 <!-- ══ ONBOARDING ══ -->
+<div id="langPicker">
+<div style="min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:420px;margin:0 auto;padding:40px 30px;">
+<div style="font-size:3.4rem;margin-bottom:8px;">🌱</div>
+<div style="font-family:'Fraunces',serif;font-size:1.9rem;color:var(--surface);font-weight:500;text-align:center;margin-bottom:6px;">Greenlabs</div>
+<div style="font-size:0.95rem;color:rgba(255,255,255,0.65);text-align:center;margin-bottom:34px;">Choose your language · Kies je taal<br>Choisissez votre langue · Wähle deine Sprache</div>
+<div style="display:flex;flex-direction:column;gap:11px;width:100%;">
+<div class="lang-opt" onclick="kiesTaal('nl')"><span class="lang-flag">🇳🇱</span><span class="lang-name">Nederlands</span><span class="lang-arr">→</span></div>
+<div class="lang-opt" onclick="kiesTaal('en')"><span class="lang-flag">🇬🇧</span><span class="lang-name">English</span><span class="lang-arr">→</span></div>
+<div class="lang-opt" onclick="kiesTaal('fr')"><span class="lang-flag">🇫🇷</span><span class="lang-name">Français</span><span class="lang-arr">→</span></div>
+<div class="lang-opt" onclick="kiesTaal('de')"><span class="lang-flag">🇩🇪</span><span class="lang-name">Deutsch</span><span class="lang-arr">→</span></div>
+</div>
+</div>
+</div>
+
 <div id="onboarding">
 <div class="ob-wrap">
 <div class="ob-progress">
@@ -418,12 +442,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="ob-step" data-step="2">
 <div class="ob-emoji">📐</div>
 <h1 class="ob-title">Hoeveel ruimte heb je?</h1>
-<p class="ob-text" style="margin-bottom:24px;">Een balkon is genoeg om te beginnen — echt.</p>
-<div class="ob-opts" id="obRuimteOpts">
-<div class="ob-opt" data-v="klein" onclick="obPick('ruimte','klein',this)"><div class="ob-opt-t">🪴 Klein</div><div class="ob-opt-s">Balkon of ongeveer 10m²</div></div>
-<div class="ob-opt sel" data-v="middel" onclick="obPick('ruimte','middel',this)"><div class="ob-opt-t">🌿 Middel</div><div class="ob-opt-s">Een tuin van 20 tot 40m²</div></div>
-<div class="ob-opt" data-v="groot" onclick="obPick('ruimte','groot',this)"><div class="ob-opt-t">🌳 Groot</div><div class="ob-opt-s">Meer dan 40m² of een moestuin</div></div>
+<p class="ob-text" style="margin-bottom:20px;">Schat hoeveel vierkante meter je kunt gebruiken om te telen. Een balkon is genoeg om te beginnen — echt.</p>
+<div style="text-align:center;margin:10px 0 20px;">
+<div style="font-family:'Fraunces',serif;font-size:3.2rem;color:var(--surface);font-weight:500;line-height:1;"><span id="obM2Val">15</span><span style="font-size:1.3rem;opacity:0.7"> m²</span></div>
+<input type="range" min="2" max="150" step="1" value="15" id="obM2Range" oninput="obSetM2(this.value)" style="width:100%;margin-top:18px;accent-color:var(--mint);">
+<div style="display:flex;justify-content:space-between;font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:6px;"><span>🪴 Balkon</span><span>🌿 Tuin</span><span>🌳 Moestuin</span></div>
 </div>
+<p class="ob-text" id="obM2Hint" style="font-size:0.82rem;margin-bottom:auto;">Een mooie tuin om gevarieerd te telen.</p>
 <div class="ob-foot"><button class="btn btn-mint btn-full" onclick="obNext()">Verder</button></div>
 </div>
 
@@ -500,6 +525,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="loc-pill" onclick="openAddSheet()">＋ Gewas</div>
 </div>
 <div class="gh-stats" id="gardenStats"></div>
+<div id="oogstSpreiding"></div>
 <div class="garden-list" id="gardenList"></div>
 </div>
 
@@ -564,6 +590,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <option value="100">Volledig van de supermarkt af (100%)</option>
 </select>
 <div style="font-size:0.7rem;color:var(--muted);margin-top:6px;line-height:1.4;">Je meter laat zien hoe ver je bent richting jouw eigen doel.</div>
+<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;" data-i18n="taal">Taal</label>
+<select class="setting-input" id="setTaal" onchange="kiesTaal(this.value);toast(t('opgeslagen'))">
+<option value="nl">🇳🇱 Nederlands</option>
+<option value="en">🇬🇧 English</option>
+<option value="fr">🇫🇷 Français</option>
+<option value="de">🇩🇪 Deutsch</option>
+</select>
 </div>
 </div>
 
@@ -695,6 +728,19 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 </div>
 </div>
 
+<!-- ══ RUIL SHEET ══ -->
+<div class="sheet-overlay" id="ruilSheet" onclick="if(event.target===this)closeRuil()">
+<div class="sheet">
+<div class="sheet-grip"></div>
+<div class="sheet-head">
+<div class="sheet-title serif" id="ruilTitle">Ruilen</div>
+<div class="sheet-sub" id="ruilSub">—</div>
+</div>
+<div id="ruilList" style="padding:0 22px"></div>
+<div style="padding:16px 22px 0;"><button class="btn btn-ghost btn-full" onclick="closeRuil()">Annuleren</button></div>
+</div>
+</div>
+
 <!-- ══ AUTH SHEET ══ -->
 <div class="sheet-overlay" id="authSheet" onclick="if(event.target===this)closeAuth()">
 <div class="sheet">
@@ -752,6 +798,154 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 </div>
 
 <script>
+// ══════════ TAAL / I18N ══════════
+let LANG=(function(){try{return localStorage.getItem('gl_lang')||null;}catch(e){return null;}})();
+
+// Maandnamen per taal
+const MAANDEN={
+nl:{kort:['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'],lang:['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december']},
+en:{kort:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],lang:['January','February','March','April','May','June','July','August','September','October','November','December']},
+fr:{kort:['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'],lang:['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']},
+de:{kort:['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],lang:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']},
+};
+// Categorie-vertalingen
+const CATT={
+'Groenten':{en:'Vegetables',fr:'Légumes',de:'Gemüse'},
+'Bladgroenten':{en:'Leafy greens',fr:'Légumes-feuilles',de:'Blattgemüse'},
+'Wortelgroenten':{en:'Root vegetables',fr:'Légumes-racines',de:'Wurzelgemüse'},
+'Knolgewassen':{en:'Bulbs & tubers',fr:'Bulbes & tubercules',de:'Knollen'},
+'Peulvruchten':{en:'Legumes',fr:'Légumineuses',de:'Hülsenfrüchte'},
+'Fruit':{en:'Fruit',fr:'Fruits',de:'Obst'},
+'Kruiden':{en:'Herbs',fr:'Herbes',de:'Kräuter'},
+};
+// Gewasnamen-vertalingen (sleutel = Nederlandse naam, intern blijft NL)
+const PLT={
+'Tomaat':{en:'Tomato',fr:'Tomate',de:'Tomate'},'Sla':{en:'Lettuce',fr:'Laitue',de:'Salat'},
+'Komkommer':{en:'Cucumber',fr:'Concombre',de:'Gurke'},'Wortel':{en:'Carrot',fr:'Carotte',de:'Karotte'},
+'Courgette':{en:'Zucchini',fr:'Courgette',de:'Zucchini'},'Aardappel':{en:'Potato',fr:'Pomme de terre',de:'Kartoffel'},
+'Boon':{en:'Bean',fr:'Haricot',de:'Bohne'},'Ui':{en:'Onion',fr:'Oignon',de:'Zwiebel'},
+'Aardbei':{en:'Strawberry',fr:'Fraise',de:'Erdbeere'},'Paprika':{en:'Bell pepper',fr:'Poivron',de:'Paprika'},
+'Knoflook':{en:'Garlic',fr:'Ail',de:'Knoblauch'},'Spinazie':{en:'Spinach',fr:'Épinard',de:'Spinat'},
+'Pompoen':{en:'Pumpkin',fr:'Citrouille',de:'Kürbis'},'Broccoli':{en:'Broccoli',fr:'Brocoli',de:'Brokkoli'},
+'Radijs':{en:'Radish',fr:'Radis',de:'Radieschen'},'Rode biet':{en:'Beetroot',fr:'Betterave',de:'Rote Bete'},
+'Prei':{en:'Leek',fr:'Poireau',de:'Lauch'},'Boerenkool':{en:'Kale',fr:'Chou frisé',de:'Grünkohl'},
+'Erwt':{en:'Pea',fr:'Petit pois',de:'Erbse'},'Aubergine':{en:'Eggplant',fr:'Aubergine',de:'Aubergine'},
+'Maïs':{en:'Corn',fr:'Maïs',de:'Mais'},'Peterselie':{en:'Parsley',fr:'Persil',de:'Petersilie'},
+'Basilicum':{en:'Basil',fr:'Basilic',de:'Basilikum'},'Bieslook':{en:'Chives',fr:'Ciboulette',de:'Schnittlauch'},
+'Munt':{en:'Mint',fr:'Menthe',de:'Minze'},'Pastinaak':{en:'Parsnip',fr:'Panais',de:'Pastinake'},
+'Snijbiet':{en:'Swiss chard',fr:'Blette',de:'Mangold'},'Bloemkool':{en:'Cauliflower',fr:'Chou-fleur',de:'Blumenkohl'},
+'Spruitjes':{en:'Brussels sprouts',fr:'Choux de Bruxelles',de:'Rosenkohl'},'Rabarber':{en:'Rhubarb',fr:'Rhubarbe',de:'Rhabarber'},
+'Framboos':{en:'Raspberry',fr:'Framboise',de:'Himbeere'},'Peper':{en:'Chili pepper',fr:'Piment',de:'Chili'},
+'Veldsla':{en:'Lamb\u2019s lettuce',fr:'Mâche',de:'Feldsalat'},'Selderij':{en:'Celery',fr:'Céleri',de:'Sellerie'},
+'Venkel':{en:'Fennel',fr:'Fenouil',de:'Fenchel'},'Witlof':{en:'Chicory',fr:'Endive',de:'Chicorée'},
+'Rucola':{en:'Arugula',fr:'Roquette',de:'Rucola'},'Postelein':{en:'Purslane',fr:'Pourpier',de:'Portulak'},
+'Asperge':{en:'Asparagus',fr:'Asperge',de:'Spargel'},'Appel':{en:'Apple',fr:'Pomme',de:'Apfel'},
+'Peer':{en:'Pear',fr:'Poire',de:'Birne'},'Blauwe bes':{en:'Blueberry',fr:'Myrtille',de:'Heidelbeere'},
+'Druif':{en:'Grape',fr:'Raisin',de:'Traube'},'Kervel':{en:'Chervil',fr:'Cerfeuil',de:'Kerbel'},
+'Dille':{en:'Dill',fr:'Aneth',de:'Dill'},'Tijm':{en:'Thyme',fr:'Thym',de:'Thymian'},
+'Rozemarijn':{en:'Rosemary',fr:'Romarin',de:'Rosmarin'},
+};
+function plantNaam(n){if(!LANG||LANG==='nl')return n;return(PLT[n]&&PLT[n][LANG])||n;}
+function catNaam(c){if(!LANG||LANG==='nl')return c;return(CATT[c]&&CATT[c][LANG])||c;}
+
+const PLTIPS={"Tomaat":{"en":{"u":"plants","zt":"Sow indoors at 20°C, 0.5cm deep","vt":"Outdoors after last night frost","ot":"±3kg per plant per season","bw":"At room temperature, never in the fridge. Keeps 5-7 days.","rc":"Fresh tomato sauce, caprese, or roasted tomato soup."},"fr":{"u":"plants","zt":"Semez à l’intérieur à 20°C, 0,5cm de profondeur","vt":"Dehors après les dernières gelées","ot":"±3kg par plant par saison","bw":"À température ambiante, jamais au frigo. Se garde 5-7 jours.","rc":"Sauce tomate fraîche, caprese ou soupe de tomates rôties."},"de":{"u":"Pflanzen","zt":"Drinnen bei 20°C säen, 0,5cm tief","vt":"Nach dem letzten Nachtfrost ins Freie","ot":"±3kg pro Pflanze pro Saison","bw":"Bei Zimmertemperatur, nie im Kühlschrank. Hält 5-7 Tage.","rc":"Frische Tomatensoße, Caprese oder geröstete Tomatensuppe."}},"Sla":{"en":{"u":"plants","zt":"Sow every 2-3 weeks for a continuous harvest","vt":"Out early, tolerates light frost","ot":"Cut outer leaves, the plant keeps growing","bw":"In a damp cloth in the fridge, 3-5 days.","rc":"Fresh salad, wraps, or as a bed under warm dishes."},"fr":{"u":"plants","zt":"Semez toutes les 2-3 semaines pour une récolte continue","vt":"Tôt dehors, tolère le gel léger","ot":"Coupez les feuilles extérieures, la plante repousse","bw":"Dans un linge humide au frigo, 3-5 jours.","rc":"Salade fraîche, wraps ou en lit sous des plats chauds."},"de":{"u":"Pflanzen","zt":"Alle 2-3 Wochen säen für laufende Ernte","vt":"Früh nach draußen, verträgt leichten Frost","ot":"Äußere Blätter schneiden, Pflanze wächst weiter","bw":"In feuchtem Tuch im Kühlschrank, 3-5 Tage.","rc":"Frischer Salat, Wraps oder als Bett unter warmen Gerichten."}},"Komkommer":{"en":{"u":"plants","zt":"Sow indoors in a warm spot (25°C)","vt":"Plant out after mid-May","ot":"Harvest regularly = more fruit","bw":"Fridge, not too cold — 1 week.","rc":"Tzatziki, fresh salad, or pickled as gherkins."},"fr":{"u":"plants","zt":"Semez à l’intérieur au chaud (25°C)","vt":"Repiquez après la mi-mai","ot":"Récoltez régulièrement = plus de fruits","bw":"Frigo, pas trop froid — 1 semaine.","rc":"Tzatziki, salade fraîche ou mariné en cornichons."},"de":{"u":"Pflanzen","zt":"Drinnen an warmem Ort säen (25°C)","vt":"Nach Mitte Mai auspflanzen","ot":"Regelmäßig ernten = mehr Früchte","bw":"Kühlschrank, nicht zu kalt — 1 Woche.","rc":"Tzatziki, frischer Salat oder als Gurken eingelegt."}},"Wortel":{"en":{"u":"seeds (row)","zt":"Directly outside, 1cm deep in loose soil","vt":"Do not transplant — sow in final spot","ot":"Harvest after 10-16 weeks","bw":"Remove leaves, cool cellar. Months in damp sand.","rc":"Carrot soup, roasted with honey, or raw as a snack."},"fr":{"u":"graines (rang)","zt":"Directement dehors, 1cm de profondeur en sol meuble","vt":"Ne pas repiquer — semez à l’emplacement final","ot":"Récoltez après 10-16 semaines","bw":"Ôtez le feuillage, cave fraîche. Des mois dans du sable humide.","rc":"Soupe de carottes, rôties au miel ou crues en en-cas."},"de":{"u":"Samen (Reihe)","zt":"Direkt draußen, 1cm tief in lockerem Boden","vt":"Nicht umpflanzen — am Endstandort säen","ot":"Nach 10-16 Wochen ernten","bw":"Laub entfernen, kühler Keller. Monate in feuchtem Sand.","rc":"Karottensuppe, mit Honig geröstet oder roh als Snack."}},"Courgette":{"en":{"u":"plants","zt":"Sow indoors in a pot, 2cm deep","vt":"Outside after mid-May","ot":"Harvest young (15-20cm)","bw":"Fridge 1 week. Grating and freezing also works.","rc":"Stuffed zucchini, soup, or zucchini cake."},"fr":{"u":"plants","zt":"Semez en pot à l’intérieur, 2cm de profondeur","vt":"Dehors après la mi-mai","ot":"Récoltez jeune (15-20cm)","bw":"Frigo 1 semaine. Râpée et congelée aussi.","rc":"Courgette farcie, soupe ou gâteau à la courgette."},"de":{"u":"Pflanzen","zt":"Drinnen im Topf säen, 2cm tief","vt":"Nach Mitte Mai nach draußen","ot":"Jung ernten (15-20cm)","bw":"Kühlschrank 1 Woche. Geraspelt einfrieren geht auch.","rc":"Gefüllte Zucchini, Suppe oder Zucchinikuchen."}},"Aardappel":{"en":{"u":"seed potatoes","zt":"Plant in April, 10-15cm deep","vt":"Earth up when foliage is 15cm high","ot":"±3kg per plant","bw":"Dark, cool and dry. Keeps for months.","rc":"Boiled, fried, mashed or in a hotpot."},"fr":{"u":"plants de pomme de terre","zt":"Plantez en avril, 10-15cm de profondeur","vt":"Buttez quand le feuillage atteint 15cm","ot":"±3kg par plant","bw":"Sombre, frais et sec. Se garde des mois.","rc":"Bouillies, frites, en purée ou en potée."},"de":{"u":"Saatkartoffeln","zt":"Im April pflanzen, 10-15cm tief","vt":"Anhäufeln, wenn das Laub 15cm hoch ist","ot":"±3kg pro Pflanze","bw":"Dunkel, kühl und trocken. Hält Monate.","rc":"Gekocht, gebraten, als Püree oder Eintopf."}},"Boon":{"en":{"u":"seeds","zt":"Directly outside after mid-May, 4cm deep","vt":"Sow straight in the final spot","ot":"Pick regularly = more harvest","bw":"Fridge 4-5 days, or blanch and freeze.","rc":"Beans with bacon, in stew, or with garlic."},"fr":{"u":"graines","zt":"Directement dehors après la mi-mai, 4cm de profondeur","vt":"Semez à l’emplacement final","ot":"Cueillez régulièrement = plus de récolte","bw":"Frigo 4-5 jours, ou blanchir et congeler.","rc":"Haricots au lard, en ragoût ou à l’ail."},"de":{"u":"Samen","zt":"Direkt draußen nach Mitte Mai, 4cm tief","vt":"Direkt am Endstandort säen","ot":"Regelmäßig pflücken = mehr Ernte","bw":"Kühlschrank 4-5 Tage, oder blanchieren und einfrieren.","rc":"Bohnen mit Speck, im Eintopf oder mit Knoblauch."}},"Ui":{"en":{"u":"onion sets","zt":"Plant sets 3cm deep, 10cm apart","vt":"Plant directly","ot":"Harvest when foliage falls over","bw":"Dried, in a net in a dry place. Months.","rc":"Base for any dish, onion soup, or caramelised."},"fr":{"u":"oignons à planter","zt":"Plantez les bulbilles à 3cm, espacés de 10cm","vt":"Plantez directement","ot":"Récoltez quand le feuillage tombe","bw":"Séchés, dans un filet au sec. Des mois.","rc":"Base de tout plat, soupe à l’oignon ou caramélisés."},"de":{"u":"Steckzwiebeln","zt":"Steckzwiebeln 3cm tief, 10cm Abstand","vt":"Direkt stecken","ot":"Ernten, wenn das Laub umfällt","bw":"Getrocknet, im Netz am trockenen Ort. Monate.","rc":"Basis für jedes Gericht, Zwiebelsuppe oder karamellisiert."}},"Aardbei":{"en":{"u":"plants","zt":"Buy young plants or runners","vt":"Plant April/May or September","ot":"June-July is peak season","bw":"Unwashed in the fridge, 2-3 days.","rc":"With yoghurt, jam, smoothie or in a fruit salad."},"fr":{"u":"plants","zt":"Achetez de jeunes plants ou stolons","vt":"Plantez en avril/mai ou septembre","ot":"Juin-juillet est la pleine saison","bw":"Non lavées au frigo, 2-3 jours.","rc":"Avec du yaourt, en confiture, smoothie ou salade de fruits."},"de":{"u":"Pflanzen","zt":"Junge Pflanzen oder Ableger kaufen","vt":"Im April/Mai oder September pflanzen","ot":"Juni-Juli ist Hauptsaison","bw":"Ungewaschen im Kühlschrank, 2-3 Tage.","rc":"Mit Joghurt, Marmelade, Smoothie oder im Obstsalat."}},"Paprika":{"en":{"u":"plants","zt":"Sow March indoors at 25°C","vt":"Outside only late May","ot":"Starts green, ripens to red/yellow","bw":"Fridge 1-2 weeks. Freeze in strips.","rc":"Stuffed peppers, stir-fry, or in ratatouille."},"fr":{"u":"plants","zt":"Semez en mars à l’intérieur à 25°C","vt":"Dehors seulement fin mai","ot":"Vert au début, mûrit vers rouge/jaune","bw":"Frigo 1-2 semaines. Congelez en lanières.","rc":"Poivrons farcis, sauté ou en ratatouille."},"de":{"u":"Pflanzen","zt":"Im März drinnen bei 25°C säen","vt":"Erst Ende Mai nach draußen","ot":"Erst grün, reift zu rot/gelb","bw":"Kühlschrank 1-2 Wochen. In Streifen einfrieren.","rc":"Gefüllte Paprika, Pfannengericht oder in Ratatouille."}},"Knoflook":{"en":{"u":"cloves","zt":"Plant Oct/Nov, tip up, 5cm deep","vt":"Plant straight in the border","ot":"Harvest when foliage turns brown","bw":"Dry and airy, keeps for months.","rc":"Flavour in everything, roasted, or as aioli."},"fr":{"u":"gousses","zt":"Plantez oct/nov, pointe vers le haut, 5cm","vt":"Plantez directement en pleine terre","ot":"Récoltez quand le feuillage brunit","bw":"Au sec et aéré, se garde des mois.","rc":"Saveur dans tout, rôti ou en aïoli."},"de":{"u":"Zehen","zt":"Im Okt/Nov pflanzen, Spitze nach oben, 5cm tief","vt":"Direkt ins Beet pflanzen","ot":"Ernten, wenn das Laub braun wird","bw":"Trocken und luftig, hält Monate.","rc":"Würze in allem, geröstet oder als Aioli."}},"Spinazie":{"en":{"u":"seeds (row)","zt":"Sow every 3 weeks continuously","vt":"Sow directly","ot":"Cut outer leaves","bw":"Fridge 2-3 days, or blanch and freeze.","rc":"Stir-fry, quiche, smoothie, or stewed with garlic."},"fr":{"u":"graines (rang)","zt":"Semez toutes les 3 semaines en continu","vt":"Semez directement","ot":"Coupez les feuilles extérieures","bw":"Frigo 2-3 jours, ou blanchir et congeler.","rc":"Sauté, quiche, smoothie ou à l’étuvée avec de l’ail."},"de":{"u":"Samen (Reihe)","zt":"Alle 3 Wochen durchgehend säen","vt":"Direkt säen","ot":"Äußere Blätter schneiden","bw":"Kühlschrank 2-3 Tage, oder blanchieren und einfrieren.","rc":"Pfannengericht, Quiche, Smoothie oder mit Knoblauch gedünstet."}},"Pompoen":{"en":{"u":"plants","zt":"Sow indoors in April, warm","vt":"Outside after mid-May, 1m² space","ot":"Stores for months after harvest","bw":"Whole in a cool dry place: months.","rc":"Pumpkin soup, roasted, risotto, or in curry."},"fr":{"u":"plants","zt":"Semez à l’intérieur en avril, au chaud","vt":"Dehors après la mi-mai, 1m² d’espace","ot":"Se conserve des mois après récolte","bw":"Entier au frais et au sec : des mois.","rc":"Soupe, rôtie, risotto ou en curry."},"de":{"u":"Pflanzen","zt":"Im April drinnen säen, warm","vt":"Nach Mitte Mai nach draußen, 1m² Platz","ot":"Hält nach der Ernte monatelang","bw":"Ganz an kühlem, trockenem Ort: Monate.","rc":"Kürbissuppe, geröstet, Risotto oder im Curry."}},"Broccoli":{"en":{"u":"plants","zt":"Sow indoors or outside 0.5cm deep","vt":"40cm apart once hardened","ot":"Harvest before flowering","bw":"Fridge 4-5 days, or blanch and freeze.","rc":"Steamed, in stir-fry, soup, or roasted."},"fr":{"u":"plants","zt":"Semez intérieur ou dehors, 0,5cm de profondeur","vt":"40cm d’écart après endurcissement","ot":"Récoltez avant la floraison","bw":"Frigo 4-5 jours, ou blanchir et congeler.","rc":"Vapeur, sauté, soupe ou rôti."},"de":{"u":"Pflanzen","zt":"Drinnen oder draußen 0,5cm tief säen","vt":"40cm Abstand nach dem Abhärten","ot":"Vor der Blüte ernten","bw":"Kühlschrank 4-5 Tage, oder blanchieren und einfrieren.","rc":"Gedämpft, im Pfannengericht, Suppe oder geröstet."}},"Radijs":{"en":{"u":"seeds (row)","zt":"Sow every 2 weeks, fastest grower","vt":"Sow directly","ot":"Ready to harvest after just 4 weeks","bw":"Remove leaves, fridge 1 week.","rc":"Raw in salad, on buttered bread, or pickled."},"fr":{"u":"graines (rang)","zt":"Semez toutes les 2 semaines, pousse la plus rapide","vt":"Semez directement","ot":"Récoltable après seulement 4 semaines","bw":"Ôtez le feuillage, frigo 1 semaine.","rc":"Cru en salade, sur pain beurré ou mariné."},"de":{"u":"Samen (Reihe)","zt":"Alle 2 Wochen säen, schnellster Wachser","vt":"Direkt säen","ot":"Schon nach 4 Wochen erntereif","bw":"Laub entfernen, Kühlschrank 1 Woche.","rc":"Roh im Salat, auf Butterbrot oder eingelegt."}},"Rode biet":{"en":{"u":"seeds (row)","zt":"Sow directly outside, 2cm deep","vt":"Thin to 10cm apart","ot":"Harvest when fist-sized","bw":"Remove leaves, fridge or cellar. Weeks.","rc":"In salad, beet soup (borscht), or roasted."},"fr":{"u":"graines (rang)","zt":"Semez directement dehors, 2cm de profondeur","vt":"Éclaircissez à 10cm d’écart","ot":"Récoltez quand grosse comme un poing","bw":"Ôtez le feuillage, frigo ou cave. Des semaines.","rc":"En salade, soupe de betterave (bortsch) ou rôtie."},"de":{"u":"Samen (Reihe)","zt":"Direkt draußen säen, 2cm tief","vt":"Auf 10cm Abstand vereinzeln","ot":"Ernten, wenn faustgroß","bw":"Laub entfernen, Kühlschrank oder Keller. Wochen.","rc":"Im Salat, Rote-Bete-Suppe (Borschtsch) oder geröstet."}},"Prei":{"en":{"u":"plants","zt":"Sow indoors Feb/Mar","vt":"Plant in deep holes (pale shaft)","ot":"Harvestable all winter","bw":"Fridge 1-2 weeks, or leave in the ground.","rc":"Leek soup, leek-potato hotpot, or braised."},"fr":{"u":"plants","zt":"Semez à l’intérieur fév/mars","vt":"Plantez en trous profonds (fût blanc)","ot":"Récoltable tout l’hiver","bw":"Frigo 1-2 semaines, ou laissez en terre.","rc":"Soupe de poireaux, potée poireau-pomme de terre ou braisé."},"de":{"u":"Pflanzen","zt":"Drinnen im Feb/März säen","vt":"In tiefe Löcher pflanzen (heller Schaft)","ot":"Den ganzen Winter erntbar","bw":"Kühlschrank 1-2 Wochen, oder im Boden lassen.","rc":"Lauchsuppe, Lauch-Kartoffel-Eintopf oder geschmort."}},"Boerenkool":{"en":{"u":"plants","zt":"Sow in May in a pot","vt":"Plant out June, 50cm apart","ot":"Tastes better after the first frost","bw":"Fridge 1 week, or blanch and freeze.","rc":"Hotpot, kale chips from the oven, or in a smoothie."},"fr":{"u":"plants","zt":"Semez en mai en pot","vt":"Repiquez en juin, 50cm d’écart","ot":"Meilleur goût après la première gelée","bw":"Frigo 1 semaine, ou blanchir et congeler.","rc":"Potée, chips de chou au four ou en smoothie."},"de":{"u":"Pflanzen","zt":"Im Mai im Topf säen","vt":"Im Juni auspflanzen, 50cm Abstand","ot":"Schmeckt besser nach dem ersten Frost","bw":"Kühlschrank 1 Woche, oder blanchieren und einfrieren.","rc":"Eintopf, Grünkohl-Chips aus dem Ofen oder im Smoothie."}},"Erwt":{"en":{"u":"seeds","zt":"Sow directly outside in March, 4cm deep","vt":"Support with twigs or netting","ot":"Pick young and sweet","bw":"Best fresh. Fridge 3 days or freeze.","rc":"Fresh peas, pea soup, or through risotto."},"fr":{"u":"graines","zt":"Semez directement dehors en mars, 4cm","vt":"Soutenez avec branches ou filet","ot":"Cueillez jeunes et sucrés","bw":"Meilleurs frais. Frigo 3 jours ou congeler.","rc":"Petits pois frais, soupe ou dans un risotto."},"de":{"u":"Samen","zt":"Direkt draußen im März säen, 4cm tief","vt":"Mit Zweigen oder Netz stützen","ot":"Jung und süß pflücken","bw":"Frisch am besten. Kühlschrank 3 Tage oder einfrieren.","rc":"Frische Erbsen, Erbsensuppe oder im Risotto."}},"Aubergine":{"en":{"u":"plants","zt":"Sow early indoors at 25°C","vt":"Outside only late May","ot":"Harvest when the fruit is glossy","bw":"Fridge 5 days. Not too cold.","rc":"Moussaka, baba ganoush, or in ratatouille."},"fr":{"u":"plants","zt":"Semez tôt à l’intérieur à 25°C","vt":"Dehors seulement fin mai","ot":"Récoltez quand le fruit brille","bw":"Frigo 5 jours. Pas trop froid.","rc":"Moussaka, baba ganoush ou en ratatouille."},"de":{"u":"Pflanzen","zt":"Früh drinnen bei 25°C säen","vt":"Erst Ende Mai nach draußen","ot":"Ernten, wenn die Frucht glänzt","bw":"Kühlschrank 5 Tage. Nicht zu kalt.","rc":"Moussaka, Baba Ganoush oder in Ratatouille."}},"Maïs":{"en":{"u":"plants","zt":"Sow indoors in April in pots","vt":"Plant in blocks for pollination","ot":"Harvest when kernels are milky","bw":"Sweetest fresh. Boil and freeze the kernels.","rc":"From the BBQ, in salsa, or through a salad."},"fr":{"u":"plants","zt":"Semez en godets en avril","vt":"Plantez en blocs pour la pollinisation","ot":"Récoltez quand les grains sont laiteux","bw":"Plus sucré frais. Cuire et congeler les grains.","rc":"Au barbecue, en salsa ou dans une salade."},"de":{"u":"Pflanzen","zt":"Im April in Töpfen säen","vt":"In Blöcken pflanzen für die Bestäubung","ot":"Ernten, wenn die Körner milchig sind","bw":"Frisch am süßesten. Körner kochen und einfrieren.","rc":"Vom Grill, in Salsa oder im Salat."}},"Peterselie":{"en":{"u":"plants","zt":"Sow indoors or outside, slow to germinate","vt":"Plant in a pot or border","ot":"Cut as needed, keeps growing","bw":"Fridge as a bunch in water, or freeze.","rc":"Garnish, in tabbouleh, or through potatoes."},"fr":{"u":"plants","zt":"Semez intérieur ou dehors, germination lente","vt":"Plantez en pot ou en pleine terre","ot":"Coupez selon besoin, repousse","bw":"Frigo en bouquet dans l’eau, ou congeler.","rc":"Garniture, dans le taboulé ou avec des pommes de terre."},"de":{"u":"Pflanzen","zt":"Drinnen oder draußen säen, langsame Keimung","vt":"In Topf oder Beet pflanzen","ot":"Nach Bedarf schneiden, wächst nach","bw":"Kühlschrank als Bund im Wasser, oder einfrieren.","rc":"Garnitur, in Tabbouleh oder mit Kartoffeln."}},"Basilicum":{"en":{"u":"plants","zt":"Sow indoors in a warm spot","vt":"Outside only after mid-May","ot":"Pinch tops for bushy growth","bw":"At room temperature in water, or freeze as pesto.","rc":"Fresh pesto, on pizza, in caprese, or through pasta."},"fr":{"u":"plants","zt":"Semez à l’intérieur au chaud","vt":"Dehors seulement après la mi-mai","ot":"Pincez les têtes pour un port touffu","bw":"À température ambiante dans l’eau, ou congeler en pesto.","rc":"Pesto frais, sur pizza, en caprese ou dans des pâtes."},"de":{"u":"Pflanzen","zt":"Drinnen an warmem Ort säen","vt":"Erst nach Mitte Mai nach draußen","ot":"Spitzen kneifen für buschiges Wachstum","bw":"Bei Zimmertemperatur im Wasser, oder als Pesto einfrieren.","rc":"Frisches Pesto, auf Pizza, in Caprese oder durch Pasta."}},"Bieslook":{"en":{"u":"plants","zt":"Sow or buy a plant, returns every year","vt":"Plant in a pot or border","ot":"Cut as needed","bw":"Fridge 5 days, or chop and freeze.","rc":"Over potatoes, through scrambled eggs, or in quark."},"fr":{"u":"plants","zt":"Semez ou achetez un plant, revient chaque année","vt":"Plantez en pot ou en pleine terre","ot":"Coupez selon besoin","bw":"Frigo 5 jours, ou ciselée et congelée.","rc":"Sur pommes de terre, dans des œufs brouillés ou du fromage blanc."},"de":{"u":"Pflanzen","zt":"Säen oder Pflanze kaufen, kommt jedes Jahr wieder","vt":"In Topf oder Beet pflanzen","ot":"Nach Bedarf schneiden","bw":"Kühlschrank 5 Tage, oder fein geschnitten einfrieren.","rc":"Über Kartoffeln, durch Rührei oder in Quark."}},"Munt":{"en":{"u":"plants","zt":"Plant in a pot (spreads otherwise!)","vt":"Keep separate, grows fast","ot":"Pick leaves as needed","bw":"Fridge as a bunch, or dry for tea.","rc":"Fresh mint tea, in a mojito, or through fruit salad."},"fr":{"u":"plants","zt":"Plantez en pot (envahissante sinon !)","vt":"Gardez à part, pousse vite","ot":"Cueillez les feuilles selon besoin","bw":"Frigo en bouquet, ou séchée pour le thé.","rc":"Thé à la menthe, dans un mojito ou en salade de fruits."},"de":{"u":"Pflanzen","zt":"In Topf pflanzen (wuchert sonst!)","vt":"Getrennt halten, wächst schnell","ot":"Blätter nach Bedarf pflücken","bw":"Kühlschrank als Bund, oder für Tee trocknen.","rc":"Frischer Minztee, im Mojito oder im Obstsalat."}},"Pastinaak":{"en":{"u":"seeds (row)","zt":"Sow directly outside, slow to germinate","vt":"Thin to 15cm","ot":"Tastes sweeter after frost","bw":"Cool cellar or leave in the ground. Months.","rc":"Roasted, in winter soup, or through a hotpot."},"fr":{"u":"graines (rang)","zt":"Semez directement dehors, germination lente","vt":"Éclaircissez à 15cm","ot":"Plus sucré après le gel","bw":"Cave fraîche ou laissé en terre. Des mois.","rc":"Rôti, en soupe d’hiver ou dans une potée."},"de":{"u":"Samen (Reihe)","zt":"Direkt draußen säen, langsame Keimung","vt":"Auf 15cm vereinzeln","ot":"Schmeckt süßer nach Frost","bw":"Kühler Keller oder im Boden lassen. Monate.","rc":"Geröstet, in Wintersuppe oder im Eintopf."}},"Snijbiet":{"en":{"u":"plants","zt":"Sow directly outside, easy","vt":"30cm apart","ot":"Cut outer leaves","bw":"Fridge 3-4 days, or blanch and freeze.","rc":"Stewed like spinach, in quiche, or a bake."},"fr":{"u":"plants","zt":"Semez directement dehors, facile","vt":"30cm d’écart","ot":"Coupez les feuilles extérieures","bw":"Frigo 3-4 jours, ou blanchir et congeler.","rc":"À l’étuvée comme l’épinard, en quiche ou gratin."},"de":{"u":"Pflanzen","zt":"Direkt draußen säen, einfach","vt":"30cm Abstand","ot":"Äußere Blätter schneiden","bw":"Kühlschrank 3-4 Tage, oder blanchieren und einfrieren.","rc":"Wie Spinat gedünstet, in Quiche oder Auflauf."}},"Bloemkool":{"en":{"u":"plants","zt":"Sow indoors, then plant out","vt":"50cm apart, lots of feeding","ot":"Harvest when the head is firm and white","bw":"Fridge 1 week, or freeze in florets.","rc":"Soup, gratin, roasted, or as rice."},"fr":{"u":"plants","zt":"Semez à l’intérieur, puis repiquez","vt":"50cm d’écart, beaucoup de nourriture","ot":"Récoltez quand la pomme est ferme et blanche","bw":"Frigo 1 semaine, ou congeler en bouquets.","rc":"Soupe, gratin, rôti ou en « riz »."},"de":{"u":"Pflanzen","zt":"Drinnen säen, dann auspflanzen","vt":"50cm Abstand, viel Nährstoffe","ot":"Ernten, wenn der Kopf fest und weiß ist","bw":"Kühlschrank 1 Woche, oder in Röschen einfrieren.","rc":"Suppe, Gratin, geröstet oder als Reis."}},"Spruitjes":{"en":{"u":"plants","zt":"Sow in April in a pot","vt":"Plant out May/June, press firmly","ot":"Taste better after frost","bw":"Fridge 1 week, or leave on the stalk.","rc":"Roasted with bacon, steamed, or in salad."},"fr":{"u":"plants","zt":"Semez en avril en pot","vt":"Repiquez mai/juin, tassez bien","ot":"Meilleur goût après le gel","bw":"Frigo 1 semaine, ou laissés sur la tige.","rc":"Rôtis au lard, vapeur ou en salade."},"de":{"u":"Pflanzen","zt":"Im April im Topf säen","vt":"Im Mai/Juni auspflanzen, fest andrücken","ot":"Schmecken besser nach Frost","bw":"Kühlschrank 1 Woche, oder am Strunk lassen.","rc":"Mit Speck geröstet, gedämpft oder im Salat."}},"Rabarber":{"en":{"u":"plants","zt":"Plant a rootstock, returns every year","vt":"Plant once, years of harvest","ot":"Pull stalks, never eat the leaves","bw":"Fridge 1 week, or freeze in pieces.","rc":"Rhubarb compote, pie or jam. Nice with strawberry."},"fr":{"u":"plants","zt":"Plantez une souche, revient chaque année","vt":"Plantez une fois, des années de récolte","ot":"Tirez les tiges, ne mangez jamais les feuilles","bw":"Frigo 1 semaine, ou congeler en morceaux.","rc":"Compote, tarte ou confiture. Bon avec la fraise."},"de":{"u":"Pflanzen","zt":"Wurzelstock pflanzen, kommt jedes Jahr wieder","vt":"Einmal pflanzen, jahrelange Ernte","ot":"Stiele ziehen, nie die Blätter essen","bw":"Kühlschrank 1 Woche, oder in Stücken einfrieren.","rc":"Rhabarberkompott, -kuchen oder -marmelade. Gut mit Erdbeere."}},"Framboos":{"en":{"u":"shrubs","zt":"Plant bushes, return every year","vt":"Plant once, give support","ot":"Pick ripe and soft","bw":"Unwashed fridge 2 days, or freeze flat.","rc":"Fresh, in jam, through yoghurt, or in a smoothie."},"fr":{"u":"arbustes","zt":"Plantez des buissons, reviennent chaque année","vt":"Plantez une fois, soutenez","ot":"Cueillez mûres et tendres","bw":"Non lavées au frigo 2 jours, ou congeler à plat.","rc":"Fraîches, en confiture, dans le yaourt ou un smoothie."},"de":{"u":"Sträucher","zt":"Sträucher pflanzen, kommen jedes Jahr wieder","vt":"Einmal pflanzen, Stütze geben","ot":"Reif und weich pflücken","bw":"Ungewaschen Kühlschrank 2 Tage, oder flach einfrieren.","rc":"Frisch, als Marmelade, durch Joghurt oder im Smoothie."}},"Peper":{"en":{"u":"plants","zt":"Sow early indoors, warm","vt":"Outside only late May","ot":"Harvest green or let it turn red","bw":"Fridge 1-2 weeks, or dry/freeze.","rc":"In curry, sambal, dried as chilli flakes."},"fr":{"u":"plants","zt":"Semez tôt à l’intérieur, au chaud","vt":"Dehors seulement fin mai","ot":"Récoltez vert ou laissez rougir","bw":"Frigo 1-2 semaines, ou sécher/congeler.","rc":"En curry, sambal, séché en flocons de piment."},"de":{"u":"Pflanzen","zt":"Früh drinnen säen, warm","vt":"Erst Ende Mai nach draußen","ot":"Grün ernten oder rot werden lassen","bw":"Kühlschrank 1-2 Wochen, oder trocknen/einfrieren.","rc":"Im Curry, Sambal, getrocknet als Chiliflocken."}},"Veldsla":{"en":{"u":"seeds (row)","zt":"Sow late summer for a winter harvest","vt":"Sow directly, hardy","ot":"Harvest all winter long","bw":"Fridge 3 days, wash just before use.","rc":"Fresh winter salad with nuts, or through a meal."},"fr":{"u":"graines (rang)","zt":"Semez fin d’été pour une récolte d’hiver","vt":"Semez directement, rustique","ot":"Récoltez tout l’hiver","bw":"Frigo 3 jours, lavez juste avant usage.","rc":"Salade d’hiver fraîche aux noix, ou dans un repas."},"de":{"u":"Samen (Reihe)","zt":"Spätsommer säen für Winterernte","vt":"Direkt säen, winterhart","ot":"Den ganzen Winter ernten","bw":"Kühlschrank 3 Tage, kurz vor Gebrauch waschen.","rc":"Frischer Wintersalat mit Nüssen, oder in einer Mahlzeit."}},"Selderij":{"en":{"u":"plants","zt":"Sow indoors Feb/March","vt":"Plant out May, 30cm apart","ot":"Cut stalks as needed","bw":"Fridge 1-2 weeks in foil, or chop and freeze for soup.","rc":"Soup vegetable, in stock, or raw with dip."},"fr":{"u":"plants","zt":"Semez à l’intérieur fév/mars","vt":"Repiquez en mai, 30cm d’écart","ot":"Coupez les tiges selon besoin","bw":"Frigo 1-2 semaines en film, ou hacher et congeler pour soupe.","rc":"Légume à soupe, en bouillon ou cru avec une sauce."},"de":{"u":"Pflanzen","zt":"Drinnen Feb/März säen","vt":"Im Mai auspflanzen, 30cm Abstand","ot":"Stangen nach Bedarf schneiden","bw":"Kühlschrank 1-2 Wochen in Folie, oder für Suppe einfrieren.","rc":"Suppengemüse, in Brühe oder roh mit Dip."}},"Venkel":{"en":{"u":"plants","zt":"Sow in May for an autumn harvest","vt":"Plant out, 25cm apart","ot":"Harvest when the bulb is fist-sized","bw":"Fridge 1 week, or freeze in pieces.","rc":"Grilled, in salad, or braised with fish."},"fr":{"u":"plants","zt":"Semez en mai pour une récolte d’automne","vt":"Repiquez, 25cm d’écart","ot":"Récoltez quand le bulbe est gros comme un poing","bw":"Frigo 1 semaine, ou congeler en morceaux.","rc":"Grillé, en salade ou braisé avec du poisson."},"de":{"u":"Pflanzen","zt":"Im Mai für Herbsternte säen","vt":"Auspflanzen, 25cm Abstand","ot":"Ernten, wenn die Knolle faustgroß ist","bw":"Kühlschrank 1 Woche, oder in Stücken einfrieren.","rc":"Gegrillt, im Salat oder mit Fisch geschmort."}},"Witlof":{"en":{"u":"plants","zt":"Sow May, force roots in winter in the dark","vt":"Harvest roots, then force indoors","ot":"Harvest the white chicons in winter","bw":"Fridge in the dark 1 week (light makes it bitter).","rc":"Gratin with ham, raw in salad, or braised."},"fr":{"u":"plants","zt":"Semez en mai, forcez les racines en hiver à l’obscurité","vt":"Récoltez les racines, puis forcez à l’intérieur","ot":"Récoltez les endives blanches en hiver","bw":"Frigo à l’obscurité 1 semaine (la lumière rend amer).","rc":"Gratin au jambon, cru en salade ou braisé."},"de":{"u":"Pflanzen","zt":"Im Mai säen, Wurzeln im Winter im Dunkeln treiben","vt":"Wurzeln ernten, dann drinnen treiben","ot":"Die weißen Köpfe im Winter ernten","bw":"Kühlschrank im Dunkeln 1 Woche (Licht macht bitter).","rc":"Gratiniert mit Schinken, roh im Salat oder geschmort."}},"Rucola":{"en":{"u":"seeds (row)","zt":"Sow every 2-3 weeks, fast grower","vt":"Sow directly","ot":"Cut young leaves","bw":"Fridge 3 days in a damp cloth.","rc":"Peppery salad, on pizza, or through pasta."},"fr":{"u":"graines (rang)","zt":"Semez toutes les 2-3 semaines, pousse rapide","vt":"Semez directement","ot":"Coupez les jeunes feuilles","bw":"Frigo 3 jours dans un linge humide.","rc":"Salade poivrée, sur pizza ou dans des pâtes."},"de":{"u":"Samen (Reihe)","zt":"Alle 2-3 Wochen säen, schneller Wachser","vt":"Direkt säen","ot":"Junge Blätter schneiden","bw":"Kühlschrank 3 Tage in feuchtem Tuch.","rc":"Pfeffriger Salat, auf Pizza oder durch Pasta."}},"Postelein":{"en":{"u":"seeds (row)","zt":"Sow from April directly outside","vt":"Sow directly","ot":"Cut young shoots","bw":"Fridge 2-3 days, best fresh.","rc":"Stewed like spinach, or raw in salad."},"fr":{"u":"graines (rang)","zt":"Semez dès avril directement dehors","vt":"Semez directement","ot":"Coupez les jeunes pousses","bw":"Frigo 2-3 jours, meilleur frais.","rc":"À l’étuvée comme l’épinard, ou cru en salade."},"de":{"u":"Samen (Reihe)","zt":"Ab April direkt draußen säen","vt":"Direkt säen","ot":"Junge Triebe schneiden","bw":"Kühlschrank 2-3 Tage, frisch am besten.","rc":"Wie Spinat gedünstet oder roh im Salat."}},"Asperge":{"en":{"u":"plants","zt":"Plant crowns, harvest only after 2 years","vt":"Plant once, years of harvest","ot":"Cut the spears April-June","bw":"Fridge upright in water, 3-4 days.","rc":"Classic with egg and ham, grilled, or in a soup."},"fr":{"u":"plants","zt":"Plantez des griffes, récolte après 2 ans seulement","vt":"Plantez une fois, des années de récolte","ot":"Coupez les turions d’avril à juin","bw":"Frigo debout dans l’eau, 3-4 jours.","rc":"Classique œuf-jambon, grillées ou en soupe."},"de":{"u":"Pflanzen","zt":"Wurzeln (Kronen) pflanzen, Ernte erst nach 2 Jahren","vt":"Einmal pflanzen, jahrelange Ernte","ot":"Die Stangen von April bis Juni stechen","bw":"Kühlschrank aufrecht im Wasser, 3-4 Tage.","rc":"Klassisch mit Ei und Schinken, gegrillt oder in Suppe."}},"Appel":{"en":{"u":"tree","zt":"Plant a young tree (autumn/spring)","vt":"Plant once, years of harvest","ot":"Pick when the apple comes off easily","bw":"Cool cellar for months, or make into sauce/juice.","rc":"Fresh, apple sauce, apple pie, or dried rings."},"fr":{"u":"arbre","zt":"Plantez un jeune arbre (automne/printemps)","vt":"Plantez une fois, des années de récolte","ot":"Cueillez quand la pomme se détache facilement","bw":"Cave fraîche des mois, ou en compote/jus.","rc":"Fraîche, compote, tarte ou en rondelles séchées."},"de":{"u":"Baum","zt":"Jungen Baum pflanzen (Herbst/Frühjahr)","vt":"Einmal pflanzen, jahrelange Ernte","ot":"Pflücken, wenn sich der Apfel leicht löst","bw":"Kühler Keller monatelang, oder zu Mus/Saft verarbeiten.","rc":"Frisch, Apfelmus, Apfelkuchen oder getrocknete Ringe."}},"Peer":{"en":{"u":"tree","zt":"Plant a young tree","vt":"Plant once, years of harvest","ot":"Pick slightly unripe, ripens after","bw":"Keep cool, ripens at room temperature. Canning works.","rc":"Fresh, poached, in a pie, or as compote."},"fr":{"u":"arbre","zt":"Plantez un jeune arbre","vt":"Plantez une fois, des années de récolte","ot":"Cueillez un peu vertes, mûrissent ensuite","bw":"Gardez au frais, mûrit à température ambiante. Mise en bocal possible.","rc":"Fraîches, pochées, en tarte ou en compote."},"de":{"u":"Baum","zt":"Jungen Baum pflanzen","vt":"Einmal pflanzen, jahrelange Ernte","ot":"Etwas unreif pflücken, reift nach","bw":"Kühl lagern, reift bei Zimmertemperatur. Einkochen möglich.","rc":"Frisch, pochiert, im Kuchen oder als Kompott."}},"Blauwe bes":{"en":{"u":"shrubs","zt":"Plant bushes in acidic soil","vt":"Plant once, years of harvest","ot":"Pick when the berries are deep blue","bw":"Fridge 1 week, or freeze loose on a tray.","rc":"Fresh, in pancakes, jam, or through yoghurt."},"fr":{"u":"arbustes","zt":"Plantez des buissons en sol acide","vt":"Plantez une fois, des années de récolte","ot":"Cueillez quand les baies sont bleu foncé","bw":"Frigo 1 semaine, ou congeler à plat.","rc":"Fraîches, en pancakes, confiture ou dans le yaourt."},"de":{"u":"Sträucher","zt":"Sträucher in sauren Boden pflanzen","vt":"Einmal pflanzen, jahrelange Ernte","ot":"Pflücken, wenn die Beeren tiefblau sind","bw":"Kühlschrank 1 Woche, oder einzeln auf einem Blech einfrieren.","rc":"Frisch, in Pfannkuchen, Marmelade oder durch Joghurt."}},"Druif":{"en":{"u":"plants","zt":"Plant a vine against a warm wall","vt":"Plant once, prune yearly","ot":"Harvest when the bunches are sweet","bw":"Fridge 1 week, or process into juice/raisins.","rc":"Fresh, with cheese, as juice, or dried into raisins."},"fr":{"u":"plants","zt":"Plantez une vigne contre un mur chaud","vt":"Plantez une fois, taillez chaque année","ot":"Récoltez quand les grappes sont sucrées","bw":"Frigo 1 semaine, ou transformer en jus/raisins secs.","rc":"Frais, avec du fromage, en jus ou séchés en raisins secs."},"de":{"u":"Pflanzen","zt":"Eine Rebe an eine warme Wand pflanzen","vt":"Einmal pflanzen, jährlich schneiden","ot":"Ernten, wenn die Trauben süß sind","bw":"Kühlschrank 1 Woche, oder zu Saft/Rosinen verarbeiten.","rc":"Frisch, zu Käse, als Saft oder getrocknet als Rosinen."}},"Kervel":{"en":{"u":"plants","zt":"Sow directly outside, partial shade","vt":"Sow directly","ot":"Cut leaves as needed","bw":"Fridge as a bunch, or chop and freeze.","rc":"In chervil soup, through salad, or with fish."},"fr":{"u":"plants","zt":"Semez directement dehors, mi-ombre","vt":"Semez directement","ot":"Coupez les feuilles selon besoin","bw":"Frigo en bouquet, ou ciselé et congelé.","rc":"En soupe de cerfeuil, dans une salade ou avec du poisson."},"de":{"u":"Pflanzen","zt":"Direkt draußen säen, Halbschatten","vt":"Direkt säen","ot":"Blätter nach Bedarf schneiden","bw":"Kühlschrank als Bund, oder fein gehackt einfrieren.","rc":"In Kerbelsuppe, durch Salat oder mit Fisch."}},"Dille":{"en":{"u":"plants","zt":"Sow directly outside in the sun","vt":"Sow directly","ot":"Cut as needed","bw":"Fridge 5 days, or freeze/dry.","rc":"With fish, in pickles, or through a dressing."},"fr":{"u":"plants","zt":"Semez directement dehors au soleil","vt":"Semez directement","ot":"Coupez selon besoin","bw":"Frigo 5 jours, ou congeler/sécher.","rc":"Avec du poisson, dans les cornichons ou une vinaigrette."},"de":{"u":"Pflanzen","zt":"Direkt draußen in die Sonne säen","vt":"Direkt säen","ot":"Nach Bedarf schneiden","bw":"Kühlschrank 5 Tage, oder einfrieren/trocknen.","rc":"Mit Fisch, in Eingelegtem oder durch ein Dressing."}},"Tijm":{"en":{"u":"plants","zt":"Buy a plant or sow, returns every year","vt":"Plant in pot or border, full sun","ot":"Cut sprigs as needed","bw":"Fresh or dried — dries very well, keeps all winter.","rc":"With meat, in stew, or through roasted vegetables."},"fr":{"u":"plants","zt":"Achetez un plant ou semez, revient chaque année","vt":"Plantez en pot ou pleine terre, plein soleil","ot":"Coupez les brins selon besoin","bw":"Frais ou séché — sèche très bien, se garde tout l’hiver.","rc":"Avec la viande, en ragoût ou avec des légumes rôtis."},"de":{"u":"Pflanzen","zt":"Pflanze kaufen oder säen, kommt jedes Jahr wieder","vt":"In Topf oder Beet pflanzen, volle Sonne","ot":"Zweige nach Bedarf schneiden","bw":"Frisch oder getrocknet — trocknet sehr gut, hält den ganzen Winter.","rc":"Mit Fleisch, im Eintopf oder durch geröstetes Gemüse."}},"Rozemarijn":{"en":{"u":"plants","zt":"Buy a plant, perennial and hardy","vt":"Plant in pot or border, full sun","ot":"Cut sprigs all year round","bw":"Cut fresh all year, or dry.","rc":"With lamb, oven potatoes, or in oil."},"fr":{"u":"plants","zt":"Achetez un plant, vivace et rustique","vt":"Plantez en pot ou pleine terre, plein soleil","ot":"Coupez les brins toute l’année","bw":"Coupez frais toute l’année, ou séchez.","rc":"Avec l’agneau, pommes de terre au four ou dans l’huile."},"de":{"u":"Pflanzen","zt":"Pflanze kaufen, mehrjährig und winterhart","vt":"In Topf oder Beet pflanzen, volle Sonne","ot":"Zweige das ganze Jahr schneiden","bw":"Das ganze Jahr frisch schneiden, oder trocknen.","rc":"Mit Lamm, Ofenkartoffeln oder in Öl."}}};
+function plantTip(n,field){if(!LANG||LANG==="nl"){const p=plantByName(n);return p?p[field]:"";}const tr=PLTIPS[n]&&PLTIPS[n][LANG];if(tr&&tr[field])return tr[field];const p=plantByName(n);return p?p[field]:"";}
+
+// Interface-teksten
+const T={
+// navigatie
+nav_home:{nl:'Home',en:'Home',fr:'Accueil',de:'Start'},
+nav_tuin:{nl:'Mijn tuin',en:'My garden',fr:'Mon jardin',de:'Mein Garten'},
+nav_ontdek:{nl:'Ontdek',en:'Discover',fr:'Découvrir',de:'Entdecken'},
+nav_account:{nl:'Account',en:'Account',fr:'Compte',de:'Konto'},
+// home
+goedemorgen:{nl:'Goedemorgen',en:'Good morning',fr:'Bonjour',de:'Guten Morgen'},
+goedemiddag:{nl:'Goedemiddag',en:'Good afternoon',fr:'Bon après-midi',de:'Guten Tag'},
+goedenavond:{nl:'Goedenavond',en:'Good evening',fr:'Bonsoir',de:'Guten Abend'},
+vandaag_tuin:{nl:'Vandaag in jouw tuin',en:'Today in your garden',fr:'Aujourd\u2019hui dans votre jardin',de:'Heute in deinem Garten'},
+vrijheid:{nl:'Supermarkt-vrijheid',en:'Supermarket freedom',fr:'Liberté du supermarché',de:'Supermarkt-Freiheit'},
+te_doen:{nl:'Te doen vandaag',en:'To do today',fr:'À faire aujourd\u2019hui',de:'Heute zu tun'},
+open:{nl:'open',en:'open',fr:'à faire',de:'offen'},
+wat_oplevert:{nl:'Wat het je oplevert',en:'What you save',fr:'Vos économies',de:'Deine Ersparnis'},
+// tuin
+mijn_tuin:{nl:'Mijn tuin',en:'My garden',fr:'Mon jardin',de:'Mein Garten'},
+gewas:{nl:'gewas',en:'crop',fr:'culture',de:'Pflanze'},
+gewassen:{nl:'gewassen',en:'crops',fr:'cultures',de:'Pflanzen'},
+nog_leeg:{nl:'Nog leeg',en:'Still empty',fr:'Encore vide',de:'Noch leer'},
+nu_oogsten:{nl:'Nu te oogsten',en:'Ready to harvest',fr:'À récolter',de:'Erntereif'},
+zelfvoorzienend:{nl:'Zelfvoorzienend',en:'Self-sufficient',fr:'Autosuffisant',de:'Selbstversorgt'},
+oogst_door_jaar:{nl:'Jouw oogst door het jaar',en:'Your harvest through the year',fr:'Votre récolte sur l\u2019année',de:'Deine Ernte übers Jahr'},
+voeg_gewas:{nl:'Gewas',en:'Crop',fr:'Culture',de:'Pflanze'},
+// knoppen algemeen
+verder:{nl:'Verder',en:'Continue',fr:'Continuer',de:'Weiter'},
+klaar:{nl:'Klaar',en:'Done',fr:'Terminé',de:'Fertig'},
+annuleren:{nl:'Annuleren',en:'Cancel',fr:'Annuler',de:'Abbrechen'},
+opgeslagen:{nl:'Opgeslagen ✓',en:'Saved ✓',fr:'Enregistré ✓',de:'Gespeichert ✓'},
+// ontdek tabs
+recepten:{nl:'Recepten',en:'Recipes',fr:'Recettes',de:'Rezepte'},
+bewaren:{nl:'Bewaren',en:'Preserve',fr:'Conserver',de:'Haltbar machen'},
+benodigdheden:{nl:'Benodigdheden',en:'Supplies',fr:'Fournitures',de:'Bedarf'},
+plantdokter:{nl:'Plantdokter',en:'Plant doctor',fr:'Médecin des plantes',de:'Pflanzenarzt'},
+// account
+jouw_tuin:{nl:'Jouw tuin',en:'Your garden',fr:'Votre jardin',de:'Dein Garten'},
+tuin_instellen:{nl:'Mijn tuin instellen',en:'Garden settings',fr:'Réglages du jardin',de:'Garten einstellen'},
+personen:{nl:'Aantal personen',en:'Number of people',fr:'Nombre de personnes',de:'Anzahl Personen'},
+tuinruimte:{nl:'Tuinruimte',en:'Garden space',fr:'Espace de jardin',de:'Gartenfläche'},
+klimaatzone:{nl:'Klimaatzone',en:'Climate zone',fr:'Zone climatique',de:'Klimazone'},
+mijn_doel:{nl:'Mijn doel',en:'My goal',fr:'Mon objectif',de:'Mein Ziel'},
+taal:{nl:'Taal',en:'Language',fr:'Langue',de:'Sprache'},
+mijn_mijlpalen:{nl:'Mijn mijlpalen',en:'My milestones',fr:'Mes étapes',de:'Meine Erfolge'},
+herinneringen:{nl:'Herinneringen',en:'Reminders',fr:'Rappels',de:'Erinnerungen'},
+app_titel:{nl:'App',en:'App',fr:'Application',de:'App'},
+beginscherm:{nl:'Zet op beginscherm',en:'Add to home screen',fr:'Ajouter à l\u2019écran d\u2019accueil',de:'Zum Startbildschirm'},
+agenda_export:{nl:'Taken naar agenda',en:'Tasks to calendar',fr:'Tâches vers l\u2019agenda',de:'Aufgaben zum Kalender'},
+opnieuw_beginnen:{nl:'Opnieuw beginnen',en:'Start over',fr:'Recommencer',de:'Neu beginnen'},
+// add sheet
+voeg_toe_tuin:{nl:'Voeg toe aan je tuin',en:'Add to your garden',fr:'Ajouter à votre jardin',de:'Zum Garten hinzufügen'},
+zoek_gewas:{nl:'Zoek een gewas...',en:'Search a crop...',fr:'Rechercher une culture...',de:'Pflanze suchen...'},
+vul_slim:{nl:'✨ Vul mijn tuin slim in voor mijn ruimte',en:'✨ Smart-fill my garden for my space',fr:'✨ Remplir intelligemment mon jardin',de:'✨ Garten clever befüllen'},
+// status
+st_te_zaaien:{nl:'Nog te zaaien',en:'To sow',fr:'À semer',de:'Zu säen'},
+st_gezaaid:{nl:'Gezaaid',en:'Sown',fr:'Semé',de:'Gesät'},
+st_groeit:{nl:'Groeit',en:'Growing',fr:'En croissance',de:'Wächst'},
+st_oogsten:{nl:'Klaar om te oogsten',en:'Ready to harvest',fr:'Prêt à récolter',de:'Erntereif'},
+// taken
+zaaien:{nl:'Zaaien',en:'Sow',fr:'Semer',de:'Säen'},
+uitplanten:{nl:'Uitplanten',en:'Plant out',fr:'Repiquer',de:'Auspflanzen'},
+oogsten:{nl:'Oogsten',en:'Harvest',fr:'Récolter',de:'Ernten'},
+// besparing
+per_maand:{nl:'mogelijk per maand',en:'possible per month',fr:'possible par mois',de:'möglich pro Monat'},
+per_jaar:{nl:'mogelijk per jaar',en:'possible per year',fr:'possible par an',de:'möglich pro Jahr'},
+echt_bespaard:{nl:'al écht bespaard',en:'actually saved',fr:'déjà économisé',de:'bereits gespart'},
+};
+function t(key){const e=T[key];if(!e)return key;return e[LANG||'nl']||e.nl||key;}
+
+// Pas de taal toe op alle vaste UI-elementen met data-i18n
+function taalToepassen(){
+const l=LANG||'nl';
+document.documentElement.lang=l;
+// dynamische arrays bijwerken
+MN.length=0;MAANDEN[l].kort.forEach(x=>MN.push(x));
+ML.length=0;MAANDEN[l].lang.forEach(x=>ML.push(x));
+// navigatie-labels
+const navmap={'nav-home':'nav_home','nav-tuin':'nav_tuin','nav-ontdek':'nav_ontdek','nav-account':'nav_account'};
+Object.entries(navmap).forEach(([id,k])=>{const el=document.querySelector('#'+id+' .nav-lbl');if(el)el.textContent=t(k);});
+// elementen met data-i18n attribuut
+document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.getAttribute('data-i18n'));});
+document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.setAttribute('placeholder',t(el.getAttribute('data-i18n-ph')));});
+// her-render dynamische schermen
+if(typeof renderHome==='function')renderHome();
+if(typeof renderGarden==='function')renderGarden();
+}
+function kiesTaal(l){
+LANG=l;try{localStorage.setItem('gl_lang',l);}catch(e){}
+document.getElementById('langPicker').style.display='none';
+taalToepassen();
+// ga door naar onboarding als die nog niet gedaan is
+let onboarded=false;try{onboarded=!!localStorage.getItem('gl_onboarded');}catch(e){}
+if(!onboarded){document.getElementById('onboarding').style.display='block';}
+}
+
 // ══════════ DATA ══════════
 const MN=['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
 const ML=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
@@ -1194,13 +1388,13 @@ const p=plantByName(g.n);if(!p)return;
 const q=Math.max(1,Math.round(p.p*settings.personen));
 const st=g.status||'te_zaaien';
 if(st==='te_zaaien'&&isMonthFor(p,'Z')){
-out.push({id:'z'+p.n,e:p.e,name:p.n,meta:p.zt+' · '+q+' '+p.u,type:'z'});
+out.push({id:'z'+p.n,e:p.e,name:plantNaam(p.n),meta:plantTip(p.n,'zt')+' · '+q+' '+plantTip(p.n,'u'),type:'z'});
 } else if(st==='gezaaid'&&isMonthFor(p,'V')){
-out.push({id:'v'+p.n,e:p.e,name:p.n,meta:p.vt,type:'v'});
+out.push({id:'v'+p.n,e:p.e,name:plantNaam(p.n),meta:plantTip(p.n,'vt'),type:'v'});
 } else if((st==='uitgeplant'||st==='groeit')&&isMonthFor(p,'O')){
 // Pas oogsten aanbieden als er genoeg groeitijd verstreken is sinds zaaien
 if(rijpGenoeg(g)){
-out.push({id:'o'+p.n,e:p.e,name:p.n,meta:p.ot,type:'o',crop:p.n});
+out.push({id:'o'+p.n,e:p.e,name:plantNaam(p.n),meta:plantTip(p.n,'ot'),type:'o',crop:p.n});
 }
 }
 });
@@ -1404,17 +1598,52 @@ if(!myGarden.length){
 document.getElementById('gardenList').innerHTML=`<div class="empty-card"><div class="empty-emoji">🌿</div><div class="empty-title serif">Begin jouw tuin</div><div class="empty-text">Kies de groenten en het fruit dat jij lekker vindt. Wij vertellen je precies wanneer je wat moet doen.</div><button class="btn btn-primary" onclick="openAddSheet()">＋ Eerste gewas kiezen</button></div>`;
 return;
 }
+// Jaar-rond oogstbalk: welke maanden geef je oogst, en waar zit opeenhoping/gaten?
+renderOogstSpreiding();
 document.getElementById('gardenList').innerHTML=myGarden.map(g=>{
 const p=plantByName(g.n);if(!p)return'';
 const st=STATUS[g.status||'te_zaaien'];
 const next=nextAction(g);
 return `<div class="gplant" onclick="openDetail('${p.n}')">
 <div class="gplant-emoji">${p.e}</div>
-<div class="gplant-body"><div class="gplant-name">${p.n}</div><div class="gplant-status">${next}</div></div>
+<div class="gplant-body"><div class="gplant-name">${plantNaam(p.n)}</div><div class="gplant-status">${next}</div></div>
 <div class="gplant-phase">${st.emoji} ${st.label}</div>
+<div class="gplant-x" onclick="event.stopPropagation();openRuil('${p.n}')" title="Ruilen" style="font-size:1rem">⇄</div>
 <div class="gplant-x" onclick="event.stopPropagation();removePlant('${p.n}')">✕</div>
 </div>`;
 }).join('');
+}
+// Jaar-rond oogstspreiding: toont per maand of je oogst hebt, met waarschuwing bij gaten/opeenhoping
+function renderOogstSpreiding(){
+const el=document.getElementById('oogstSpreiding');if(!el)return;
+// tel per maand hoeveel gewassen oogst geven
+const perMaand=new Array(12).fill(0);
+myGarden.forEach(g=>oogstMaanden(g.n).forEach(m=>perMaand[m]++));
+const gedekt=perMaand.filter(x=>x>0).length;
+const maxPiek=Math.max(...perMaand,1);
+const bars=perMaand.map((cnt,i)=>{
+const hoog=cnt===0?6:10+Math.round((cnt/maxPiek)*26);
+let kleur=cnt===0?'var(--line)':cnt>=Math.max(3,maxPiek*0.8)?'var(--terra)':'var(--mint)';
+return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+<div style="width:100%;max-width:18px;height:${hoog}px;background:${kleur};border-radius:4px;${i===cm?'outline:2px solid var(--forest);outline-offset:1px':''}"></div>
+<div style="font-size:0.54rem;color:var(--muted)">${MN[i][0]}</div>
+</div>`;
+}).join('');
+// analyse: gaten en piek
+const gaten=[];for(let i=0;i<12;i++)if(perMaand[i]===0)gaten.push(MN[i]);
+const piekMaanden=[];for(let i=0;i<12;i++)if(perMaand[i]>=Math.max(3,maxPiek*0.8)&&maxPiek>=3)piekMaanden.push(MN[i]);
+let melding='';
+if(gaten.length>=4)melding=`<div style="font-size:0.72rem;color:var(--terra);margin-top:8px">⚠️ In ${gaten.slice(0,4).join(', ')}${gaten.length>4?'…':''} heb je nog geen oogst. Voeg winterse gewassen toe (boerenkool, prei, veldsla) voor het hele jaar door.</div>`;
+else if(piekMaanden.length)melding=`<div style="font-size:0.72rem;color:var(--terra);margin-top:8px">💡 Veel oogst tegelijk in ${piekMaanden.join(', ')}. Overweeg te ruilen of bewaren (zie Ontdek → Bewaren) zodat je niets verspilt.</div>`;
+else melding=`<div style="font-size:0.72rem;color:var(--sage);margin-top:8px">✅ Mooi gespreid — je oogst verdeeld over ${gedekt} maanden van het jaar.</div>`;
+el.innerHTML=`<div style="margin:0 22px 4px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 17px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+<div style="font-weight:600;font-size:0.84rem;color:var(--forest)">📅 Jouw oogst door het jaar</div>
+<div style="font-size:0.7rem;color:var(--muted)">${gedekt}/12 maanden</div>
+</div>
+<div style="display:flex;align-items:flex-end;gap:3px;height:42px">${bars}</div>
+${melding}
+</div>`;
 }
 // Vertelt wat de volgende stap is, op basis van waar DEZE plant nu staat
 function nextAction(g){
@@ -1514,6 +1743,107 @@ checkBadges();save();renderAddGrid();renderGarden();renderHome();
 if(toegevoegd)toast(`🌱 ${toegevoegd} gewassen slim ingedeeld voor ${budget}m²`);
 else toast('Je tuin zit al vol — mooi zo!');
 }
+
+// ══════════ JAAR-ROND TUIN + RUILEN ══════════
+// In welke maanden levert dit gewas oogst (rekening houdend met klimaat)?
+function oogstMaanden(n){
+const p=plantByName(n);if(!p)return[];
+const k=shiftK(p.k,KLIM[settings.klimaat].s);
+const out=[];k.forEach((c,i)=>{if(c.includes('O'))out.push(i);});
+return out;
+}
+// Hoeveel verschillende maanden van het jaar dekt mijn tuin met oogst?
+function gedekteMaanden(){
+const set=new Set();myGarden.forEach(g=>oogstMaanden(g.n).forEach(m=>set.add(m)));
+return set;
+}
+// Vul automatisch een diverse tuin die het hele jaar door oogst geeft, passend bij m²
+function vulJaarRondTuin(){
+const budget=beschikbareM2();
+const klein=budget<=10;
+const warm=['Tomaat','Komkommer','Paprika','Aubergine','Peper','Maïs','Pompoen','Basilicum','Courgette'];
+// geschikte kandidaten voor klimaat en ruimte
+let kandidaten=PL.filter(p=>{
+if(settings.klimaat==='koud'&&warm.includes(p.n))return false;
+if(budget<=12&&p.r==='groot')return false;
+if(klein&&ruimteM2(p.n)>0.6)return false;
+return true;
+});
+const dagelijks=['Sla','Tomaat','Wortel','Ui','Courgette','Spinazie','Aardbei','Basilicum','Boerenkool','Prei','Boon','Rucola','Snijbiet','Veldsla'];
+let gebruikt=0;const gedekt=new Set();const perCat={};
+const maxItems=klein?6:budget<=40?12:16;
+const maxPerCat=klein?2:3;
+// Strategie: kies telkens het gewas dat de MEESTE nog-niet-gedekte oogstmaanden toevoegt,
+// zodat je het hele jaar door blijft oogsten — met variatie en binnen je m².
+let veilig=0;
+while(myGarden.length<maxItems&&veilig<200){
+veilig++;
+let beste=null,besteScore=-1;
+for(const p of kandidaten){
+if(inGarden(p.n))continue;
+if((perCat[p.cat]||0)>=maxPerCat)continue;
+const ruimte=plantRuimteVoorMij(p);
+if(gebruikt+ruimte>budget+0.001)continue;
+const maanden=oogstMaanden(p.n);
+const nieuw=maanden.filter(m=>!gedekt.has(m)).length; // hoeveel nieuwe maanden dekt dit
+let sc=nieuw*3 + (dagelijks.includes(p.n)?2:0) + opbrengstPerM2(p)*0.3;
+if(p.cat==='Kruiden')sc+=1;
+if(sc>besteScore){besteScore=sc;beste=p;}
+}
+if(!beste)break;
+myGarden.push({n:beste.n,status:'te_zaaien'});
+gebruikt+=plantRuimteVoorMij(beste);
+perCat[beste.cat]=(perCat[beste.cat]||0)+1;
+oogstMaanden(beste.n).forEach(m=>gedekt.add(m));
+}
+}
+
+// ══════════ RUILEN ══════════
+// Geef alternatieven die DEZELFDE oogstmaand(en) dekken en in de vrijgekomen ruimte passen
+function ruilOpties(naam){
+const p=plantByName(naam);if(!p)return[];
+const mijnMaanden=new Set(oogstMaanden(naam));
+const vrijNa=vrijeM2()+plantRuimteVoorMij(p); // ruimte als je dit gewas eruit haalt
+const warm=['Tomaat','Komkommer','Paprika','Aubergine','Peper','Maïs','Pompoen','Basilicum','Courgette'];
+return PL.filter(alt=>{
+if(inGarden(alt.n)||alt.n===naam)return false;
+if(settings.klimaat==='koud'&&warm.includes(alt.n))return false;
+if(plantRuimteVoorMij(alt)>vrijNa+0.001)return false; // moet passen
+// moet minstens één van dezelfde oogstmaanden dekken → geen gat in je voorraad
+const altM=oogstMaanden(alt.n);
+return altM.some(m=>mijnMaanden.has(m));
+}).sort((a,b)=>{
+// beste match = meeste overlappende oogstmaanden, dan zelfde categorie
+const oa=oogstMaanden(a.n).filter(m=>mijnMaanden.has(m)).length;
+const ob=oogstMaanden(b.n).filter(m=>mijnMaanden.has(m)).length;
+if(ob!==oa)return ob-oa;
+return (b.cat===p.cat?1:0)-(a.cat===p.cat?1:0);
+}).slice(0,6);
+}
+function openRuil(naam){
+const opties=ruilOpties(naam);
+const p=plantByName(naam);
+const lijst=opties.length?opties.map(alt=>{
+const maanden=oogstMaanden(alt.n).filter(m=>oogstMaanden(naam).includes(m)).map(m=>MN[m]).join(', ');
+return `<div class="ruil-opt" onclick="doeRuil('${naam}','${alt.n}')">
+<div style="font-size:1.5rem">${alt.e}</div>
+<div style="flex:1"><div style="font-weight:600;font-size:0.88rem">${alt.n}</div><div style="font-size:0.7rem;color:var(--muted)">Oogst ook in ${maanden} · ${plantRuimteVoorMij(alt).toFixed(1)}m²</div></div>
+<div style="color:var(--sage);font-weight:700">⇄</div>
+</div>`;
+}).join(''):'<div style="font-size:0.84rem;color:var(--muted);padding:10px 0">Geen passende ruil gevonden die dezelfde oogstperiode dekt. Je kunt dit gewas wel gewoon verwijderen.</div>';
+document.getElementById('ruilTitle').innerHTML=`${p.e} ${naam} ruilen`;
+document.getElementById('ruilSub').textContent='Kies een vervanger die in dezelfde maand oogst geeft — zo houd je je voorraad op peil.';
+document.getElementById('ruilList').innerHTML=lijst;
+document.getElementById('ruilSheet').classList.add('open');
+}
+function closeRuil(){document.getElementById('ruilSheet').classList.remove('open');}
+function doeRuil(oud,nieuw){
+const i=myGarden.findIndex(g=>g.n===oud);
+if(i<0)return;
+myGarden[i]={n:nieuw,status:'te_zaaien'};
+save();closeRuil();renderGarden();renderHome();
+toast(`⇄ ${oud} geruild voor ${nieuw}`);
+}
 function renderAddGrid(){
 const sub=document.getElementById('addSheetSub');
 const vrij=vrijeM2().toFixed(1),totaal=beschikbareM2();
@@ -1545,8 +1875,8 @@ ${rec?'<div class="add-rec-tag">★ Aanrader</div>':''}
 ${!past?'<div class="add-rec-tag" style="background:var(--terra);color:#fff">Vol</div>':''}
 <div class="add-badge">✓</div>
 <div class="add-emoji">${p.e}</div>
-<div class="add-name">${p.n}</div>
-<div class="add-cat">${p.cat} · ${ruimte<0.1?'<0.1':ruimte.toFixed(1)}m²</div>
+<div class="add-name">${plantNaam(p.n)}</div>
+<div class="add-cat">${catNaam(p.cat)} · ${ruimte<0.1?'<0.1':ruimte.toFixed(1)}m²</div>
 </div>`;
 }).join('');
 return `<div class="add-group-title">${icoMap[cat]||'🌱'} ${cat} <span class="add-group-count">${groups[cat].length}</span></div><div class="add-grid">${cards}</div>`;
@@ -1569,8 +1899,8 @@ checkBadges();save();renderAddGrid();
 function openDetail(n){
 const p=plantByName(n);if(!p)return;detailPlant=n;
 document.getElementById('dtEmoji').textContent=p.e;
-document.getElementById('dtName').textContent=p.n;
-document.getElementById('dtCat').textContent=p.cat;
+document.getElementById('dtName').textContent=plantNaam(p.n);
+document.getElementById('dtCat').textContent=catNaam(p.cat);
 const s=KLIM[settings.klimaat].s,k=shiftK(p.k,s);
 const tl=k.map((c,i)=>{let bg='var(--surface2)',ic='';if(c.includes('O')){bg='var(--terra-soft)';ic='🧺';}else if(c.includes('Z')){bg='var(--mint-soft)';ic='🌱';}else if(c.includes('V')){bg='#FBEFD4';ic='🪴';}return `<div class="tl-month"><div class="tl-bar" style="background:${bg};${i===cm?'outline:2px solid var(--sage);':''}">${ic}</div><div class="tl-m">${MN[i]}</div></div>`;}).join('');
 const q=Math.max(1,Math.round(p.p*settings.personen));
@@ -1601,11 +1931,11 @@ ${failBtn}
 document.getElementById('dtBody').innerHTML=`
 ${statusBlock}
 <div class="detail-block"><div class="db-label">📆 Jouw jaarkalender</div><div class="detail-timeline">${tl}</div></div>
-<div class="detail-block"><div class="db-label">🌱 Zaaien</div><div class="db-text">${p.zt}<br><strong>Voor ${settings.personen} ${settings.personen===1?'persoon':'personen'}:</strong> ${q} ${p.u}</div></div>
-<div class="detail-block"><div class="db-label">🪴 Uitplanten</div><div class="db-text">${p.vt}</div></div>
-<div class="detail-block"><div class="db-label">🧺 Oogsten</div><div class="db-text">${p.ot}</div></div>
-<div class="detail-block"><div class="db-label">📦 Bewaren</div><div class="db-text">${p.bw}</div></div>
-<div class="detail-block"><div class="db-label">🍽️ In de keuken</div><div class="db-text">${p.rc}</div></div>
+<div class="detail-block"><div class="db-label">🌱 ${t('zaaien')}</div><div class="db-text">${plantTip(p.n,'zt')}<br><strong>${settings.personen} ${settings.personen===1?'×':'×'}:</strong> ${q} ${plantTip(p.n,'u')}</div></div>
+<div class="detail-block"><div class="db-label">🪴 ${t('uitplanten')}</div><div class="db-text">${plantTip(p.n,'vt')}</div></div>
+<div class="detail-block"><div class="db-label">🧺 ${t('oogsten')}</div><div class="db-text">${plantTip(p.n,'ot')}</div></div>
+<div class="detail-block"><div class="db-label">📦 ${t('bewaren')}</div><div class="db-text">${plantTip(p.n,'bw')}</div></div>
+<div class="detail-block"><div class="db-label">🍽️ ${t('recepten')}</div><div class="db-text">${plantTip(p.n,'rc')}</div></div>
 <div class="detail-block" style="background:var(--mint-soft);border-color:var(--mint)"><div class="db-label">🛒 Wat heb je nodig?</div><div class="db-text" style="margin-bottom:10px">Bekijk zaden en benodigdheden voor ${p.n}.</div>${suppliesFor(p).map(s=>`<button class="btn btn-ghost btn-sm" style="margin:3px 4px 3px 0" onclick="shopGo('${s.zoek.replace(/'/g,'')}')">${s.ico} ${s.naam}</button>`).join('')}</div>
 <button class="btn btn-ghost btn-full" style="margin-top:6px;" onclick="removePlant('${p.n}');showScreen('tuin')">Verwijder uit mijn tuin</button>`;
 showScreen('detail');
@@ -1770,6 +2100,7 @@ document.getElementById('setPersonen').value=settings.personen;
 const mm=document.getElementById('setM2');if(mm){mm.value=settings.m2||30;const ml=document.getElementById('m2Label');if(ml)ml.textContent=settings.m2||30;}
 document.getElementById('setKlimaat').value=settings.klimaat;
 const dl=document.getElementById('setDoel');if(dl)dl.value=settings.doel||85;
+const tl=document.getElementById('setTaal');if(tl)tl.value=LANG||'nl';
 renderBadges();
 }
 function renderBadges(){
@@ -1820,17 +2151,33 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 function obNext(){obStep++;document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));document.querySelector(`.ob-step[data-step="${obStep}"]`).classList.add('active');for(let i=0;i<4;i++)document.getElementById('obd'+i).classList.toggle('on',i<=obStep);}
 function obAdj(d){obData.personen=Math.max(1,Math.min(20,obData.personen+d));document.getElementById('obNum').textContent=obData.personen;}
 function obPick(key,val,el){obData[key]=val;el.parentElement.querySelectorAll('.ob-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+function obSetM2(v){
+v=parseInt(v);obData.m2=v;
+document.getElementById('obM2Val').textContent=v;
+// ruimte-categorie afleiden uit m²
+obData.ruimte=v<=12?'klein':v<=40?'middel':'groot';
+const hint=document.getElementById('obM2Hint');
+if(hint){
+if(v<=8)hint.textContent='Een balkon of klein terras — perfect voor verse kruiden en salade.';
+else if(v<=25)hint.textContent='Een mooie tuin om gevarieerd te telen.';
+else if(v<=60)hint.textContent='Ruim genoeg om een groot deel van je groente zelf te kweken.';
+else hint.textContent='Een echte moestuin — hier kun je grotendeels zelfvoorzienend worden!';
+}
+}
 function finishOnboarding(){
 settings={...obData};
-// Zet een m²-startwaarde op basis van de gekozen ruimte
-if(!settings.m2)settings.m2={klein:8,middel:30,groot:60}[settings.ruimte]||30;
-// Leg het startpunt vast — zo kunnen we tonen hoe ver je bent richting 'binnen een jaar zelfvoorzienend'
+if(!settings.m2)settings.m2=15;
+if(!settings.ruimte)settings.ruimte=settings.m2<=12?'klein':settings.m2<=40?'middel':'groot';
 settings.startTijd=Date.now();
 try{localStorage.setItem('gl_onboarded','1');}catch(e){}
 document.getElementById('onboarding').style.display='none';
-fillSettings();renderHome();save();
+// Vul automatisch een diverse, jaar-rond starttuin passend bij de m²
+myGarden=[];
+vulJaarRondTuin();
+fillSettings();renderHome();renderGarden();save();
 setTimeout(detectLoc,300);
-setTimeout(()=>{if(!myGarden.length)openAddSheet();},700);
+// toon meteen de tuin zodat mensen hun starttuin zien
+setTimeout(()=>{showScreen('tuin');toast('🌿 We hebben alvast een tuin voor je samengesteld!');},600);
 }
 
 // ══════════ NOTIFICATIES ══════════
@@ -1938,11 +2285,14 @@ function doLogout(){if(confirm('Uitloggen? Je tuin blijft op dit apparaat bewaar
 
 // ══════════ INIT ══════════
 const had=load();
+if(LANG)taalToepassen();
 fillSettings();renderHome();refreshAccount();updateNotifUI();checkBadges();
 if(userLat)fetchWeer();
 scheduleNotif();
 let onboarded=false;try{onboarded=!!localStorage.getItem('gl_onboarded');}catch(e){}
-if(!onboarded&&!had){document.getElementById('onboarding').style.display='block';}
+// Eerst taal kiezen (als nog niet gekozen), dan onboarding
+if(!LANG){document.getElementById('langPicker').style.display='block';}
+else if(!onboarded&&!had){document.getElementById('onboarding').style.display='block';}
 else if(!userLat){setTimeout(detectLoc,500);}
 </script>
 
