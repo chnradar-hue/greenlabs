@@ -2199,21 +2199,22 @@ const pct=Math.max(0,Math.min(100,(r.vrij/maxT)*100));
 const neg=r.vrij<0;
 return `<div class="tl-row"><div class="tl-maand">${MN[r.maand]}</div><div class="tl-bar-bg"><div class="tl-bar ${neg?'over':''}" style="width:${neg?100:pct}%"></div></div><div class="tl-val">${r.vrij.toFixed(1)} m²</div></div>`;
 }).join('');
-// 4. Visuele grid — elke tegel ~ een evenredig deel van de tuin
-const totaalTiles=Math.min(48,Math.max(myGarden.length,Math.round(nu.totaal)));
-// verdeel tegels over gewassen naar rato van hun oppervlak
-const totOpp=myGarden.reduce((s,g)=>s+plantOppervlak(g.n),0)||1;
-let tiles=[];
-myGarden.forEach(g=>{
-const aantal=Math.max(1,Math.round((plantOppervlak(g.n)/totOpp)*totaalTiles));
-for(let i=0;i<aantal;i++)tiles.push(g.n);
+// 4. Visuele grid — toont ALLEEN wat je echt hebt uitgeplant, op de plek die jij koos
+const inTuin=tuinPlanten();
+const cellen=tuinRasterCellen();
+const cols=cellen<=9?3:cellen<=16?4:cellen<=25?5:6;
+// bouw cel-array: gebruik de gekozen cel (g.cel), val terug op eerstvolgende vrije plek
+const celInhoud=new Array(cellen).fill(null);
+const zonderCel=[];
+inTuin.forEach(g=>{
+if(typeof g.cel==='number'&&g.cel>=0&&g.cel<cellen&&celInhoud[g.cel]===null)celInhoud[g.cel]=g.n;
+else zonderCel.push(g.n);
 });
-// vul rest met lege tegels als er vrije ruimte is
-const legeTiles=Math.max(0,Math.round((nu.vrij/maxT)*totaalTiles));
-for(let i=0;i<legeTiles;i++)tiles.push(null);
-const cols=tiles.length<=9?3:tiles.length<=16?4:5;
+// planten zonder (geldige) cel: vul eerste vrije plekken
+let zi=0;
+for(let i=0;i<cellen&&zi<zonderCel.length;i++){if(celInhoud[i]===null){celInhoud[i]=zonderCel[zi++];}}
 const grid=`<div class="grid-wrap"><div class="garden-grid" style="grid-template-columns:repeat(${cols},1fr)">`+
-tiles.slice(0,48).map(n=>{
+celInhoud.map(n=>{
 if(!n)return `<div class="grid-tile empty">+</div>`;
 const p=plantByName(n);
 return `<div class="grid-tile ${plantType(n)}" onclick="openDetail('${n}')"><div>${p.e}</div><div class="gt-name">${plantNaam(n)}</div></div>`;
@@ -2242,12 +2243,28 @@ return;
 renderOogstSpreiding();
 const opkweek=opkweekPlanten();
 const inTuin=tuinPlanten();
-let html='';
-// ── Opkweek-sectie: zaaigoed in bakje/kas, nog niet in de grond ──
+let htmlTuin='',htmlOpkweek='';
+// ── Tuin-sectie: planten die echt in de grond staan (waar je NU mee bezig bent) ──
+if(inTuin.length){
+htmlTuin+=`<div class="sectie-kop">🌿 ${t('in_tuin_titel')} <span class="sectie-tel">${inTuin.length}</span></div>`;
+htmlTuin+=inTuin.map(g=>{
+const p=plantByName(g.n);if(!p)return'';
+const st=STATUS[g.status||'uitgeplant'];
+const next=nextAction(g);
+return `<div class="gplant" onclick="openDetail('${p.n}')">
+<div class="gplant-emoji">${p.e}</div>
+<div class="gplant-body"><div class="gplant-name">${plantNaam(p.n)}</div><div class="gplant-status">${next}</div></div>
+<div class="gplant-phase">${st.emoji} ${statusLabel(g.status||"te_zaaien")}</div>
+<div class="gplant-x" onclick="event.stopPropagation();openRuil('${p.n}')" title="Ruilen" style="font-size:1rem">⇄</div>
+<div class="gplant-x" onclick="event.stopPropagation();removePlant('${p.n}')">✕</div>
+</div>`;
+}).join('');
+}
+// ── Opkweek-sectie: zaaigoed in bakje/kas, nog niet in de grond (komt later) ──
 if(opkweek.length){
-html+=`<div class="sectie-kop">🌱 ${t('opkweek_titel')} <span class="sectie-tel">${opkweek.length}</span></div>`;
-html+=`<div class="sectie-uitleg">${t('opkweek_uitleg')}</div>`;
-html+=opkweek.map(g=>{
+htmlOpkweek+=`<div class="sectie-kop" ${inTuin.length?'style="margin-top:18px"':''}>🌱 ${t('opkweek_titel')} <span class="sectie-tel">${opkweek.length}</span></div>`;
+htmlOpkweek+=`<div class="sectie-uitleg">${t('opkweek_uitleg')}</div>`;
+htmlOpkweek+=opkweek.map(g=>{
 const p=plantByName(g.n);if(!p)return'';
 const st=STATUS[g.status||'te_zaaien'];
 const klaar=g.status==='gezaaid'&&klaarVoorUitplant(g);
@@ -2264,23 +2281,8 @@ ${g.status==='te_zaaien'
 </div>`;
 }).join('');
 }
-// ── Tuin-sectie: planten die echt in de grond staan ──
-if(inTuin.length){
-html+=`<div class="sectie-kop" style="margin-top:18px">🌿 ${t('in_tuin_titel')} <span class="sectie-tel">${inTuin.length}</span></div>`;
-html+=inTuin.map(g=>{
-const p=plantByName(g.n);if(!p)return'';
-const st=STATUS[g.status||'uitgeplant'];
-const next=nextAction(g);
-return `<div class="gplant" onclick="openDetail('${p.n}')">
-<div class="gplant-emoji">${p.e}</div>
-<div class="gplant-body"><div class="gplant-name">${plantNaam(p.n)}</div><div class="gplant-status">${next}</div></div>
-<div class="gplant-phase">${st.emoji} ${statusLabel(g.status||"te_zaaien")}</div>
-<div class="gplant-x" onclick="event.stopPropagation();openRuil('${p.n}')" title="Ruilen" style="font-size:1rem">⇄</div>
-<div class="gplant-x" onclick="event.stopPropagation();removePlant('${p.n}')">✕</div>
-</div>`;
-}).join('');
-}
-document.getElementById('gardenList').innerHTML=html;
+// Volgorde: eerst waar je mee bezig bent (in de tuin), dan wat nog komt (opkweek)
+document.getElementById('gardenList').innerHTML=htmlTuin+htmlOpkweek;
 // Houd de visuele indeling in sync als die actief is
 if(tuinView==='indeling')renderIndeling();
 }
