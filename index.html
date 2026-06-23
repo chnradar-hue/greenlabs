@@ -481,16 +481,16 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="ob-step active" data-step="0">
 <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
 <div class="ob-emoji">🌱</div>
-<h1 class="ob-title">Welkom bij Greenlabs</h1>
-<p class="ob-text">Samen kweken we ons eigen eten — rustig, eerlijk en stap voor stap. Geen supermarkt nodig.<br><br>We stellen je een paar korte vragen, zodat jouw tuin precies bij jou past.</p>
+<h1 class="ob-title" data-i18n="ob_welkom">Welkom bij Greenlabs</h1>
+<p class="ob-text">Samen kweken we ons eigen eten — rustig, eerlijk en stap voor stap. Geen supermarkt nodig.<br><br data-i18n="ob_welkom_x">We stellen je een paar korte vragen, zodat jouw tuin precies bij jou past.</p>
 </div>
-<div class="ob-foot"><button class="btn btn-mint btn-full" onclick="obNext()">Laten we beginnen</button></div>
+<div class="ob-foot"><button class="btn btn-mint btn-full" onclick="obNext()" data-i18n="ob_start">Laten we beginnen</button></div>
 </div>
 
 <div class="ob-step" data-step="1">
 <div class="ob-emoji">👥</div>
-<h1 class="ob-title">Voor hoeveel monden?</h1>
-<p class="ob-text">Zo berekenen we hoeveel je moet planten om echt zelfvoorzienend te worden.</p>
+<h1 class="ob-title" data-i18n="ob_monden">Voor hoeveel monden?</h1>
+<p class="ob-text" data-i18n="ob_monden_x">Zo berekenen we hoeveel je moet planten om echt zelfvoorzienend te worden.</p>
 <div class="ob-num">
 <button class="ob-num-btn" onclick="obAdj(-1)">−</button>
 <div class="ob-num-val" id="obNum">2</div>
@@ -501,27 +501,27 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 
 <div class="ob-step" data-step="2">
 <div class="ob-emoji">📐</div>
-<h1 class="ob-title">Hoeveel ruimte heb je?</h1>
+<h1 class="ob-title" data-i18n="ob_ruimte">Hoeveel ruimte heb je?</h1>
 <p class="ob-text" style="margin-bottom:20px;">Schat hoeveel vierkante meter je kunt gebruiken om te telen. Een balkon is genoeg om te beginnen — echt.</p>
 <div style="text-align:center;margin:10px 0 20px;">
 <div style="font-family:'Fraunces',serif;font-size:3.2rem;color:var(--surface);font-weight:500;line-height:1;"><span id="obM2Val">15</span><span style="font-size:1.3rem;opacity:0.7"> m²</span></div>
 <input type="range" min="2" max="150" step="1" value="15" id="obM2Range" oninput="obSetM2(this.value)" style="width:100%;margin-top:18px;accent-color:var(--mint);">
 <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:6px;"><span>🪴 Balkon</span><span>🌿 Tuin</span><span>🌳 Moestuin</span></div>
 </div>
-<p class="ob-text" id="obM2Hint" style="font-size:0.82rem;margin-bottom:auto;">Een mooie tuin om gevarieerd te telen.</p>
+<p class="ob-text" id="obM2Hint" style="font-size:0.82rem;margin-bottom:auto;" data-i18n="m2_hint_mid">Een mooie tuin om gevarieerd te telen.</p>
 <div class="ob-foot"><button class="btn btn-mint btn-full" onclick="obNext()">Verder</button></div>
 </div>
 
 <div class="ob-step" data-step="3">
 <div class="ob-emoji">🌍</div>
-<h1 class="ob-title">Waar woon je?</h1>
+<h1 class="ob-title" data-i18n="ob_waar">Waar woon je?</h1>
 <p class="ob-text">Je klimaat bepaalt wanneer je zaait en oogst. Straks vragen we je locatie voor het weer — dat stelt dit automatisch bij.</p>
 <div class="ob-field" style="margin-top:24px;">
 <div class="ob-opts" id="obKlimaatOpts">
-<div class="ob-opt sel" data-v="gematigd" onclick="obPick('klimaat','gematigd',this)"><div class="ob-opt-t">🌧️ Gematigd</div><div class="ob-opt-s">Nederland, België, Duitsland, UK</div></div>
-<div class="ob-opt" data-v="mediterraan" onclick="obPick('klimaat','mediterraan',this)"><div class="ob-opt-t">☀️ Mediterraan</div><div class="ob-opt-s">Spanje, Italië, Griekenland</div></div>
-<div class="ob-opt" data-v="tropisch" onclick="obPick('klimaat','tropisch',this)"><div class="ob-opt-t">🌴 Tropisch</div><div class="ob-opt-s">Subtropisch of tropisch klimaat</div></div>
-<div class="ob-opt" data-v="koud" onclick="obPick('klimaat','koud',this)"><div class="ob-opt-t">❄️ Koud</div><div class="ob-opt-s">Scandinavië, Canada, bergen</div></div>
+<div class="ob-opt sel" data-v="gematigd" onclick="obPick('klimaat','gematigd',this)"><div class="ob-opt-t">🌧️ Gematigd</div><div class="ob-opt-s" data-i18n="ob_klim_gematigd">Nederland, België, Duitsland, UK</div></div>
+<div class="ob-opt" data-v="mediterraan" onclick="obPick('klimaat','mediterraan',this)"><div class="ob-opt-t">☀️ Mediterraan</div><div class="ob-opt-s" data-i18n="ob_klim_mediterraan">Spanje, Italië, Griekenland</div></div>
+<div class="ob-opt" data-v="tropisch" onclick="obPick('klimaat','tropisch',this)"><div class="ob-opt-t">🌴 Tropisch</div><div class="ob-opt-s" data-i18n="ob_klim_tropisch">Subtropisch of tropisch klimaat</div></div>
+<div class="ob-opt" data-v="koud" onclick="obPick('klimaat','koud',this)"><div class="ob-opt-t">❄️ Koud</div><div class="ob-opt-s" data-i18n="ob_klim_koud">Scandinavië, Canada, bergen</div></div>
 </div>
 </div>
 <div class="ob-foot"><button class="btn btn-mint btn-full" onclick="finishOnboarding()">Open mijn tuin 🌿</button></div>
@@ -541,11 +541,11 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 
 <div class="home-hero">
 <div class="hero-greet" data-i18n="vandaag_tuin">Vandaag in jouw tuin</div>
-<div class="hero-line serif" id="heroLine">Laten we iets moois laten groeien.</div>
+<div class="hero-line serif" id="heroLine" data-i18n="hero_groei">Laten we iets moois laten groeien.</div>
 <div id="streakChip"></div>
 <div class="hero-weather" id="heroWeather">
 <div class="hw-ico">📍</div>
-<div style="flex:1"><div class="hw-desc">Tik op 'Locatie' voor weer & tuintips op maat</div></div>
+<div style="flex:1"><div class="hw-desc" data-i18n="hero_weer_def">Tik op 'Locatie' voor weer & tuintips op maat</div></div>
 </div>
 </div>
 <div id="dagTip"></div>
@@ -554,7 +554,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="meter-top">
 <div>
 <div class="meter-label">Supermarkt-vrijheid <span onclick="event.stopPropagation();showCalcInfo('meter')" style="cursor:pointer;color:var(--muted);font-size:0.75rem;border:1px solid var(--line);border-radius:50%;padding:0 5px;margin-left:3px">?</span></div>
-<div class="meter-sub" id="meterSub">Hoe meer je zelf oogst, hoe vrijer je wordt.</div>
+<div class="meter-sub" id="meterSub" data-i18n="supermarkt_vrijheid_x">Hoe meer je zelf oogst, hoe vrijer je wordt.</div>
 </div>
 <div class="meter-pct" id="meterPct">0<small>%</small></div>
 </div>
@@ -566,7 +566,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div id="savingsStrip" style="display:none" onclick="showScreen('besparing')"></div>
 
 <div class="sec">
-<div class="sec-head"><div class="sec-title">Te doen vandaag</div><div class="sec-link" id="taskCountLink"></div></div>
+<div class="sec-head"><div class="sec-title" data-i18n="te_doen_vandaag">Te doen vandaag</div><div class="sec-link" id="taskCountLink"></div></div>
 <div id="todayTasks"></div>
 </div>
 
@@ -623,42 +623,42 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="acc-card">
 <div class="acc-row" onclick="openAuth()" id="authRow">
 <div class="acc-row-ico">🔐</div>
-<div class="acc-row-body"><div class="acc-row-t" id="authRowT">Maak een account</div><div class="acc-row-s" id="authRowS">Bewaar je tuin veilig en op al je apparaten</div></div>
+<div class="acc-row-body"><div class="acc-row-t" id="authRowT" data-i18n="acc_maak">Maak een account</div><div class="acc-row-s" id="authRowS" data-i18n="acc_bewaar">Bewaar je tuin veilig en op al je apparaten</div></div>
 <div class="acc-row-arr">›</div>
 </div>
 </div>
 </div>
 
 <div class="acc-section">
-<div class="acc-label">Mijn mijlpalen</div>
+<div class="acc-label" data-i18n="mijn_mijlpalen">Mijn mijlpalen</div>
 <div class="acc-card" style="padding:18px;">
 <div class="badge-grid" id="badgeGrid"></div>
 </div>
 </div>
 
 <div class="acc-section">
-<div class="acc-label">Mijn tuin instellen</div>
+<div class="acc-label" data-i18n="mijn_tuin_instellen">Mijn tuin instellen</div>
 <div class="acc-card" style="padding:17px;">
-<label style="font-size:0.8rem;font-weight:600;color:var(--forest);">Aantal personen</label>
+<label style="font-size:0.8rem;font-weight:600;color:var(--forest);" data-i18n="aantal_personen">Aantal personen</label>
 <input type="number" class="setting-input" id="setPersonen" min="1" max="20" oninput="syncSettings()">
 <label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Tuinruimte: <span id="m2Label">30</span> m²</label>
 <input type="range" min="2" max="200" step="1" class="setting-input" id="setM2" style="padding:6px 0" oninput="document.getElementById('m2Label').textContent=this.value;syncSettings()">
 <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;line-height:1.4;">Balkon ±5m² · kleine tuin ±15m² · ruime tuin 40m²+. Hiermee berekenen we of je planten passen.</div>
-<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Klimaatzone</label>
+<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;" data-i18n="klimaatzone">Klimaatzone</label>
 <select class="setting-input" id="setKlimaat" onchange="syncSettings()">
 <option value="gematigd">Gematigd (NL/BE/DE/UK)</option>
 <option value="mediterraan">Mediterraan (ES/IT/GR)</option>
 <option value="tropisch">Tropisch / subtropisch</option>
 <option value="koud">Koud (NO/SE/FI/CA)</option>
 </select>
-<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;">Mijn doel</label>
+<label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;" data-i18n="mijn_doel">Mijn doel</label>
 <select class="setting-input" id="setDoel" onchange="syncSettings()">
 <option value="30">Wat verse groenten (30%)</option>
 <option value="50">Flink wat zelf telen (50%)</option>
 <option value="85">Grotendeels zelfvoorzienend (85%)</option>
 <option value="100">Volledig van de supermarkt af (100%)</option>
 </select>
-<div style="font-size:0.7rem;color:var(--muted);margin-top:6px;line-height:1.4;">Je meter laat zien hoe ver je bent richting jouw eigen doel.</div>
+<div style="font-size:0.7rem;color:var(--muted);margin-top:6px;line-height:1.4;" data-i18n="doel_x">Je meter laat zien hoe ver je bent richting jouw eigen doel.</div>
 <label style="font-size:0.8rem;font-weight:600;color:var(--forest);margin-top:14px;display:block;" data-i18n="taal">Taal</label>
 <select class="setting-input" id="setTaal" onchange="kiesTaal(this.value);toast(t('opgeslagen'))">
 <option value="nl">🇳🇱 Nederlands</option>
@@ -674,7 +674,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="acc-card">
 <div class="acc-row" style="cursor:default">
 <div class="acc-row-ico">🎁</div>
-<div class="acc-row-body"><div class="acc-row-t">Alles gratis tijdens onze lancering</div><div class="acc-row-s">Geniet van alle functies. We bouwen ondertussen aan nog meer moois.</div></div>
+<div class="acc-row-body"><div class="acc-row-t" data-i18n="gratis_lancering">Alles gratis tijdens onze lancering</div><div class="acc-row-s" data-i18n="gratis_lancering_x">Geniet van alle functies. We bouwen ondertussen aan nog meer moois.</div></div>
 </div>
 </div>
 </div>
@@ -684,22 +684,22 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="acc-card">
 <div class="acc-row" onclick="toggleNotif()">
 <div class="acc-row-ico">🔔</div>
-<div class="acc-row-body"><div class="acc-row-t">Herinneringen</div><div class="acc-row-s" id="notifStatus">Krijg een seintje bij zaai- en oogsttijd</div></div>
+<div class="acc-row-body"><div class="acc-row-t" data-i18n="herinneringen">Herinneringen</div><div class="acc-row-s" id="notifStatus" data-i18n="notif_uit_x">Krijg een seintje bij zaai- en oogsttijd</div></div>
 <div class="acc-row-arr" id="notifToggle">›</div>
 </div>
 <div class="acc-row" onclick="installPWA()">
 <div class="acc-row-ico">📲</div>
-<div class="acc-row-body"><div class="acc-row-t">Zet op beginscherm</div><div class="acc-row-s">Gebruik Greenlabs als echte app</div></div>
+<div class="acc-row-body"><div class="acc-row-t" data-i18n="zet_beginscherm">Zet op beginscherm</div><div class="acc-row-s" data-i18n="zet_beginscherm_x">Gebruik Greenlabs als echte app</div></div>
 <div class="acc-row-arr">›</div>
 </div>
 <div class="acc-row" onclick="exportAgenda()">
 <div class="acc-row-ico">📅</div>
-<div class="acc-row-body"><div class="acc-row-t">Taken naar agenda</div><div class="acc-row-s">Exporteer deze maand naar je kalender</div></div>
+<div class="acc-row-body"><div class="acc-row-t" data-i18n="taken_agenda">Taken naar agenda</div><div class="acc-row-s" data-i18n="taken_agenda_x">Exporteer deze maand naar je kalender</div></div>
 <div class="acc-row-arr">›</div>
 </div>
 <div class="acc-row" onclick="resetAll()">
 <div class="acc-row-ico">🔄</div>
-<div class="acc-row-body"><div class="acc-row-t">Opnieuw beginnen</div><div class="acc-row-s">Wis mijn tuin en gegevens</div></div>
+<div class="acc-row-body"><div class="acc-row-t" data-i18n="opnieuw_beginnen">Opnieuw beginnen</div><div class="acc-row-s" data-i18n="opnieuw_beginnen_x">Wis mijn tuin en gegevens</div></div>
 <div class="acc-row-arr">›</div>
 </div>
 </div>
@@ -713,33 +713,33 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="topbar"><div class="tb-title">‹ Terug</div></div>
 <div class="plan-hero">
 <h2 class="serif">Word zelfvoorzienend</h2>
-<p>Begin gratis. Groei naar een tuin die je supermarkt overbodig maakt.</p>
+<p data-i18n="plan_intro">Begin gratis. Groei naar een tuin die je supermarkt overbodig maakt.</p>
 </div>
 <div class="plan-card">
 <div class="plan-name">🌱 Starter</div>
 <div class="plan-price">Gratis</div>
-<div class="plan-desc">Proef het zelf-kweken, zonder verplichtingen.</div>
+<div class="plan-desc" data-i18n="plan_gratis_x">Proef het zelf-kweken, zonder verplichtingen.</div>
 <ul class="plan-feats">
 <li>Tot 5 gewassen in je tuin</li>
-<li>Maandelijkse zaai- & oogsttaken</li>
-<li>Recepten & bewaartips</li>
+<li data-i18n="plan_f_taken">Maandelijkse zaai- & oogsttaken</li>
+<li data-i18n="plan_f_recept">Recepten & bewaartips</li>
 <li class="off">Alle 34 gewassen</li>
-<li class="off">Weer & tuintips op maat</li>
-<li class="off">AI Plantdokter</li>
+<li class="off" data-i18n="plan_f_weer">Weer & tuintips op maat</li>
+<li class="off" data-i18n="plan_f_ai">AI Plantdokter</li>
 </ul>
-<button class="btn btn-ghost btn-full" onclick="showScreen('home')">Verder met gratis</button>
+<button class="btn btn-ghost btn-full" onclick="showScreen('home')" data-i18n="plan_verder_gratis">Verder met gratis</button>
 </div>
 <div class="plan-card feat">
 <div class="plan-badge">Aanrader</div>
 <div class="plan-name">🌿 Groen</div>
 <div class="plan-price">€6 <span>/ maand</span></div>
-<div class="plan-desc">Alles om écht zelfvoorzienend te worden.</div>
+<div class="plan-desc" data-i18n="plan_groen_x">Alles om écht zelfvoorzienend te worden.</div>
 <ul class="plan-feats">
 <li>Alle 34 gewassen, onbeperkt</li>
-<li>Weer & dagelijkse tuintips</li>
+<li data-i18n="plan_f_weertip">Weer & dagelijkse tuintips</li>
 <li>AI Plantdokter (foto-diagnose)</li>
-<li>Supermarkt-vrijheidsmeter</li>
-<li>Taken naar je agenda</li>
+<li data-i18n="plan_f_meter">Supermarkt-vrijheidsmeter</li>
+<li data-i18n="plan_f_agenda">Taken naar je agenda</li>
 <li>14 dagen gratis proberen</li>
 </ul>
 <button class="btn btn-mint btn-full" onclick="setPro(true);toast(t('m_welkom_pro'));showScreen('home')">Probeer 14 dagen gratis</button>
@@ -747,13 +747,13 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="plan-card">
 <div class="plan-name">👨‍👩‍👧 Familie</div>
 <div class="plan-price">€6 <span>+ €2 per profiel</span></div>
-<div class="plan-desc">Deel met je gezin of buren. Elk een eigen tuin.</div>
+<div class="plan-desc" data-i18n="plan_fam_x">Deel met je gezin of buren. Elk een eigen tuin.</div>
 <ul class="plan-feats">
-<li>Alles uit Groen</li>
+<li data-i18n="plan_f_allesgroen">Alles uit Groen</li>
 <li>Extra tuinprofiel voor +€2/maand</li>
-<li>Ieder een eigen klimaat & oogst</li>
+<li data-i18n="plan_f_ieder">Ieder een eigen klimaat & oogst</li>
 </ul>
-<button class="btn btn-ghost btn-full" onclick="toast(t('m_binnenkort'))">Meer info</button>
+<button class="btn btn-ghost btn-full" onclick="toast(t('m_binnenkort'))" data-i18n="meer_info">Meer info</button>
 </div>
 <div style="height:20px;"></div>
 </div>
@@ -784,7 +784,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="sheet-grip"></div>
 <div class="sheet-head">
 <div class="sheet-title serif" data-i18n="voeg_toe_sheet">Voeg toe aan je tuin</div>
-<div class="sheet-sub" id="addSheetSub">Kies wat je wilt gaan kweken</div>
+<div class="sheet-sub" id="addSheetSub" data-i18n="kies_kweken">Kies wat je wilt gaan kweken</div>
 </div>
 <div class="search-box">
 <span>🔍</span><input type="text" id="addSearch" placeholder="Zoek een gewas..." oninput="renderAddGrid()">
@@ -802,11 +802,11 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="sheet">
 <div class="sheet-grip"></div>
 <div class="sheet-head">
-<div class="sheet-title serif" id="ruilTitle">Ruilen</div>
+<div class="sheet-title serif" id="ruilTitle" data-i18n="ruilen">Ruilen</div>
 <div class="sheet-sub" id="ruilSub">—</div>
 </div>
 <div id="ruilList" style="padding:0 22px"></div>
-<div style="padding:16px 22px 0;"><button class="btn btn-ghost btn-full" onclick="closeRuil()">Annuleren</button></div>
+<div style="padding:16px 22px 0;"><button class="btn btn-ghost btn-full" onclick="closeRuil()" data-i18n="annuleren">Annuleren</button></div>
 </div>
 </div>
 
@@ -815,7 +815,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="sheet">
 <div class="sheet-grip"></div>
 <div class="sheet-head">
-<div class="sheet-title serif" id="plaatsTitle">Plek kiezen</div>
+<div class="sheet-title serif" id="plaatsTitle" data-i18n="plek_kiezen">Plek kiezen</div>
 <div class="sheet-sub" id="plaatsSub">—</div>
 </div>
 <div style="padding:4px 22px 0"><div class="pk-grid" id="plaatsGrid"></div></div>
@@ -829,15 +829,15 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="sheet">
 <div class="sheet-grip"></div>
 <div class="sheet-head">
-<div class="sheet-title serif" id="authTitle">Maak een account</div>
-<div class="sheet-sub" id="authSub">Zo bewaar je je tuin veilig en op al je apparaten</div>
+<div class="sheet-title serif" id="authTitle" data-i18n="maak_account">Maak een account</div>
+<div class="sheet-sub" id="authSub" data-i18n="auth_sub_reg">Zo bewaar je je tuin veilig en op al je apparaten</div>
 </div>
 <div style="padding:0 22px;">
 <input type="text" class="setting-input" id="authNaam" placeholder="Je naam" style="margin-top:0;">
 <input type="email" class="setting-input" id="authEmail" placeholder="E-mailadres">
 <input type="password" class="setting-input" id="authPass" placeholder="Wachtwoord">
-<button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="doAuth()" id="authBtn">Account aanmaken</button>
-<div style="text-align:center;font-size:0.8rem;color:var(--muted);margin-top:14px;cursor:pointer;" onclick="switchAuth()" id="authSwitch">Heb je al een account? Log in</div>
+<button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="doAuth()" id="authBtn" data-i18n="account_aanmaken">Account aanmaken</button>
+<div style="text-align:center;font-size:0.8rem;color:var(--muted);margin-top:14px;cursor:pointer;" onclick="switchAuth()" id="authSwitch" data-i18n="auth_switch_reg">Heb je al een account? Log in</div>
 <div style="background:var(--mint-soft);border-radius:12px;padding:13px 15px;margin-top:16px;font-size:0.76rem;color:var(--sage);line-height:1.5;">
 🔒 In deze versie wordt je account lokaal op dit apparaat bewaard. Synchroniseren over apparaten komt in de volgende update.
 </div>
@@ -849,7 +849,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="toast" id="toast"></div>
 <div class="badge-pop" id="badgePop">
 <div class="badge-pop-emoji" id="badgePopEmoji">🏆</div>
-<div class="badge-pop-title">Mijlpaal behaald!</div>
+<div class="badge-pop-title" data-i18n="mijlpaal_behaald">Mijlpaal behaald!</div>
 <div class="badge-pop-naam" id="badgePopNaam">—</div>
 <div class="badge-pop-uitleg" id="badgePopUitleg">—</div>
 </div>
@@ -857,7 +857,7 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div class="calc-box">
 <div class="calc-title serif" id="calcInfoTitle">—</div>
 <div class="calc-text" id="calcInfoText">—</div>
-<button class="btn btn-primary btn-full" style="margin-top:18px" onclick="closeCalcInfo()">Duidelijk!</button>
+<button class="btn btn-primary btn-full" style="margin-top:18px" onclick="closeCalcInfo()" data-i18n="duidelijk">Duidelijk!</button>
 </div>
 </div>
 
@@ -866,8 +866,8 @@ box-shadow:0 -4px 24px rgba(31,58,28,0.06);
 <div style="font-size:2.6rem">🌿</div>
 <div class="calc-title serif" style="margin-top:6px">Word zelfvoorzienend</div>
 <div class="calc-text" id="upgradeText" style="margin-top:8px">—</div>
-<button class="btn btn-mint btn-full" style="margin-top:18px" onclick="goToPlan()">Bekijk Greenlabs Groen</button>
-<div style="font-size:0.78rem;color:var(--muted);margin-top:12px;cursor:pointer" onclick="closeUpgrade()">Misschien later</div>
+<button class="btn btn-mint btn-full" style="margin-top:18px" onclick="goToPlan()" data-i18n="bekijk_groen">Bekijk Greenlabs Groen</button>
+<div style="font-size:0.78rem;color:var(--muted);margin-top:12px;cursor:pointer" onclick="closeUpgrade()" data-i18n="misschien_later">Misschien later</div>
 </div>
 </div>
 
@@ -890,6 +890,13 @@ nl:{kort:['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec
 en:{kort:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],lang:['January','February','March','April','May','June','July','August','September','October','November','December']},
 fr:{kort:['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'],lang:['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']},
 de:{kort:['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],lang:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']},
+};
+// Dagnamen per taal (zo blijven datums niet Nederlands)
+const DAGEN={
+nl:{lang:['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'],kort:['Zo','Ma','Di','Wo','Do','Vr','Za']},
+en:{lang:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],kort:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']},
+fr:{lang:['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'],kort:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']},
+de:{lang:['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],kort:['So','Mo','Di','Mi','Do','Fr','Sa']},
 };
 // Categorie-vertalingen
 const CATT={
@@ -1226,6 +1233,92 @@ jouw_doel:{nl:'Jouw doel',en:'Your goal',fr:'Votre objectif',de:'Dein Ziel'},
 streak_dagen:{nl:'dagen op rij',en:'days in a row',fr:'jours d\u2019affilée',de:'Tage in Folge'},
 streak_top:{nl:'record:',en:'best:',fr:'record :',de:'Rekord:'},
 tip_van_de_dag:{nl:'Tip van de dag',en:'Tip of the day',fr:'Astuce du jour',de:'Tipp des Tages'},
+deze_maand_chip:{nl:'Deze maand',en:'This month',fr:'Ce mois-ci',de:'Diesen Monat'},
+alle_chip:{nl:'Alle',en:'All',fr:'Tout',de:'Alle'},
+toon_alle_chip:{nl:'Toon alle gewassen',en:'Show all crops',fr:'Voir toutes les cultures',de:'Alle Pflanzen zeigen'},
+niks_zaaien_t:{nl:'Deze maand is er weinig te zaaien',en:'Little to sow this month',fr:'Peu à semer ce mois-ci',de:'Wenig zu säen diesen Monat'},
+niks_zaaien_x:{nl:'In jouw klimaat is dit een rustige maand. Plan alvast vooruit, of bekijk alle gewassen om te zien wat later kan.',en:'In your climate this is a quiet month. Plan ahead, or browse all crops to see what\u2019s coming.',fr:'Dans votre climat, c\u2019est un mois calme. Anticipez, ou parcourez toutes les cultures.',de:'In deinem Klima ist dies ein ruhiger Monat. Plane voraus oder sieh dir alle Pflanzen an.'},
+volgende_oogst:{nl:'Volgende oogst',en:'Next harvest',fr:'Prochaine récolte',de:'Nächste Ernte'},
+ruil_sub:{nl:'Kies een vervanger die in dezelfde maand oogst geeft — zo houd je je voorraad op peil.',en:'Pick a replacement that harvests in the same month — so your supply stays steady.',fr:'Choisissez un remplaçant qui se récolte le même mois — pour garder un approvisionnement constant.',de:'Wähle einen Ersatz, der im selben Monat reift — so bleibt deine Versorgung stabil.'},
+dok_titel:{nl:'Plantdokter',en:'Plant doctor',fr:'Médecin des plantes',de:'Pflanzenarzt'},
+dok_pro_x:{nl:'Maak een foto van een zieke plant en krijg direct een diagnose met behandelplan. Deze AI-functie zit in Greenlabs Groen.',en:'Take a photo of a sick plant and get an instant diagnosis with a treatment plan. This AI feature is part of Greenlabs Green.',fr:'Photographiez une plante malade et obtenez un diagnostic instantané avec un plan de traitement. Cette fonction IA fait partie de Greenlabs Green.',de:'Fotografiere eine kranke Pflanze und erhalte sofort eine Diagnose mit Behandlungsplan. Diese KI-Funktion gehört zu Greenlabs Grün.'},
+dok_ontgrendel:{nl:'Ontgrendel de Plantdokter',en:'Unlock the Plant doctor',fr:'Débloquer le médecin des plantes',de:'Pflanzenarzt freischalten'},
+dok_x:{nl:'Maak een foto van je plant. We bekijken wat er speelt en geven je een helder behandelplan.',en:'Take a photo of your plant. We\u2019ll see what\u2019s going on and give you a clear treatment plan.',fr:'Photographiez votre plante. Nous verrons ce qui se passe et vous donnerons un plan clair.',de:'Fotografiere deine Pflanze. Wir schauen, was los ist, und geben dir einen klaren Behandlungsplan.'},
+dok_kies_foto:{nl:'Tik om een foto te kiezen',en:'Tap to choose a photo',fr:'Appuyez pour choisir une photo',de:'Tippe, um ein Foto zu wählen'},
+dok_bekijk:{nl:'Bekijk mijn plant',en:'Check my plant',fr:'Examiner ma plante',de:'Meine Pflanze prüfen'},
+dok_diagnose:{nl:'Diagnose',en:'Diagnosis',fr:'Diagnostic',de:'Diagnose'},
+m2_hint_klein:{nl:'Een balkon of klein terras — perfect voor verse kruiden en salade.',en:'A balcony or small terrace — perfect for fresh herbs and salad.',fr:'Un balcon ou une petite terrasse — parfait pour herbes fraîches et salade.',de:'Ein Balkon oder kleine Terrasse — perfekt für frische Kräuter und Salat.'},
+m2_hint_mid:{nl:'Een mooie tuin om gevarieerd te telen.',en:'A nice garden for varied growing.',fr:'Un beau jardin pour cultiver varié.',de:'Ein schöner Garten für vielfältigen Anbau.'},
+m2_hint_groot:{nl:'Ruim genoeg om een groot deel van je groente zelf te kweken.',en:'Spacious enough to grow much of your own veg.',fr:'Assez grand pour cultiver une grande partie de vos légumes.',de:'Groß genug, um viel eigenes Gemüse anzubauen.'},
+m2_hint_moestuin:{nl:'Een echte moestuin — hier kun je grotendeels zelfvoorzienend worden!',en:'A real vegetable garden — here you can become largely self-sufficient!',fr:'Un vrai potager — vous pouvez devenir largement autosuffisant !',de:'Ein echter Gemüsegarten — hier kannst du weitgehend selbstversorgt werden!'},
+notif_aan_x:{nl:'Je krijgt een seintje bij tuintaken',en:'You\u2019ll get a nudge for garden tasks',fr:'Vous serez averti pour les tâches du jardin',de:'Du wirst bei Gartenaufgaben erinnert'},
+notif_uit_x:{nl:'Krijg een seintje bij zaai- en oogsttijd',en:'Get a nudge at sowing and harvest time',fr:'Soyez averti aux moments de semis et récolte',de:'Erinnerung zur Saat- und Erntezeit'},
+acc_maak:{nl:'Maak een account',en:'Create an account',fr:'Créer un compte',de:'Konto erstellen'},
+acc_bewaar:{nl:'Bewaar je tuin veilig en op al je apparaten',en:'Keep your garden safe and on all your devices',fr:'Gardez votre jardin en sécurité sur tous vos appareils',de:'Sichere deinen Garten auf all deinen Geräten'},
+auth_sub_reg:{nl:'Zo bewaar je je tuin veilig en op al je apparaten',en:'This keeps your garden safe and on all your devices',fr:'Ainsi votre jardin reste en sécurité sur tous vos appareils',de:'So bleibt dein Garten sicher und auf allen Geräten'},
+auth_sub_login:{nl:'Log in om verder te gaan met jouw tuin',en:'Log in to continue with your garden',fr:'Connectez-vous pour continuer avec votre jardin',de:'Melde dich an, um mit deinem Garten fortzufahren'},
+auth_switch_reg:{nl:'Heb je al een account? Log in',en:'Already have an account? Log in',fr:'Déjà un compte ? Connectez-vous',de:'Schon ein Konto? Anmelden'},
+auth_switch_login:{nl:'Nog geen account? Maak er een',en:'No account yet? Create one',fr:'Pas encore de compte ? Créez-en un',de:'Noch kein Konto? Erstelle eins'},
+logout_confirm:{nl:'Uitloggen? Je tuin blijft op dit apparaat bewaard.',en:'Log out? Your garden stays saved on this device.',fr:'Se déconnecter ? Votre jardin reste sur cet appareil.',de:'Abmelden? Dein Garten bleibt auf diesem Gerät gespeichert.'},
+ob_welkom:{nl:'Welkom bij Greenlabs',en:'Welcome to Greenlabs',fr:'Bienvenue chez Greenlabs',de:'Willkommen bei Greenlabs'},
+ob_welkom_x:{nl:'We stellen je een paar korte vragen, zodat jouw tuin precies bij jou past.',en:'We\u2019ll ask a few short questions so your garden fits you perfectly.',fr:'Quelques questions rapides pour que votre jardin vous corresponde.',de:'Ein paar kurze Fragen, damit dein Garten genau zu dir passt.'},
+ob_start:{nl:'Laten we beginnen',en:'Let\u2019s get started',fr:'Commençons',de:'Los geht\u2019s'},
+ob_monden:{nl:'Voor hoeveel monden?',en:'For how many mouths?',fr:'Pour combien de personnes ?',de:'Für wie viele Personen?'},
+ob_monden_x:{nl:'Zo berekenen we hoeveel je moet planten om echt zelfvoorzienend te worden.',en:'This lets us calculate how much to plant to become truly self-sufficient.',fr:'Cela nous permet de calculer combien planter pour devenir autosuffisant.',de:'So berechnen wir, wie viel du pflanzen musst, um selbstversorgt zu werden.'},
+ob_verder:{nl:'Verder',en:'Next',fr:'Suivant',de:'Weiter'},
+ob_ruimte:{nl:'Hoeveel ruimte heb je?',en:'How much space do you have?',fr:'Combien d\u2019espace avez-vous ?',de:'Wie viel Platz hast du?'},
+ob_waar:{nl:'Waar woon je?',en:'Where do you live?',fr:'Où habitez-vous ?',de:'Wo wohnst du?'},
+ob_klim_gematigd:{nl:'Nederland, België, Duitsland, UK',en:'Netherlands, Belgium, Germany, UK',fr:'Pays-Bas, Belgique, Allemagne, R-U',de:'Niederlande, Belgien, Deutschland, UK'},
+ob_klim_mediterraan:{nl:'Spanje, Italië, Griekenland',en:'Spain, Italy, Greece',fr:'Espagne, Italie, Grèce',de:'Spanien, Italien, Griechenland'},
+ob_klim_tropisch:{nl:'Subtropisch of tropisch klimaat',en:'Subtropical or tropical climate',fr:'Climat subtropical ou tropical',de:'Subtropisches oder tropisches Klima'},
+ob_klim_koud:{nl:'Scandinavië, Canada, bergen',en:'Scandinavia, Canada, mountains',fr:'Scandinavie, Canada, montagnes',de:'Skandinavien, Kanada, Berge'},
+hero_weer_def:{nl:'Tik op \u2019Locatie\u2019 voor weer & tuintips op maat',en:'Tap \u2019Location\u2019 for weather & tailored garden tips',fr:'Touchez \u2019Localisation\u2019 pour météo & conseils sur mesure',de:'Tippe auf \u2019Standort\u2019 für Wetter & passende Gartentipps'},
+hero_groei:{nl:'Laten we iets moois laten groeien.',en:'Let\u2019s grow something beautiful.',fr:'Faisons pousser quelque chose de beau.',de:'Lass uns etwas Schönes wachsen lassen.'},
+supermarkt_vrijheid:{nl:'Supermarkt-vrijheid',en:'Supermarket freedom',fr:'Liberté du supermarché',de:'Supermarkt-Freiheit'},
+supermarkt_vrijheid_x:{nl:'Hoe meer je zelf oogst, hoe vrijer je wordt.',en:'The more you harvest yourself, the freer you become.',fr:'Plus vous récoltez vous-même, plus vous êtes libre.',de:'Je mehr du selbst erntest, desto freier wirst du.'},
+te_doen_vandaag:{nl:'Te doen vandaag',en:'To do today',fr:'À faire aujourd\u2019hui',de:'Heute zu tun'},
+jouw_tuin:{nl:'Jouw tuin',en:'Your garden',fr:'Votre jardin',de:'Dein Garten'},
+mijn_mijlpalen:{nl:'Mijn mijlpalen',en:'My milestones',fr:'Mes étapes',de:'Meine Meilensteine'},
+mijn_tuin_instellen:{nl:'Mijn tuin instellen',en:'Set up my garden',fr:'Configurer mon jardin',de:'Meinen Garten einrichten'},
+aantal_personen:{nl:'Aantal personen',en:'Number of people',fr:'Nombre de personnes',de:'Anzahl Personen'},
+klimaatzone:{nl:'Klimaatzone',en:'Climate zone',fr:'Zone climatique',de:'Klimazone'},
+mijn_doel:{nl:'Mijn doel',en:'My goal',fr:'Mon objectif',de:'Mein Ziel'},
+doel_x:{nl:'Je meter laat zien hoe ver je bent richting jouw eigen doel.',en:'Your meter shows how far you are toward your own goal.',fr:'Votre jauge montre votre progression vers votre objectif.',de:'Deine Anzeige zeigt, wie weit du zu deinem Ziel bist.'},
+abonnement:{nl:'Abonnement',en:'Subscription',fr:'Abonnement',de:'Abonnement'},
+gratis_lancering:{nl:'Alles gratis tijdens onze lancering',en:'Everything free during our launch',fr:'Tout gratuit pendant notre lancement',de:'Alles kostenlos während unseres Starts'},
+gratis_lancering_x:{nl:'Geniet van alle functies. We bouwen ondertussen aan nog meer moois.',en:'Enjoy all features. Meanwhile we\u2019re building even more.',fr:'Profitez de toutes les fonctions. Nous en préparons d\u2019autres.',de:'Genieße alle Funktionen. Wir bauen unterdessen noch mehr.'},
+herinneringen:{nl:'Herinneringen',en:'Reminders',fr:'Rappels',de:'Erinnerungen'},
+zet_beginscherm:{nl:'Zet op beginscherm',en:'Add to home screen',fr:'Ajouter à l\u2019écran d\u2019accueil',de:'Zum Startbildschirm',},
+zet_beginscherm_x:{nl:'Gebruik Greenlabs als echte app',en:'Use Greenlabs as a real app',fr:'Utilisez Greenlabs comme une vraie app',de:'Nutze Greenlabs wie eine echte App'},
+taken_agenda:{nl:'Taken naar agenda',en:'Tasks to calendar',fr:'Tâches vers l\u2019agenda',de:'Aufgaben zum Kalender'},
+taken_agenda_x:{nl:'Exporteer deze maand naar je kalender',en:'Export this month to your calendar',fr:'Exportez ce mois vers votre calendrier',de:'Exportiere diesen Monat in deinen Kalender'},
+opnieuw_beginnen:{nl:'Opnieuw beginnen',en:'Start over',fr:'Recommencer',de:'Neu beginnen'},
+opnieuw_beginnen_x:{nl:'Wis mijn tuin en gegevens',en:'Erase my garden and data',fr:'Effacer mon jardin et mes données',de:'Meinen Garten und Daten löschen'},
+kies_kweken:{nl:'Kies wat je wilt gaan kweken',en:'Choose what you want to grow',fr:'Choisissez ce que vous voulez cultiver',de:'Wähle, was du anbauen willst'},
+plek_kiezen:{nl:'Plek kiezen',en:'Choose a spot',fr:'Choisir un emplacement',de:'Platz wählen'},
+ruilen:{nl:'Ruilen',en:'Swap',fr:'Échanger',de:'Tauschen'},
+account_aanmaken:{nl:'Account aanmaken',en:'Create account',fr:'Créer un compte',de:'Konto erstellen'},
+mijlpaal_behaald:{nl:'Mijlpaal behaald!',en:'Milestone reached!',fr:'Étape atteinte !',de:'Meilenstein erreicht!'},
+duidelijk:{nl:'Duidelijk!',en:'Got it!',fr:'Compris !',de:'Verstanden!'},
+bekijk_groen:{nl:'Bekijk Greenlabs Groen',en:'See Greenlabs Green',fr:'Voir Greenlabs Vert',de:'Greenlabs Grün ansehen'},
+misschien_later:{nl:'Misschien later',en:'Maybe later',fr:'Peut-être plus tard',de:'Vielleicht später'},
+meer_info:{nl:'Meer info',en:'More info',fr:'Plus d\u2019infos',de:'Mehr Infos'},
+plan_intro:{nl:'Begin gratis. Groei naar een tuin die je supermarkt overbodig maakt.',en:'Start free. Grow into a garden that makes your supermarket obsolete.',fr:'Commencez gratuitement. Cultivez un jardin qui rend le supermarché inutile.',de:'Kostenlos starten. Wachse zu einem Garten, der den Supermarkt überflüssig macht.'},
+plan_gratis:{nl:'Gratis',en:'Free',fr:'Gratuit',de:'Kostenlos'},
+plan_gratis_x:{nl:'Proef het zelf-kweken, zonder verplichtingen.',en:'Taste growing your own, no strings attached.',fr:'Goûtez à l\u2019autoculture, sans engagement.',de:'Probiere den Eigenanbau, ganz unverbindlich.'},
+plan_f_taken:{nl:'Maandelijkse zaai- & oogsttaken',en:'Monthly sowing & harvest tasks',fr:'Tâches mensuelles de semis & récolte',de:'Monatliche Saat- & Ernteaufgaben'},
+plan_f_recept:{nl:'Recepten & bewaartips',en:'Recipes & preservation tips',fr:'Recettes & conseils de conservation',de:'Rezepte & Aufbewahrungstipps'},
+plan_f_weer:{nl:'Weer & tuintips op maat',en:'Weather & tailored garden tips',fr:'Météo & conseils sur mesure',de:'Wetter & passende Gartentipps'},
+plan_f_ai:{nl:'AI Plantdokter',en:'AI Plant doctor',fr:'Médecin des plantes IA',de:'KI-Pflanzenarzt'},
+plan_verder_gratis:{nl:'Verder met gratis',en:'Continue with free',fr:'Continuer en gratuit',de:'Kostenlos fortfahren'},
+plan_groen_x:{nl:'Alles om écht zelfvoorzienend te worden.',en:'Everything to become truly self-sufficient.',fr:'Tout pour devenir vraiment autosuffisant.',de:'Alles, um wirklich selbstversorgt zu werden.'},
+plan_f_weertip:{nl:'Weer & dagelijkse tuintips',en:'Weather & daily garden tips',fr:'Météo & conseils quotidiens',de:'Wetter & tägliche Gartentipps'},
+plan_f_meter:{nl:'Supermarkt-vrijheidsmeter',en:'Supermarket freedom meter',fr:'Jauge de liberté du supermarché',de:'Supermarkt-Freiheitsanzeige'},
+plan_f_agenda:{nl:'Taken naar je agenda',en:'Tasks to your calendar',fr:'Tâches vers votre agenda',de:'Aufgaben zu deinem Kalender'},
+plan_fam_x:{nl:'Deel met je gezin of buren. Elk een eigen tuin.',en:'Share with family or neighbours. Each their own garden.',fr:'Partagez avec famille ou voisins. Chacun son jardin.',de:'Teile mit Familie oder Nachbarn. Jeder ein eigener Garten.'},
+plan_f_allesgroen:{nl:'Alles uit Groen',en:'Everything from Green',fr:'Tout de Vert',de:'Alles aus Grün'},
+plan_f_ieder:{nl:'Ieder een eigen klimaat & oogst',en:'Each their own climate & harvest',fr:'Chacun son climat & sa récolte',de:'Jeder eigenes Klima & Ernte'},
+maak_account:{nl:'Maak een account',en:'Create an account',fr:'Créer un compte',de:'Konto erstellen'},
 recept_leeg_s:{nl:'Voeg gewassen toe die in onze recepten voorkomen.',en:'Add crops that appear in our recipes.',fr:'Ajoutez des cultures présentes dans nos recettes.',de:'Füge Pflanzen hinzu, die in unseren Rezepten vorkommen.'},
 jouw_oogst:{nl:'Jouw oogst',en:'Your harvest',fr:'Votre récolte',de:'Deine Ernte'},
 voor_jouw_tuin:{nl:'Voor jouw tuin',en:'For your garden',fr:'Pour votre jardin',de:'Für deinen Garten'},
@@ -1246,15 +1339,22 @@ document.documentElement.lang=l;
 // dynamische arrays bijwerken
 MN.length=0;MAANDEN[l].kort.forEach(x=>MN.push(x));
 ML.length=0;MAANDEN[l].lang.forEach(x=>ML.push(x));
+// dagnamen bijwerken (anders blijven die Nederlands)
+if(typeof DAGEN!=='undefined'&&DAGEN[l]){DG.length=0;DAGEN[l].lang.forEach(x=>DG.push(x));DGK.length=0;DAGEN[l].kort.forEach(x=>DGK.push(x));}
 // navigatie-labels
 const navmap={'nav-home':'nav_home','nav-tuin':'nav_tuin','nav-ontdek':'nav_ontdek','nav-account':'nav_account'};
 Object.entries(navmap).forEach(([id,k])=>{const el=document.querySelector('#'+id+' .nav-lbl');if(el)el.textContent=t(k);});
 // elementen met data-i18n attribuut
 document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.getAttribute('data-i18n'));});
 document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.setAttribute('placeholder',t(el.getAttribute('data-i18n-ph')));});
-// her-render dynamische schermen
-if(typeof renderHome==='function')renderHome();
-if(typeof renderGarden==='function')renderGarden();
+// her-render ALLE dynamische schermen zodat geen enkel woord achterblijft
+try{if(typeof renderHome==='function')renderHome();}catch(e){}
+try{if(typeof renderGarden==='function')renderGarden();}catch(e){}
+try{if(typeof renderDiscover==='function')renderDiscover();}catch(e){}
+try{if(typeof refreshAccount==='function')refreshAccount();}catch(e){}
+try{if(typeof renderPlan==='function')renderPlan();}catch(e){}
+try{if(typeof fillSettings==='function')fillSettings();}catch(e){}
+try{if(typeof renderCatChips==='function'&&document.getElementById('addSheet')&&document.getElementById('addSheet').classList.contains('open')){renderCatChips();renderAddGrid();}}catch(e){}
 }
 function kiesTaal(l){
 LANG=l;try{localStorage.setItem('gl_lang',l);}catch(e){}
@@ -1612,7 +1712,7 @@ let badges=[]; // behaalde mijlpalen
 let userLat=null,userLon=null;
 let settings={personen:2,ruimte:'middel',m2:30,klimaat:'gematigd',doel:85,startMaand:null};
 let obData={personen:2,ruimte:'middel',m2:30,klimaat:'gematigd',doel:85};
-let obStep=0, deferredPWA=null, addCat='Alle', detailPlant=null;
+let obStep=0, deferredPWA=null, addCat='nu', detailPlant=null;
 
 // Status-stappen die een plant doorloopt
 const STATUS={
@@ -1632,7 +1732,7 @@ const GROEIWEKEN={
 'Tomaat':16,'Komkommer':10,'Courgette':9,'Paprika':18,'Aubergine':18,'Peper':18,'Boon':10,'Erwt':12,
 'Wortel':14,'Rode biet':12,'Pastinaak':20,'Ui':20,'Knoflook':36,'Aardappel':14,'Pompoen':16,'Maïs':14,
 'Broccoli':14,'Bloemkool':16,'Spruitjes':28,'Boerenkool':12,'Prei':30,'Witlof':30,'Selderij':16,'Venkel':14,
-'Aardbei':10,'Framboos':12,'Blauwe bes':12,'Appel':16,'Peer':16,'Druif':16,'Asperge':8,
+'Aardbei':10,'Framboos':12,'Blauwe bes':12,'Appel':16,'Peer':16,'Druif':16,'Asperge':8,'Rabarber':12,
 'Peterselie':10,'Basilicum':8,'Bieslook':10,'Munt':8,'Kervel':8,'Dille':8,'Tijm':10,'Rozemarijn':12,
 'Zoete aardappel':18,'Okra':12,'Cassave':40,'Gember':36,'Taro':32,'Papaya':40,
 'Winterpostelein':8,'Palmkool':16,'Raapstelen':5,'Tuinkers':2,
@@ -1987,7 +2087,7 @@ else if(!cats.has('Groenten'))tekorten.push('tomaat of courgette');
 else tekorten.push('meer planten van wat je al hebt');
 }
 let html='';
-if(soonest!==null)html+=`<div class="growth-row">📈 <span>Volgende oogst${soonest===0?' deze maand':' in '+soonName}</span></div>`;
+if(soonest!==null)html+=`<div class="growth-row">📈 <span>${t('volgende_oogst')}${soonest===0?' '+t('deze_maand'):' '+t('in_maand')+' '+soonName}</span></div>`;
 // Ruimte-waarschuwing als de tuin niet meer past
 if(ruimteVol()){
 const nodig=Math.ceil(benodigdeM2());
@@ -2199,25 +2299,32 @@ const pct=Math.max(0,Math.min(100,(r.vrij/maxT)*100));
 const neg=r.vrij<0;
 return `<div class="tl-row"><div class="tl-maand">${MN[r.maand]}</div><div class="tl-bar-bg"><div class="tl-bar ${neg?'over':''}" style="width:${neg?100:pct}%"></div></div><div class="tl-val">${r.vrij.toFixed(1)} m²</div></div>`;
 }).join('');
-// 4. Visuele grid — toont ALLEEN wat je echt hebt uitgeplant, op de plek die jij koos
+// 4. Visuele grid — toont ALLEEN wat je echt hebt uitgeplant.
+// Elke plant neemt cellen in NAAR RATO van zijn m² (pompoen groot, radijs klein).
 const inTuin=tuinPlanten();
 const cellen=tuinRasterCellen();
 const cols=cellen<=9?3:cellen<=16?4:cellen<=25?5:6;
-// bouw cel-array: gebruik de gekozen cel (g.cel), val terug op eerstvolgende vrije plek
+const m2PerCel=Math.max(0.1,beschikbareM2()/cellen); // hoeveel m² stelt één cel voor
 const celInhoud=new Array(cellen).fill(null);
-const zonderCel=[];
-inTuin.forEach(g=>{
-if(typeof g.cel==='number'&&g.cel>=0&&g.cel<cellen&&celInhoud[g.cel]===null)celInhoud[g.cel]=g.n;
-else zonderCel.push(g.n);
+// sorteer op gekozen cel zodat plaatsing stabiel is
+const gesorteerd=inTuin.slice().sort((a,b)=>((a.cel??99)-(b.cel??99)));
+gesorteerd.forEach(g=>{
+// aantal cellen voor deze plant = oppervlak / m²-per-cel, minimaal 1
+let nodig=Math.max(1,Math.round(plantOppervlak(g.n)/m2PerCel));
+let start=(typeof g.cel==='number'&&g.cel>=0&&g.cel<cellen)?g.cel:0;
+// plaats vanaf de gekozen cel; sla bezette cellen over
+let geplaatst=0,i=start;
+while(geplaatst<nodig&&i<cellen){if(celInhoud[i]===null){celInhoud[i]=g.n;geplaatst++;}i++;}
+// als achteraan vol: vul vooraan bij wat niet paste
+for(let j=0;j<cellen&&geplaatst<nodig;j++){if(celInhoud[j]===null){celInhoud[j]=g.n;geplaatst++;}}
 });
-// planten zonder (geldige) cel: vul eerste vrije plekken
-let zi=0;
-for(let i=0;i<cellen&&zi<zonderCel.length;i++){if(celInhoud[i]===null){celInhoud[i]=zonderCel[zi++];}}
+// bouw tegels — toon de naam alleen op de EERSTE cel van een aaneengesloten blok
 const grid=`<div class="grid-wrap"><div class="garden-grid" style="grid-template-columns:repeat(${cols},1fr)">`+
-celInhoud.map(n=>{
+celInhoud.map((n,idx)=>{
 if(!n)return `<div class="grid-tile empty">+</div>`;
 const p=plantByName(n);
-return `<div class="grid-tile ${plantType(n)}" onclick="openDetail('${n}')"><div>${p.e}</div><div class="gt-name">${plantNaam(n)}</div></div>`;
+const toonNaam=idx===0||celInhoud[idx-1]!==n; // naam alleen bij begin van een blok
+return `<div class="grid-tile ${plantType(n)}" onclick="openDetail('${n}')"><div>${p.e}</div>${toonNaam?`<div class="gt-name">${plantNaam(n)}</div>`:''}</div>`;
 }).join('')+`</div>
 <div class="grid-legend">
 <span><span class="gl-dot" style="background:#d7ecc8"></span>${t('legenda_blad')}</span>
@@ -2346,8 +2453,12 @@ function removePlant(n){myGarden=myGarden.filter(g=>g.n!==n);renderGarden();rend
 function openAddSheet(){document.getElementById('addSheet').classList.add('open');renderCatChips();renderAddGrid();}
 function closeAddSheet(){document.getElementById('addSheet').classList.remove('open');renderGarden();renderHome();}
 function renderCatChips(){
-const cats=['Alle',...new Set(PL.map(p=>p.cat))];
-document.getElementById('addCatChips').innerHTML=cats.map(c=>`<button class="cat-chip ${c===addCat?'active':''}" onclick="setAddCat('${c}')">${c}</button>`).join('');
+// 'Deze maand' staat vooraan en is de standaard — toont alleen wat je nu kunt zaaien
+const cats=['nu','Alle',...new Set(PL.map(p=>p.cat))];
+document.getElementById('addCatChips').innerHTML=cats.map(c=>{
+const label=c==='nu'?'🌱 '+t('deze_maand_chip'):c==='Alle'?t('alle_chip'):catNaam(c);
+return `<button class="cat-chip ${c===addCat?'active':''}" onclick="setAddCat('${c}')">${label}</button>`;
+}).join('');
 }
 function setAddCat(c){addCat=c;renderCatChips();renderAddGrid();}
 // Ruimte die één eenheid van dit gewas inneemt voor jouw huishouden
@@ -2649,7 +2760,7 @@ return `<div class="ruil-opt" onclick="doeRuil('${naam}','${alt.n}')">
 </div>`;
 }).join(''):'<div style="font-size:0.84rem;color:var(--muted);padding:10px 0">Geen passende ruil gevonden die dezelfde oogstperiode dekt. Je kunt dit gewas wel gewoon verwijderen.</div>';
 document.getElementById('ruilTitle').innerHTML=`${p.e} ${naam} ruilen`;
-document.getElementById('ruilSub').textContent='Kies een vervanger die in dezelfde maand oogst geeft — zo houd je je voorraad op peil.';
+document.getElementById('ruilSub').textContent=t('ruil_sub');
 document.getElementById('ruilList').innerHTML=lijst;
 document.getElementById('ruilSheet').classList.add('open');
 }
@@ -2669,7 +2780,23 @@ const ruimteTxt=`📐 ${vrij}m² vrij van ${totaal}m²`;
 sub.innerHTML=isPro()?ruimteTxt:`${ruimteTxt} · gratis ${myGarden.length}/${GRATIS_MAX}`;
 }
 const q=(document.getElementById('addSearch').value||'').toLowerCase();
-let items=PL.filter(p=>(addCat==='Alle'||p.cat===addCat)&&p.n.toLowerCase().includes(q));
+let items;
+if(addCat==='nu'){
+// Alleen wat je DEZE maand kunt (voor)zaaien én past bij je klimaat — automatisch bepaald
+items=PL.filter(p=>{
+if(!p.n.toLowerCase().includes(q))return false;
+if(!geschiktVoorKlimaat(p.n))return false;
+const z=zaaiStatus(p.n);
+return z&&(z.status==='nu'||z.status==='voor');
+});
+// toon een passende uitleg + lege staat als er deze maand niets te zaaien is
+if(!items.length){
+document.getElementById('addGroups').innerHTML=`<div style="padding:24px 22px;text-align:center"><div style="font-size:2rem;margin-bottom:8px">🌙</div><div style="font-size:0.9rem;color:var(--forest);font-weight:600;margin-bottom:4px">${t('niks_zaaien_t')}</div><div style="font-size:0.8rem;color:var(--muted);line-height:1.5">${t('niks_zaaien_x')}</div><button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="setAddCat('Alle')">${t('toon_alle_chip')}</button></div>`;
+return;
+}
+}else{
+items=PL.filter(p=>(addCat==='Alle'||p.cat===addCat)&&p.n.toLowerCase().includes(q));
+}
 const groups={};
 items.forEach(p=>{(groups[p.cat]=groups[p.cat]||[]).push(p);});
 const order=['Groenten','Bladgroenten','Wortelgroenten','Knolgewassen','Peulvruchten','Fruit','Kruiden'];
@@ -2810,10 +2937,10 @@ c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter 🔬</h3><p>De 
 return;
 }
 if(!isPro()){
-c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter 🔬</h3><p>Maak een foto van een zieke plant en krijg direct een diagnose met behandelplan. Deze AI-functie zit in Greenlabs Groen.</p><button class="btn btn-mint btn-full" onclick="showUpgrade('ai')">Ontgrendel de Plantdokter</button></div>`;
+c.innerHTML=`<div class="dok-card"><h3 class="serif">${t('dok_titel')} 🔬</h3><p>${t('dok_pro_x')}</p><button class="btn btn-mint btn-full" onclick="showUpgrade('ai')">${t('dok_ontgrendel')}</button></div>`;
 return;
 }
-c.innerHTML=`<div class="dok-card"><h3 class="serif">Plantdokter</h3><p>Maak een foto van je plant. We bekijken wat er speelt en geven je een helder behandelplan.</p><div class="dok-upload" onclick="document.getElementById('dokInput').click()"><div class="dok-ico">📷</div><p>Tik om een foto te kiezen</p></div></div><div class="dok-preview" id="dokPreview"><img id="dokImg" src=""><button class="btn btn-terra btn-full" style="margin-top:10px;" onclick="analyzeDok()">🔬 Bekijk mijn plant</button></div><div class="dok-result" id="dokResult"><div class="dr-head">🌿 Diagnose</div><div class="dr-body" id="dokBody"></div></div>`;
+c.innerHTML=`<div class="dok-card"><h3 class="serif">${t('dok_titel')}</h3><p>${t('dok_x')}</p><div class="dok-upload" onclick="document.getElementById('dokInput').click()"><div class="dok-ico">📷</div><p>${t('dok_kies_foto')}</p></div></div><div class="dok-preview" id="dokPreview"><img id="dokImg" src=""><button class="btn btn-terra btn-full" style="margin-top:10px;" onclick="analyzeDok()">🔬 ${t('dok_bekijk')}</button></div><div class="dok-result" id="dokResult"><div class="dr-head">🌿 ${t('dok_diagnose')}</div><div class="dr-body" id="dokBody"></div></div>`;
 return;
 }
 const plants=gardenPlants();
@@ -2988,10 +3115,10 @@ document.getElementById('obM2Val').textContent=v;
 obData.ruimte=v<=12?'klein':v<=40?'middel':'groot';
 const hint=document.getElementById('obM2Hint');
 if(hint){
-if(v<=8)hint.textContent='Een balkon of klein terras — perfect voor verse kruiden en salade.';
-else if(v<=25)hint.textContent='Een mooie tuin om gevarieerd te telen.';
-else if(v<=60)hint.textContent='Ruim genoeg om een groot deel van je groente zelf te kweken.';
-else hint.textContent='Een echte moestuin — hier kun je grotendeels zelfvoorzienend worden!';
+if(v<=8)hint.textContent=t('m2_hint_klein');
+else if(v<=25)hint.textContent=t('m2_hint_mid');
+else if(v<=60)hint.textContent=t('m2_hint_groot');
+else hint.textContent=t('m2_hint_moestuin');
 }
 }
 function finishOnboarding(){
@@ -3015,7 +3142,7 @@ function updateNotifUI(){
 const on=localStorage.getItem('gl_notif')==='1'&&('Notification'in window&&Notification.permission==='granted');
 const t=document.getElementById('notifToggle'),s=document.getElementById('notifStatus');
 if(t)t.textContent=on?'Aan ✓':'›';
-if(s)s.textContent=on?'Je krijgt een seintje bij tuintaken':'Krijg een seintje bij zaai- en oogsttijd';
+if(s)s.textContent=on?t('notif_aan_x'):t('notif_uit_x');
 }
 async function toggleNotif(){
 if(!('Notification'in window)){toast(t('m_notif_nvt'));return;}
@@ -3078,14 +3205,14 @@ const av=document.getElementById('accAvatar'),nm=document.getElementById('accNam
 const rt=document.getElementById('authRowT'),rs=document.getElementById('authRowS');
 if(u){
 if(av)av.textContent=u.naam?u.naam[0].toUpperCase():'🌱';
-if(nm)nm.textContent=u.naam||'Mijn tuin';
+if(nm)nm.textContent=u.naam||t('mijn_tuin');
 if(sub)sub.textContent=u.email+(GRATIS_FASE?' · Gratis':(pro?' · Groen':' · Starter'));
 if(rt)rt.textContent='Uitloggen';
 if(rs)rs.textContent='Je bent ingelogd als '+u.email;
 document.getElementById('authRow').setAttribute('onclick','doLogout()');
 }else{
-if(av)av.textContent='🌱';if(nm)nm.textContent='Jouw tuin';if(sub)sub.textContent=plan;
-if(rt)rt.textContent='Maak een account';if(rs)rs.textContent='Bewaar je tuin veilig en op al je apparaten';
+if(av)av.textContent='🌱';if(nm)nm.textContent=t('jouw_tuin');if(sub)sub.textContent=plan;
+if(rt)rt.textContent=t('acc_maak');if(rs)rs.textContent=t('acc_bewaar');
 document.getElementById('authRow').setAttribute('onclick','openAuth()');
 }
 }
@@ -3095,9 +3222,9 @@ function switchAuth(){authMode=authMode==='register'?'login':'register';renderAu
 function renderAuthMode(){
 const reg=authMode==='register';
 document.getElementById('authTitle').textContent=reg?'Maak een account':'Welkom terug';
-document.getElementById('authSub').textContent=reg?'Zo bewaar je je tuin veilig en op al je apparaten':'Log in om verder te gaan met jouw tuin';
+document.getElementById('authSub').textContent=reg?t('auth_sub_reg'):t('auth_sub_login');
 document.getElementById('authBtn').textContent=reg?'Account aanmaken':'Inloggen';
-document.getElementById('authSwitch').textContent=reg?'Heb je al een account? Log in':'Nog geen account? Maak er een';
+document.getElementById('authSwitch').textContent=reg?t('auth_switch_reg'):t('auth_switch_login');
 document.getElementById('authNaam').style.display=reg?'block':'none';
 }
 function doAuth(){
@@ -3111,7 +3238,7 @@ localStorage.setItem('gl_user',JSON.stringify({naam:naam||email.split('@')[0],em
 closeAuth();refreshAccount();
 toast(authMode==='register'?'Welkom bij Greenlabs! 🌱':'Welkom terug! 🌿');
 }
-function doLogout(){if(confirm('Uitloggen? Je tuin blijft op dit apparaat bewaard.')){localStorage.removeItem('gl_user');refreshAccount();toast(t('m_uitgelogd'));}}
+function doLogout(){if(confirm(t('logout_confirm'))){localStorage.removeItem('gl_user');refreshAccount();toast(t('m_uitgelogd'));}}
 
 // ══════════ INIT ══════════
 const had=load();
