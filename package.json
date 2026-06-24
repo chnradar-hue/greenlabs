@@ -1,0 +1,13 @@
+{
+  "name": "greenlabs",
+  "version": "1.0.0",
+  "description": "Greenlabs — samen zelfvoorzienend. Jouw rustige tuingids van zaadje tot bord.",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}
